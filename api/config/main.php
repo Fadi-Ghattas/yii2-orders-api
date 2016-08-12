@@ -29,7 +29,6 @@ return [
                         'message' => $response->data['message'],
                         'data' => $response->data,
                     ];
-                    $response->statusCode = $response->statusCode;
                 }
             },
         ],
