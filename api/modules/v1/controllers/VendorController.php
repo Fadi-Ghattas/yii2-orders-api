@@ -50,10 +50,13 @@ class VendorController extends ActiveController
         $post_data = Yii::$app->request->post();
         $model = new LoginForm();
         $model->username = $post_data['email'];
+        $model->password = $post_data['password'];
+        $model->email = $post_data['email'];
         if ($model->load($post_data, '') && $model->login()) {
             $restaurantManager = User::findByEmail($post_data['email']);
-            if(empty($restaurantManager))
+            if(empty($restaurantManager)){
                 throw new NotFoundHttpException('User not found.');
+            }
             if(User::getRoleName(Yii::$app->user->id) != User::RESTAURANT_MANAGER)
                 throw new ForbiddenHttpException('This account is not a restaurant account.');
 
