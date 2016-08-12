@@ -57,7 +57,8 @@ class VendorController extends ActiveController
             if(User::getRoleName(Yii::$app->user->id) != User::RESTAURANT_MANAGER)
                 throw new ForbiddenHttpException('This account is not a restaurant account.');
 
-            return ['status' => 'true', 'auth_key' => $restaurantManager['auth_key']];
+            return ['auth_key' => $restaurantManager['auth_key']];
+
         } else {
             throw new UserException(strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])));
         }
@@ -94,5 +95,35 @@ class VendorController extends ActiveController
             throw new ServerErrorHttpException('Something went wrong please try again..');
             //throw $e;
         }
+    }
+
+    public function afterAction($action, $result)
+    {
+        $response = array();
+        $result = parent::afterAction($action, $result);
+
+        switch ($action->id) {
+            case 'view':
+                $response['status'] = 'success';
+                $response['message'] = 'Restaurant profile has been retrieved successfully.';
+                $response['data'] = $result;
+                break;
+            case 'update':
+                $response['status'] = 'success';
+                $response['message'] = 'Restaurant profile has been updated successfully.';
+                $response['data']['updated'] = 'true';
+                break;
+            case 'login':
+                $response['status'] = 'success';
+                $response['message'] = 'Restaurant user has been logged in successfully.';
+                $response['data'] = $result;
+                break;
+            default:
+                $response['status'] = 'error';
+                $response['message'] = "You don't have permission to do this action.";
+                $response['data']['error'] = 'true';
+        }
+
+        return $response;
     }
 }

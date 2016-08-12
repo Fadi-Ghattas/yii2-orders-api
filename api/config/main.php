@@ -19,6 +19,26 @@ return [
         ]
     ],
     'components' => [
+        'response' => [
+            'class' => 'yii\web\Response',
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                if ($response->data !== null && Yii::$app->request->get('suppress_response_code')) {
+                    $response->data = [
+                        'success' => $response->isSuccessful,
+                        'data' => $response->data,
+                    ];
+                    $response->statusCode = 200;
+                } else {
+                    $response->data = [
+                        'status' => 'error',
+                        'message' => $response->data['message'],
+                        'data' => $response->data,
+                    ];
+                    $response->statusCode = $response->statusCode;
+                }
+            },
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => false,
