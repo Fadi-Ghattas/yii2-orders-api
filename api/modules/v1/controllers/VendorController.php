@@ -107,24 +107,24 @@ class VendorController extends ActiveController
 
         switch ($action->id) {
             case 'view':
-                $response['status'] = 'success';
-                $response['message'] = 'Restaurant profile has been retrieved successfully.';
+                $response['success'] = true;
+                $response['message'] = 'get success';
                 $response['data'] = $result;
                 break;
             case 'update':
-                $response['status'] = 'success';
-                $response['message'] = 'Restaurant profile has been updated successfully.';
-                $response['data']['updated'] = 'true';
+                $response['success'] = true;
+                $response['message'] = 'update success';
+                $response['data']['updated'] = true;
                 break;
             case 'login':
-                $response['status'] = 'success';
-                $response['message'] = 'Restaurant user has been logged in successfully.';
+                $response['success'] = true;
+                $response['message'] = 'login success';
                 $response['data'] = $result;
                 break;
             default:
-                $response['status'] = 'error';
+                $response['success'] = false;
                 $response['message'] = "You don't have permission to do this action.";
-                $response['data']['error'] = 'true';
+                $response['data'] = null;
         }
 
         return $response;

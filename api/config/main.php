@@ -23,11 +23,11 @@ return [
             'class' => 'yii\web\Response',
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                 if($response->statusCode != 200) {
+                if ($response->statusCode != 200 && $response->statusCode != 422) {
                     $response->data = [
-                        'status' => 'error',
+                        'success' => false,
                         'message' => $response->data['message'],
-                        'data' => $response->data,
+                        'data' => null,
                     ];
                 }
             },
