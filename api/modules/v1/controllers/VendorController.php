@@ -12,9 +12,6 @@ use common\models\Restaurants;
 use Yii;
 use common\models\User;
 use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use yii\base\InvalidValueException;
-use yii\db\IntegrityException;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\helpers\ArrayHelper;
@@ -114,7 +111,7 @@ class VendorController extends ActiveController
             case 'update':
                 $response['success'] = true;
                 $response['message'] = 'update success';
-                $response['data']['updated'] = true;
+                $response['data']['id'] = $result['id'];
                 break;
             case 'login':
                 $response['success'] = true;

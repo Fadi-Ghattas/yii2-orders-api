@@ -244,6 +244,7 @@ class Restaurants extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
+            'id',
             'name',
             'phone_number',
             'minimum_order_amount',
@@ -285,7 +286,7 @@ class Restaurants extends \yii\db\ActiveRecord
         if ($this->hasErrors()) {
             $validation = array();
             $validation['success'] = false;
-            $validation['message'] = 'Validation failed.';
+            $validation['message'] = 'validation failed';
             $validation['data'] = $this->errors;
 
             $response = Yii::$app->getResponse();
