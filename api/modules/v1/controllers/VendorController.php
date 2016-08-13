@@ -12,9 +12,6 @@ use common\models\Restaurants;
 use Yii;
 use common\models\User;
 use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use yii\base\InvalidValueException;
-use yii\db\IntegrityException;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\helpers\ArrayHelper;
@@ -50,14 +47,18 @@ class VendorController extends ActiveController
         $post_data = Yii::$app->request->post();
         $model = new LoginForm();
         $model->username = $post_data['email'];
+        $model->password = $post_data['password'];
+        $model->email = $post_data['email'];
         if ($model->load($post_data, '') && $model->login()) {
             $restaurantManager = User::findByEmail($post_data['email']);
-            if(empty($restaurantManager))
+            if(empty($restaurantManager)){
                 throw new NotFoundHttpException('User not found.');
+            }
             if(User::getRoleName(Yii::$app->user->id) != User::RESTAURANT_MANAGER)
                 throw new ForbiddenHttpException('This account is not a restaurant account.');
 
-            return ['status' => 'true', 'auth_key' => $restaurantManager['auth_key']];
+            return ['auth_key' => $restaurantManager['auth_key']];
+
         } else {
             throw new UserException(strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])));
         }
@@ -94,5 +95,35 @@ class VendorController extends ActiveController
             throw new ServerErrorHttpException('Something went wrong please try again..');
             //throw $e;
         }
+    }
+
+    public function afterAction($action, $result)
+    {
+        $response = array();
+        $result = parent::afterAction($action, $result);
+
+        switch ($action->id) {
+            case 'view':
+                $response['success'] = true;
+                $response['message'] = 'get success';
+                $response['data'] = $result;
+                break;
+            case 'update':
+                $response['success'] = true;
+                $response['message'] = 'update success';
+                $response['data']['id'] = $result['id'];
+                break;
+            case 'login':
+                $response['success'] = true;
+                $response['message'] = 'login success';
+                $response['data'] = $result;
+                break;
+            default:
+                $response['success'] = false;
+                $response['message'] = "You don't have permission to do this action.";
+                $response['data'] = null;
+        }
+
+        return $response;
     }
 }

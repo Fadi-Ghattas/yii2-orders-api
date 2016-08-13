@@ -19,6 +19,19 @@ return [
         ]
     ],
     'components' => [
+        'response' => [
+            'class' => 'yii\web\Response',
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                if ($response->statusCode != 200 && $response->statusCode != 422) {
+                    $response->data = [
+                        'success' => false,
+                        'message' => $response->data['message'],
+                        'data' => null,
+                    ];
+                }
+            },
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => false,
