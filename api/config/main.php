@@ -8,7 +8,7 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-api',
+    'id' => 'jommakan-api',
     'name' => 'jommakan',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -23,11 +23,18 @@ return [
             'class' => 'yii\web\Response',
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                if ($response->statusCode != 200 && $response->statusCode != 422) {
+                if($response->format == 'html'){
+                    $response->format = \yii\web\Response::FORMAT_JSON;
+                    $response->data = [
+                        'success' => false,
+                        'message' =>  $response->statusText,
+                        'data' => null
+                    ];
+                } else if ($response->statusCode != 200 && $response->statusCode != 422) {
                     $response->data = [
                         'success' => false,
                         'message' => $response->data['message'],
-                        'data' => null,
+                        'data' => null
                     ];
                 }
             },

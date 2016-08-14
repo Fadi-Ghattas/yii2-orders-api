@@ -1,4 +1,0 @@
-<IfModule mod_rewrite.c>
-#Send all /api requests to api/web folder
-RewriteRule ^api/(.*)$ api/web/$1
-</IfModule>

@@ -4,8 +4,8 @@ namespace common\models;
 
 use Yii;
 use yii\web\ForbiddenHttpException;
-use yii\helpers\Json;
 use yii\web\Response;
+
 
 /**
  * This is the model class for table "restaurants".
@@ -19,10 +19,11 @@ use yii\web\Response;
  * @property string $rank
  * @property integer $halal
  * @property integer $featured
+ * @property string $working_opening_hours
+ * @property string $working_closing_hours
  * @property integer $disable_ordering
  * @property integer $delivery_duration
  * @property string $phone_number
- * @property string $working_hours
  * @property double $longitude
  * @property double $latitude
  * @property string $image
@@ -31,6 +32,7 @@ use yii\web\Response;
  * @property string $updated_at
  * @property string $owner_id
  * @property integer $user_id
+ *
  * @property Addons[] $addons
  * @property AreaRestaurant[] $areaRestaurants
  * @property Areas[] $areas
@@ -48,15 +50,6 @@ use yii\web\Response;
  */
 class Restaurants extends \yii\db\ActiveRecord
 {
-
-//    public $mangerName;
-//    public $mangerEmail;
-//    public $mangerPassWord;
-//    public $ownerName;
-//    public $ownerContactNumber;
-//    public $ownerEmail;
-
-
     /**
      * @inheritdoc
      */
@@ -71,16 +64,13 @@ class Restaurants extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'minimum_order_amount', 'time_order_open', 'time_order_close', 'delivery_fee', 'rank', 'halal', 'featured', 'disable_ordering', 'delivery_duration', 'phone_number', 'working_hours', 'longitude', 'latitude', 'status', 'owner_id', 'user_id'], 'required'],
-//            [['ownerEmail','ownerContactNumber','ownerName','mangerPassWord','mangerEmail','mangerName','name', 'minimum_order_amount', 'time_order_open', 'time_order_close', 'delivery_fee', 'rank', 'halal', 'featured', 'disable_ordering', 'delivery_duration', 'phone_number', 'working_hours', 'longitude', 'latitude', 'status', 'owner_id', 'user_id'], 'required'],
+            [['name', 'minimum_order_amount', 'time_order_open', 'time_order_close', 'delivery_fee', 'rank', 'halal', 'featured', 'working_opening_hours', 'working_closing_hours', 'disable_ordering', 'delivery_duration', 'phone_number', 'longitude', 'latitude', 'image', 'status', 'owner_id', 'user_id'], 'required'],
             [['minimum_order_amount', 'delivery_fee', 'rank', 'longitude', 'latitude'], 'number'],
-            [['time_order_open', 'time_order_close', 'created_at', 'updated_at', 'image'], 'safe'],
+            [['time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
             [['halal', 'featured', 'disable_ordering', 'delivery_duration', 'status', 'owner_id', 'user_id'], 'integer'],
-            [['working_hours'], 'string'],
             [['name', 'phone_number', 'image'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['owner_id'], 'exist', 'skipOnError' => true, 'targetClass' => Owners::className(), 'targetAttribute' => ['owner_id' => 'id']],
-//            [['ownerEmail','mangerEmail'], 'email'],
         ];
     }
 
@@ -102,7 +92,8 @@ class Restaurants extends \yii\db\ActiveRecord
             'disable_ordering' => 'Disable Ordering',
             'delivery_duration' => 'Delivery Duration',
             'phone_number' => 'Phone Number',
-            'working_hours' => 'Working Hours',
+            'working_opening_hours' => 'Working Opening Hours',
+            'working_closing_hours' => 'Working Closing Hours',
             'longitude' => 'Longitude',
             'latitude' => 'Latitude',
             'image' => 'Image',
@@ -248,6 +239,8 @@ class Restaurants extends \yii\db\ActiveRecord
             'name',
             'phone_number',
             'minimum_order_amount',
+            'working_opening_hours',
+            'working_closing_hours',
             'time_order_open',
             'time_order_close',
             'delivery_fee',
@@ -255,7 +248,6 @@ class Restaurants extends \yii\db\ActiveRecord
             'featured',
             'disable_ordering',
             'delivery_duration',
-            'working_hours',
             'longitude',
             'latitude',
             'image',
@@ -284,15 +276,12 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public function afterValidate(){
         if ($this->hasErrors()) {
-            $validation = array();
-            $validation['success'] = false;
-            $validation['message'] = 'validation failed';
-            $validation['data'] = $this->errors;
-
             $response = Yii::$app->getResponse();
             $response->setStatusCode(422);
             $response->format = Response::FORMAT_JSON;
-            $response->data = $validation;
+            $response->data = ['success' => false,
+                               'message' => 'validation failed',
+                               'data' => null];
             $response->send();
         }
     }
