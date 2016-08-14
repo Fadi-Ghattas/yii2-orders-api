@@ -29,17 +29,29 @@ class VendorController extends ActiveController
 
     public function behaviors()
     {
-        return ArrayHelper::merge(
-            parent::behaviors(), [
-                'authenticator' => [
-                    'class' => CompositeAuth::className(),
-                    'except' => ['login'],
-                    'authMethods' => [
-                        HttpBearerAuth::className(),
-                    ],
-                ],
-            ]
-        );
+
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => CompositeAuth::className(),
+            'authMethods' => [
+                HttpBearerAuth::className(),
+            ],
+        ];
+
+        $behaviors['verbs'] = [
+            'class' => \yii\filters\VerbFilter::className(),
+            'actions' => [
+                //'index'  => ['get'],
+                'login' => ['post'],
+                'view'   => ['get'],
+                //'create' => ['get', 'post'],
+                'update' => ['put'],
+                //'delete' => ['post', 'delete'],
+                'delete' => [''],
+            ],
+        ];
+
+        return $behaviors;
     }
 
     public function actionLogin()
