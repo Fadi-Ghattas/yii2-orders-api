@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use yii\base\InvalidValueException;
+use yii\base\UserException;
 use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 
@@ -281,6 +283,18 @@ class Restaurants extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         $post_data = Yii::$app->request->post();
+
+        if(empty($post_data)) {
+            $response = Yii::$app->getResponse();
+            $response->setStatusCode(422);
+            $response->format = Response::FORMAT_JSON;
+            $response->data = ['success' => false,
+                'message' => 'validation failed',
+                'data' => ['data' => ['please provide data']]];
+            $response->send();
+            die();
+        }
+
         if(isset($post_data['email'])) {
             $user = new User();
             $user->email = $post_data['email'];
@@ -291,7 +305,7 @@ class Restaurants extends \yii\db\ActiveRecord
         $auth_key = explode(' ',$headers['authorization'])[1];
         $restaurantManager = \common\models\User::findIdentityByAccessToken($auth_key);
         if($this->user_id != $restaurantManager->id){
-            throw new ForbiddenHttpException("You don't have permission to do this action.");
+            throw new ForbiddenHttpException("You don't have permission to do this action");
         }
 
         $lockedValues = ['name', 'halal', 'featured', 'latitude', 'longitude', 'image', 'status', 'created_at', 'updated_at'];
