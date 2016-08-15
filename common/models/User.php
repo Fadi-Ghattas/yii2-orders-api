@@ -6,6 +6,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\web\Response;
 
 /**
  * User model
@@ -57,7 +58,9 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
-            [['username'], 'safe']
+            [['username'], 'safe'],
+            [['email'], 'unique'],
+            [['email'], 'email'],
         ];
     }
 
@@ -235,5 +238,18 @@ class User extends ActiveRecord implements IdentityInterface
         $role = current($roles);
 
         return $role->name;
+    }
+
+    public function afterValidate(){
+        if ($this->hasErrors()) {
+            $response = Yii::$app->getResponse();
+            $response->setStatusCode(422);
+            $response->format = Response::FORMAT_JSON;
+            $response->data = ['success' => false,
+                                'message' => 'validation failed',
+                                'data' => $this->errors];
+            $response->send();
+            die();
+        }
     }
 }

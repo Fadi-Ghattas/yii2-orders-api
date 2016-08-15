@@ -14,7 +14,6 @@ use common\models\User;
 use common\models\LoginForm;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
-use yii\helpers\ArrayHelper;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\base\UserException;
@@ -26,13 +25,12 @@ class VendorController extends ActiveController
 {
     public $modelClass = 'common\models\Restaurants';
 
-
     public function behaviors()
     {
-
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => CompositeAuth::className(),
+            'except' => ['login'],
             'authMethods' => [
                 HttpBearerAuth::className(),
             ],
@@ -41,13 +39,12 @@ class VendorController extends ActiveController
         $behaviors['verbs'] = [
             'class' => \yii\filters\VerbFilter::className(),
             'actions' => [
-                //'index'  => ['get'],
+                'index'  => [],
                 'login' => ['post'],
                 'view'   => ['get'],
-                //'create' => ['get', 'post'],
+                'create' => [],
                 'update' => ['put'],
-                //'delete' => ['post', 'delete'],
-                'delete' => [''],
+                'delete' => []
             ],
         ];
 
@@ -57,6 +54,10 @@ class VendorController extends ActiveController
     public function actionLogin()
     {
         $post_data = Yii::$app->request->post();
+
+        if(!isset($post_data['email']) || !isset($post_data['password']))
+            throw new UserException('email and password are required for login.');
+
         $model = new LoginForm();
         $model->username = $post_data['email'];
         $model->password = $post_data['password'];
@@ -109,6 +110,21 @@ class VendorController extends ActiveController
         }
     }
 
+
+    public function beforeAction($event)
+    {
+        $request_action = explode('/',Yii::$app->getRequest()->getUrl());
+        $actions = ['login' => ['POST']];
+        foreach ($actions as $action => $verb)
+        {
+            if(in_array($action , $request_action)){
+                if( !in_array(Yii::$app->getRequest()->getMethod() , $actions[$action]))
+                    throw new \yii\web\MethodNotAllowedHttpException('method not allowed');
+            }
+        }
+        return parent::beforeAction($event);
+    }
+
     public function afterAction($action, $result)
     {
         $response = array();
@@ -128,6 +144,11 @@ class VendorController extends ActiveController
             case 'login':
                 $response['success'] = true;
                 $response['message'] = 'login success';
+                $response['data'] = $result;
+                break;
+            case 'test':
+                $response['success'] = true;
+                $response['message'] = 'test success';
                 $response['data'] = $result;
                 break;
             default:
