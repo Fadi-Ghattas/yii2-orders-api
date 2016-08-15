@@ -27,7 +27,7 @@ return [
                     $response->format = \yii\web\Response::FORMAT_JSON;
                     $response->data = [
                         'success' => false,
-                        'message' =>  $response->statusText,
+                        'message' => ($response->statusText != 'Method Not Allowed' ? $response->statusText : "You don't have permission to do this action"),
                         'data' => null
                     ];
                 } else if ($response->statusCode != 200 && $response->statusCode != 422) {
