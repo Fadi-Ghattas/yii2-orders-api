@@ -110,7 +110,6 @@ class VendorController extends ActiveController
         }
     }
 
-
     public function beforeAction($event)
     {
         $request_action = explode('/',Yii::$app->getRequest()->getUrl());
@@ -144,11 +143,6 @@ class VendorController extends ActiveController
             case 'login':
                 $response['success'] = true;
                 $response['message'] = 'login success';
-                $response['data'] = $result;
-                break;
-            case 'test':
-                $response['success'] = true;
-                $response['message'] = 'test success';
                 $response['data'] = $result;
                 break;
             default:
