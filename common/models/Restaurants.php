@@ -2,12 +2,10 @@
 
 namespace common\models;
 
-use Yii;
-use yii\base\InvalidValueException;
-use yii\base\UserException;
-use yii\web\ForbiddenHttpException;
-use yii\web\Response;
 
+use Yii;
+use yii\web\ForbiddenHttpException;
+use common\helpers\Helpers;
 
 /**
  * This is the model class for table "restaurants".
@@ -284,16 +282,8 @@ class Restaurants extends \yii\db\ActiveRecord
     {
         $post_data = Yii::$app->request->post();
 
-        if(empty($post_data)) {
-            $response = Yii::$app->getResponse();
-            $response->setStatusCode(422);
-            $response->format = Response::FORMAT_JSON;
-            $response->data = ['success' => false,
-                'message' => 'validation failed',
-                'data' => ['data' => ['please provide data']]];
-            $response->send();
-            die();
-        }
+        if(empty($post_data))
+            Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
 
         if(isset($post_data['email'])) {
             $user = new User();
@@ -319,14 +309,7 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public function afterValidate(){
         if ($this->hasErrors()) {
-            $response = Yii::$app->getResponse();
-            $response->setStatusCode(422);
-            $response->format = Response::FORMAT_JSON;
-            $response->data = ['success' => false,
-                               'message' => 'validation failed',
-                               'data' => $this->errors];
-            $response->send();
-            die();
+            Helpers::UnprocessableEntityHttpException('validation failed' ,  $this->errors);
         }
     }
 

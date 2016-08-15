@@ -1,12 +1,12 @@
 <?php
 namespace common\models;
 
+
 use Yii;
-use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use yii\web\Response;
+use common\helpers\Helpers;
 
 /**
  * User model
@@ -242,14 +242,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function afterValidate(){
         if ($this->hasErrors()) {
-            $response = Yii::$app->getResponse();
-            $response->setStatusCode(422);
-            $response->format = Response::FORMAT_JSON;
-            $response->data = ['success' => false,
-                                'message' => 'validation failed',
-                                'data' => $this->errors];
-            $response->send();
-            die();
+            Helpers::UnprocessableEntityHttpException('validation failed' ,  $this->errors);
         }
     }
 }

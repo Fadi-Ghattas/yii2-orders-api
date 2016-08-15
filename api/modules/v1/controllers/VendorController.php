@@ -8,16 +8,18 @@
 
 namespace api\modules\v1\controllers;
 
-use common\models\Restaurants;
+
+use common\helpers\Helpers;
 use Yii;
 use common\models\User;
 use common\models\LoginForm;
+use common\models\Restaurants;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
-use yii\base\UserException;
 use yii\web\ForbiddenHttpException;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\ServerErrorHttpException;
 use yii\web\NotFoundHttpException;
 
@@ -56,7 +58,7 @@ class VendorController extends ActiveController
         $post_data = Yii::$app->request->post();
 
         if(!isset($post_data['email']) || !isset($post_data['password']))
-            throw new UserException('email and password are required for login.');
+            Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['email and password are required for login.']]);
 
         $model = new LoginForm();
         $model->username = $post_data['email'];
@@ -73,9 +75,9 @@ class VendorController extends ActiveController
             return ['auth_key' => $restaurantManager['auth_key']];
 
         } else {
-            throw new UserException(strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])));
+            throw new ServerErrorHttpException(strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])));
         }
-        throw new UserException('Please provide valid data.');
+        Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['Please provide valid data.']]);
     }
 
     public function actionLogout()
@@ -89,7 +91,7 @@ class VendorController extends ActiveController
         if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
             throw new ForbiddenHttpException('This account is not a restaurant account.');
         if($post_data['password'] != $restaurantManager['password_hash'])
-            throw new UserException('The password incorrect.');
+            Helpers::UnprocessableEntityHttpException('validation failed', ['password' => ['The password incorrect.']]);
 
         $user = User::findOne($restaurantManager->id);
         $restaurants = Restaurants::find(['=','user_id',$restaurantManager->id])->one();
@@ -118,7 +120,7 @@ class VendorController extends ActiveController
         {
             if(in_array($action , $request_action)){
                 if( !in_array(Yii::$app->getRequest()->getMethod() , $actions[$action]))
-                    throw new \yii\web\MethodNotAllowedHttpException("You don't have permission to do this action");
+                    throw new MethodNotAllowedHttpException("You don't have permission to do this action");
             }
         }
         return parent::beforeAction($event);
