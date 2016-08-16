@@ -24,18 +24,4 @@ class Helpers
         $response->send();
         die();
     }
-
-    public static function validate_telephone_number($number)
-    {
-        $formats = array('###-###-####', '####-###-###',
-                        '(###) ###-###', '####-####-####',
-                        '##-###-####-####', '####-####', '###-###-###',
-                        '#####-###-###', '##########');
-        $format = trim(preg_replace("[0-9]", "#", $number));
-
-        return (in_array($format, $formats)) ? true : false;
-    }
-
-    /* Usage Examples */
-
 }
