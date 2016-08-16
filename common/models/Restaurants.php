@@ -252,6 +252,10 @@ class Restaurants extends \yii\db\ActiveRecord
         return [
             'id',
             'name',
+            'email' => function () {
+                $user = User::findOne($this->user_id);
+                return $user['email'];
+            },
             'phone_number',
             'minimum_order_amount',
             'working_opening_hours',
@@ -269,10 +273,6 @@ class Restaurants extends \yii\db\ActiveRecord
             'owner' => function () {
                 $owner = Owners::findOne($this->owner_id);
                 return $owner;
-            },
-            'email' => function () {
-                $user = User::findOne($this->user_id);
-                return $user['email'];
             }
         ];
     }
