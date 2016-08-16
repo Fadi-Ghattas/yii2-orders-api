@@ -58,7 +58,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
-            [['username'], 'safe'],
+            [['username','auth_key'], 'safe'],
             [['email'], 'unique'],
             [['email'], 'email'],
         ];
@@ -240,7 +240,7 @@ class User extends ActiveRecord implements IdentityInterface
         return $role->name;
     }
 
-    public function afterValidate(){
+    public function afterValidate() {
         if ($this->hasErrors()) {
             Helpers::UnprocessableEntityHttpException('validation failed' ,  $this->errors);
         }

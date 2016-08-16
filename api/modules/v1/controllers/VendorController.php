@@ -38,18 +38,6 @@ class VendorController extends ActiveController
             ],
         ];
 
-        $behaviors['verbs'] = [
-            'class' => \yii\filters\VerbFilter::className(),
-            'actions' => [
-                'index'  => [],
-                'login' => ['post'],
-                'view'   => ['get'],
-                'create' => [],
-                'update' => ['put'],
-                'delete' => []
-            ],
-        ];
-
         return $behaviors;
     }
 
@@ -148,9 +136,7 @@ class VendorController extends ActiveController
                 $response['data'] = $result;
                 break;
             default:
-                $response['success'] = false;
-                $response['message'] = "You don't have permission to do this action";
-                $response['data'] = null;
+                throw new MethodNotAllowedHttpException("You don't have permission to do this action");
         }
 
         return $response;

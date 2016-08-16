@@ -58,21 +58,21 @@ class Restaurants extends \yii\db\ActiveRecord
         return 'restaurants';
     }
 
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => \yii\filters\VerbFilter::className(),
-                'actions' => [
-                    'view'   => ['get'],
-                    'create' => ['post'],
-                    'update' => ['put'],
-                    //'delete' => ['post', 'delete'],
-                    'delete' => [''],
-                ],
-            ],
-        ];
-    }
+//    public function behaviors()
+//    {
+//        return [
+//            'verbs' => [
+//                'class' => \yii\filters\VerbFilter::className(),
+//                'actions' => [
+//                    'view'   => ['get'],
+//                    'create' => ['post'],
+//                    'update' => ['put'],
+//                    //'delete' => ['post', 'delete'],
+//                    'delete' => [''],
+//                ],
+//            ],
+//        ];
+//    }
     /**
      * @inheritdoc
      */
@@ -269,6 +269,10 @@ class Restaurants extends \yii\db\ActiveRecord
             'owner' => function () {
                 $owner = Owners::findOne($this->owner_id);
                 return $owner;
+            },
+            'email' => function () {
+                $user = User::findOne($this->user_id);
+                return $user['email'];
             }
         ];
     }
@@ -286,8 +290,10 @@ class Restaurants extends \yii\db\ActiveRecord
             Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
 
         if(isset($post_data['email'])) {
-            $user = new User();
+            $user = User::find()->where(['id' => $this->user_id])->one();
+//            $user = new User();
             $user->email = $post_data['email'];
+//            $user->username = $post_data['email'];
             $user->save();
         }
 
