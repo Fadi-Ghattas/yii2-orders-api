@@ -108,7 +108,7 @@ class VendorController extends ActiveController
         {
             if(in_array($action , $request_action)){
                 if( !in_array(Yii::$app->getRequest()->getMethod() , $actions[$action]))
-                    throw new MethodNotAllowedHttpException("You don't have permission to do this action");
+                    throw new MethodNotAllowedHttpException("Method Not Allowed");
             }
         }
         return parent::beforeAction($event);
@@ -136,7 +136,7 @@ class VendorController extends ActiveController
                 $response['data'] = $result;
                 break;
             default:
-                throw new MethodNotAllowedHttpException("You don't have permission to do this action");
+                throw new MethodNotAllowedHttpException("Method Not Allowed");
         }
 
         return $response;
