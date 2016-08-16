@@ -84,7 +84,7 @@ class Restaurants extends \yii\db\ActiveRecord
             [['time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
             [['halal', 'featured', 'disable_ordering', 'delivery_duration', 'status', 'owner_id', 'user_id'], 'integer'],
             [['name', 'phone_number', 'image'], 'string', 'max' => 255],
-            [['working_opening_hours','working_closing_hours'], 'date', 'format' => 'H:m:s'],
+            [['working_opening_hours','working_closing_hours','time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['owner_id'], 'exist', 'skipOnError' => true, 'targetClass' => Owners::className(), 'targetAttribute' => ['owner_id' => 'id']],
         ];
