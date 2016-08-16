@@ -35,3 +35,5 @@ phpunit.phar
 /.vagrant
 
 #test
+
+.htaccess
