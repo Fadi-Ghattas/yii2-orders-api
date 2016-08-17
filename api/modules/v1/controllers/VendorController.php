@@ -77,21 +77,21 @@ class VendorController extends ActiveController
         if(empty($restaurantManager))
             throw new NotFoundHttpException('User not found.');
         if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
-            throw new ForbiddenHttpException('This account is not a restaurant account.');
+            throw new ForbiddenHttpException('This account is not a restaurant account');
         
-        $user = User::findOne($restaurantManager->id);
+//        $user = User::findOne($restaurantManager->id);
         $restaurants = Restaurants::find(['=','user_id',$restaurantManager->id])->one();
         $restaurants->action = 'logout';
 
         if($post_data['password'] != $restaurantManager['password_hash'])
             Helpers::UnprocessableEntityHttpException('validation failed', ['password' => ['The password incorrect.']]);
 
-        $transaction = User::getDb()->beginTransaction();
+        $transaction = Restaurants::getDb()->beginTransaction();
 
 
         try {
-            $user->password_hash = 'RESTAURANT_DEACTIVATED';
-            $user->save(false);
+//            $user->password_hash = 'RESTAURANT_DEACTIVATED';
+//            $user->save(false);
             $restaurants->status = 0;
             $restaurants->save(false);
             $transaction->commit();

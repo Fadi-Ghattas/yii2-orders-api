@@ -274,8 +274,19 @@ class Restaurants extends \yii\db\ActiveRecord
             'latitude',
             'image',
             'owner' => function () {
-                $owner = Owners::findOne($this->owner_id);
-                return $owner;
+                //$owner = Owners::findOne($this->owner_id);
+                return $this->owner;
+            },
+            'areas' => function(){
+                $areas_data =  array();
+                foreach ($this->areas as $area){
+                    if(is_null($area->deleted_at)) {
+                        $single_area = array();
+                        $single_area[$area->id] = $area->name;
+                    }
+                    $areas_data [] = $single_area;
+                }
+                return $areas_data;
             }
         ];
     }
