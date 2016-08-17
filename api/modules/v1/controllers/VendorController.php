@@ -48,20 +48,20 @@ class VendorController extends ActiveController
         if(!isset($post_data['email']) || !isset($post_data['password']))
             Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['email and password are required for login.']]);
 
+        $restaurantManager = User::findByEmail($post_data['email']);
+        if(empty($restaurantManager))
+            throw new NotFoundHttpException('User not found.');
+        if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
+            throw new ForbiddenHttpException('This account is not a restaurant account');
+        if(!Restaurants::find()->where(['user_id' => $restaurantManager->id])->one()->status)
+            throw new ForbiddenHttpException('This account is deactivated');
+
         $model = new LoginForm();
         $model->username = $post_data['email'];
         $model->password = $post_data['password'];
         $model->email = $post_data['email'];
         if ($model->load($post_data, '') && $model->login()) {
-            $restaurantManager = User::findByEmail($post_data['email']);
-            if(empty($restaurantManager)){
-                throw new NotFoundHttpException('User not found.');
-            }
-            if(User::getRoleName(Yii::$app->user->id) != User::RESTAURANT_MANAGER)
-                throw new ForbiddenHttpException('This account is not a restaurant account.');
-
             return ['auth_key' => $restaurantManager['auth_key']];
-
         } else {
             throw new ServerErrorHttpException(strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])));
         }
@@ -78,13 +78,16 @@ class VendorController extends ActiveController
             throw new NotFoundHttpException('User not found.');
         if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
             throw new ForbiddenHttpException('This account is not a restaurant account.');
+        
+        $user = User::findOne($restaurantManager->id);
+        $restaurants = Restaurants::find(['=','user_id',$restaurantManager->id])->one();
+        $restaurants->action = 'logout';
+
         if($post_data['password'] != $restaurantManager['password_hash'])
             Helpers::UnprocessableEntityHttpException('validation failed', ['password' => ['The password incorrect.']]);
 
-        $user = User::findOne($restaurantManager->id);
-        $restaurants = Restaurants::find(['=','user_id',$restaurantManager->id])->one();
-
         $transaction = User::getDb()->beginTransaction();
+
 
         try {
             $user->password_hash = 'RESTAURANT_DEACTIVATED';
@@ -103,7 +106,8 @@ class VendorController extends ActiveController
     public function beforeAction($event)
     {
         $request_action = explode('/',Yii::$app->getRequest()->getUrl());
-        $actions = ['login' => ['POST']];
+        $actions = ['login' => ['POST'],
+                    'logout' => ['POST']];
         foreach ($actions as $action => $verb)
         {
             if(in_array($action , $request_action)){
@@ -134,6 +138,11 @@ class VendorController extends ActiveController
                 $response['success'] = true;
                 $response['message'] = 'login success';
                 $response['data'] = $result;
+                break;
+            case 'logout':
+                $response['success'] = true;
+                $response['message'] = 'logout success';
+                $response['data'] = null;
                 break;
             default:
                 throw new MethodNotAllowedHttpException("Method Not Allowed");
