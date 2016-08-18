@@ -76,4 +76,8 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         return new MenuCategoriesQuery(get_called_class());
     }
+
+    public function actionIndex(){
+        return 0;
+    }
 }

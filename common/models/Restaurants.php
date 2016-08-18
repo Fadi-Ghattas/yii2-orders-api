@@ -150,7 +150,7 @@ class Restaurants extends \yii\db\ActiveRecord
      */
     public function getAreas()
     {
-        return $this->hasMany(Areas::className(), ['id' => 'area_id'])->viaTable('area_restaurant', ['restaurant_id' => 'id']);
+        return $this->hasMany(Areas::className(), ['id' => 'area_id'])->viaTable('area_restaurant', ['restaurant_id' => 'id'])->where(['deleted_at' => null]);
     }
 
     /**
@@ -166,7 +166,7 @@ class Restaurants extends \yii\db\ActiveRecord
      */
     public function getCuisineRestaurants()
     {
-        return $this->hasMany(CuisineRestaurant::className(), ['restaurant_id' => 'id']);
+        return $this->hasMany(CuisineRestaurant::className(), ['restaurant_id' => 'id'])->where(['deleted_at' => null]);
     }
 
     /**
@@ -198,7 +198,7 @@ class Restaurants extends \yii\db\ActiveRecord
      */
     public function getMenuCategories()
     {
-        return $this->hasMany(MenuCategories::className(), ['restaurant_id' => 'id']);
+        return $this->hasMany(MenuCategories::className(), ['restaurant_id' => 'id'])->viaTable('area_restaurant', ['restaurant_id' => 'id'])->joinWith(['menuCategoryItems'])->where(['deleted_at' => null])->joinWith(['menuCategoryItems'])->asArray()->all();
     }
 
     /**
@@ -256,8 +256,7 @@ class Restaurants extends \yii\db\ActiveRecord
             'id',
             'name',
             'email' => function () {
-                $user = User::findOne($this->user_id);
-                return $user['email'];
+                return $this->user->email;
             },
             'phone_number',
             'minimum_order_amount',
@@ -274,19 +273,16 @@ class Restaurants extends \yii\db\ActiveRecord
             'latitude',
             'image',
             'owner' => function () {
-                //$owner = Owners::findOne($this->owner_id);
                 return $this->owner;
             },
-            'areas' => function(){
-                $areas_data =  array();
-                foreach ($this->areas as $area){
-                    if(is_null($area->deleted_at)) {
-                        $single_area = array();
-                        $single_area[$area->id] = $area->name;
-                    }
-                    $areas_data [] = $single_area;
-                }
-                return $areas_data;
+            'areas' => function() {
+                return Helpers::formatJsonIdName($this->areas);
+            },
+            'cuisine' => function(){
+                return  Helpers::formatJsonIdName($this->cuisines);
+            },
+            'paymentMethod' => function(){
+                return $this->paymentMethodRestaurants;
             }
         ];
     }

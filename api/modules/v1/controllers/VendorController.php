@@ -8,9 +8,8 @@
 
 namespace api\modules\v1\controllers;
 
-
-use common\helpers\Helpers;
 use Yii;
+use common\helpers\Helpers;
 use common\models\User;
 use common\models\LoginForm;
 use common\models\Restaurants;
@@ -95,7 +94,7 @@ class VendorController extends ActiveController
             $restaurants->status = 0;
             $restaurants->save(false);
             $transaction->commit();
-            return ['status' => 'true'];
+            return ['success' => 'true' , 'message' => 'You have been logged out successful', 'dara' => null];
         } catch(\Exception $e) {
             $transaction->rollback();
             throw new ServerErrorHttpException('Something went wrong please try again..');

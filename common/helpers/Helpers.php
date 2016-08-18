@@ -24,4 +24,15 @@ class Helpers
         $response->send();
         die();
     }
+
+    public static function formatJsonIdName($json)
+    {
+        $formatted_json = array();
+        foreach ($json as $data){
+            $single_json = array();
+            $single_json[$data->id] = $data->name;
+            $formatted_json [] = $single_json;
+        }
+        return $formatted_json;
+    }
 }
