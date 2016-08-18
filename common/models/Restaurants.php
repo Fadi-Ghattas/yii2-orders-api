@@ -198,7 +198,7 @@ class Restaurants extends \yii\db\ActiveRecord
      */
     public function getMenuCategories()
     {
-        return $this->hasMany(MenuCategories::className(), ['restaurant_id' => 'id'])->viaTable('area_restaurant', ['restaurant_id' => 'id'])->joinWith(['menuCategoryItems'])->where(['deleted_at' => null])->joinWith(['menuCategoryItems'])->asArray()->all();
+        return $this->hasMany(MenuCategories::className(), ['restaurant_id' => 'id'])->where(['deleted_at' => null]);
     }
 
     /**
@@ -299,7 +299,7 @@ class Restaurants extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         $post_data = Yii::$app->request->post();
-        
+
 
         if(empty($post_data))
             Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
