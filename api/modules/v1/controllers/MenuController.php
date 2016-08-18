@@ -56,7 +56,7 @@ class MenuController extends ActiveController
         $restaurantManager = User::findIdentityByAccessToken(explode(' ',$headers['authorization'])[1]);
         $restaurant = Restaurants::find()->where(['user_id' => $restaurantManager->id])->one();
 
-        return $restaurant->menuCategories;
+        return Helpers::formatJsonIdName($restaurant->menuCategories);
     }
 
     public function getRestaurantMenuItems()
