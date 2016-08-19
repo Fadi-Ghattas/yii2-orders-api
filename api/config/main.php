@@ -28,7 +28,7 @@ return [
                     $response->data = [
                         'success' => false,
                         'message' => $response->statusText,
-                        'data' =>    [Yii::$app->request->url ,Yii::$app->request->absoluteUrl]
+                        'data' =>    [Yii::$app->request->getAbsoluteUrl(),Yii::$app->request->getUrl(),Yii::$app->request->getBaseUrl() ,Yii::$app->request->baseUrl ,Yii::$app->request->url ,Yii::$app->request->absoluteUrl]
                     ];
                 } else if ($response->statusCode != 200 && $response->statusCode != 422) {
                     $response->data = [
