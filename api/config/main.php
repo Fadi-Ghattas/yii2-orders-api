@@ -28,7 +28,7 @@ return [
                     $response->data = [
                         'success' => false,
                         'message' => $response->statusText,
-                        'data' =>    $post_data = Yii::$app->request
+                        'data' =>    [Yii::$app->request->url ,Yii::$app->request->absoluteUrl]
                     ];
                 } else if ($response->statusCode != 200 && $response->statusCode != 422) {
                     $response->data = [
