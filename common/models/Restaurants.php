@@ -319,7 +319,7 @@ class Restaurants extends \yii\db\ActiveRecord
             throw new ForbiddenHttpException("You don't have permission to do this action");
         }
 
-        $lockedValues = ['name', 'halal', 'featured', 'latitude', 'longitude', 'image', 'status', 'created_at', 'updated_at'];
+        $lockedValues = ['name', 'halal','rank' ,'featured', 'latitude', 'longitude', 'image', 'status', 'created_at', 'updated_at'];
 
         if(!$this->action == 'logout')
             $lockedValues [] = 'email';

@@ -90,22 +90,28 @@ class VendorController extends ActiveController
     {
         $post_data = Yii::$app->request->post();
         $headers = Yii::$app->getRequest()->getHeaders();
-        $restaurantManager = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
 
+        if(empty($post_data))
+            Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['Please provide data']]);
+
+        if(!isset($post_data['email']) || !isset($post_data['password']))
+            Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['The email and password are required']]);
+
+        $restaurantManager = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
         if (empty($restaurantManager))
             throw new NotFoundHttpException('User not found');
+
         if (User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
             throw new ForbiddenHttpException('This account is not a restaurant account');
+
+        if($post_data['email'] !=  $restaurantManager->email || $post_data['password'] != $restaurantManager->password_hash)
+            Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['The email or password incorrect']]);
 
 //        $user = User::findOne($restaurantManager->id);
         $restaurants = Restaurants::find(['=', 'user_id', $restaurantManager->id])->one();
         $restaurants->action = 'logout';
 
-        if ($post_data['password'] != $restaurantManager['password_hash'])
-            Helpers::UnprocessableEntityHttpException('validation failed', ['password' => ['The password incorrect']]);
-
         $transaction = Restaurants::getDb()->beginTransaction();
-
 
         try {
 //            $user->password_hash = 'RESTAURANT_DEACTIVATED';
@@ -116,8 +122,8 @@ class VendorController extends ActiveController
             return Helpers::formatResponse(true,'You have been logged out successful' , null);
         } catch (\Exception $e) {
             $transaction->rollback();
-            throw new ServerErrorHttpException('Something went wrong please try again..');
-            //throw $e;
+//            throw new ServerErrorHttpException('Something went wrong please try again..');
+            throw $e;
         }
     }
 

@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\helpers\Helpers;
 use Yii;
+use yii\web\ForbiddenHttpException;
 
 /**
  * This is the model class for table "menu_categories".
@@ -138,6 +139,13 @@ class MenuCategories extends \yii\db\ActiveRecord
         if(self::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name']))
         {
             $menCategory = MenuCategories::find()->where(['id' => $category_id])->one();
+
+            if(is_null($menCategory))
+                return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This category dos't exist"]]);
+
+            if($menCategory->restaurant_id != $restaurant->id)
+                throw new ForbiddenHttpException("You don't have permission to do this action");
+
             $menCategory->name = $data['name'];
             $isUpdated = $menCategory->save();
             if($isUpdated)
@@ -151,7 +159,18 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
         if(empty(self::getMenuCategoryItemsAsArray($category_id))) {
-            $menCategory = MenuCategories::find()->where(['id' => $category_id])->one();
+
+            $menCategory = MenuCategories::find()
+                ->where(['id' => $category_id])
+                ->andWhere(['deleted_at' => null])
+                ->one();
+
+            if(is_null($menCategory))
+                return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This category dos't exist"]]);
+
+            if($menCategory->restaurant_id != $restaurant->id)
+                throw new ForbiddenHttpException("You don't have permission to do this action");
+
             $menCategory->deleted_at = date('Y-m-d H:i:s');
             $isUpdated = $menCategory->save();
             if($isUpdated)
