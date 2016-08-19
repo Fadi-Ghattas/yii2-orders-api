@@ -46,6 +46,19 @@ class VendorController extends ActiveController
         return $behaviors;
     }
 
+
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['create']);
+        unset($actions['update']);
+        unset($actions['delete']);
+        unset($actions['view']);
+        unset($actions['index']);
+        unset($actions['options']);
+        return $actions;
+    }
+
     public function actionLogin()
     {
         $post_data = Yii::$app->request->post();
@@ -108,6 +121,21 @@ class VendorController extends ActiveController
         }
     }
 
+    public function actionProfile()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if($request->isGet && empty($get_data)) {
+            return Restaurants::checkRestaurantAccess();
+        }else if($request->isPut && empty($get_data)) {
+            if(empty(Json::decode($request->getRawBody())))
+                Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
+            return Restaurants::updateRestaurant(Json::decode($request->getRawBody()));
+        }
+        throw new MethodNotAllowedHttpException("Method Not Allowed");
+    }
+
     public function actionMenu()
     {
         $request = Yii::$app->request;
@@ -139,8 +167,10 @@ class VendorController extends ActiveController
         $actions = [
             'login' => ['POST'],
             'logout' => ['POST'],
-            'menu' => ['GET','PUT','POST','DELETE']
+            'menu' => ['GET','PUT','POST','DELETE'],
+            'profile' => ['GET','PUT']
         ];
+
         foreach ($actions as $action => $verb) {
             if (in_array($action, $request_action)) {
                 if (!in_array(Yii::$app->getRequest()->getMethod(), $actions[$action]))
@@ -150,30 +180,36 @@ class VendorController extends ActiveController
         return parent::beforeAction($event);
     }
 
-    public function afterAction($action, $result)
-    {
-        $result = parent::afterAction($action, $result);
-
-        if(in_array($action->id, ['index','view','update','delete','create','options']))
-        {
-            $response = array();
-            switch ($action->id) {
-                case 'view':
-                    $response['success'] = true;
-                    $response['message'] = 'get success';
-                    $response['data'] = $result;
-                    break;
-                case 'update':
-                    $response['success'] = true;
-                    $response['message'] = 'update success';
-                    $response['data']['id'] = $result['id'];
-                    break;
-                default:
-                    throw new MethodNotAllowedHttpException("Method Not Allowed");
-            }
-            return $response;
-        }
-
-        return $result;
-    }
+//    public function afterAction($action, $result)
+//    {
+//        $result = parent::afterAction($action, $result);
+//
+//        if(in_array($action->id, ['index','view','update','delete','create','options']))
+//        {
+//            $request = Yii::$app->request;
+//            $get_data = $request->get();
+//            $response = array();
+//            switch ($action->id) {
+//                case 'view':
+//                    if($request->isGet && empty($get_data)){
+//                        $response['success'] = true;
+//                        $response['message'] = 'get success';
+//                        $response['data'] = $result;
+//                    } else {
+//                        throw new MethodNotAllowedHttpException("Method Not Allowed");
+//                    }
+//                    break;
+//                case 'update':
+//                    $response['success'] = true;
+//                    $response['message'] = 'update success';
+//                    $response['data']['id'] = $result['id'];
+//                    break;
+//                default:
+//                    throw new MethodNotAllowedHttpException("Method Not Allowed");
+//            }
+//            return $response;
+//        }
+//
+//        return $result;
+//    }
 }
