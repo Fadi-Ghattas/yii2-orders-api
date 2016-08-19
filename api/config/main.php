@@ -81,6 +81,21 @@ return [
                 ],
                 [
                     'class' => 'yii\rest\UrlRule',
+                    'controller' => ['v1/menu'],
+                    'extraPatterns' => [
+                        'POST' => 'create', // 'xxxxx' refers to 'actionXxxxx'
+                        'PUT {id}' => 'update',
+                        'PATCH {id}' => 'update',
+                        'DELETE {id}' => 'delete',
+                        'GET {id}' => 'view',
+                        'GET' => 'index',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\w+>'
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
                     'controller' => ['v1/vendor/menu'],
                     'extraPatterns' => [
                         'POST' => 'create', // 'xxxxx' refers to 'actionXxxxx'
