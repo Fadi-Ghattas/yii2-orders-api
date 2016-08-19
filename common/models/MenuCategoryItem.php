@@ -62,7 +62,7 @@ class MenuCategoryItem extends \yii\db\ActiveRecord
      */
     public function getMenuItem()
     {
-        return $this->hasOne(MenuItems::className(), ['id' => 'menu_item_id']);
+        return $this->hasOne(MenuItems::className(), ['id' => 'menu_item_id'])->where(['menu_items.deleted_at' => null]);
     }
 
     /**

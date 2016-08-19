@@ -74,16 +74,16 @@ class VendorController extends ActiveController
         $restaurantManager = User::findIdentityByAccessToken(explode(' ',$headers['authorization'])[1]);
 
         if(empty($restaurantManager))
-            throw new NotFoundHttpException('User not found.');
+            throw new NotFoundHttpException('User not found');
         if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
             throw new ForbiddenHttpException('This account is not a restaurant account');
-        
+
 //        $user = User::findOne($restaurantManager->id);
         $restaurants = Restaurants::find(['=','user_id',$restaurantManager->id])->one();
         $restaurants->action = 'logout';
 
         if($post_data['password'] != $restaurantManager['password_hash'])
-            Helpers::UnprocessableEntityHttpException('validation failed', ['password' => ['The password incorrect.']]);
+            Helpers::UnprocessableEntityHttpException('validation failed', ['password' => ['The password incorrect']]);
 
         $transaction = Restaurants::getDb()->beginTransaction();
 
@@ -94,14 +94,14 @@ class VendorController extends ActiveController
             $restaurants->status = 0;
             $restaurants->save(false);
             $transaction->commit();
-            return ['success' => 'true' , 'message' => 'You have been logged out successful', 'dara' => null];
+            return ['success' => 'true' , 'message' => 'You have been logged out successful', 'data' => null];
         } catch(\Exception $e) {
             $transaction->rollback();
             throw new ServerErrorHttpException('Something went wrong please try again..');
             //throw $e;
         }
     }
-
+    
     public function beforeAction($event)
     {
         $request_action = explode('/',Yii::$app->getRequest()->getUrl());
