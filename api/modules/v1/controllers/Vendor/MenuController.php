@@ -100,20 +100,22 @@ class MenuController extends ActiveController
         if(!is_null($menuCategoryItems[0]['deleted_at']))
             return Helpers::UnprocessableEntityHttpException("This menu category was deleted and we can't get the menu items", null);
         if($restaurant->id != intval($menuCategoryItems[0]['restaurant_id']))
-            return Helpers::UnprocessableEntityHttpException('This menu category not belong to this restaurant',null);
+            return Helpers::UnprocessableEntityHttpException('This menu category is not belong to this restaurant',null);
 
         $menuItems = array();
         foreach ($menuCategoryItems[0]['menuCategoryItems'] as $menuItem)
         {
-            $singleMenuItem = array();
-            $singleMenuItem[$menuItem['menuItem']['id']] = $menuItem['menuItem']['name'];
-            $menuItems[] = $singleMenuItem;
+            if(!empty($menuItem['menuItem'])) {
+                $singleMenuItem = array();
+                $singleMenuItem[$menuItem['menuItem']['id']] = $menuItem['menuItem']['name'];
+                $menuItems[] = $singleMenuItem;
+            }
         }
 
         return ['success' => 'true' , 'message' => 'get success', 'data' => $menuItems];
     }
 
-    
+
 
     public function afterAction($action, $result)
     {
