@@ -28,7 +28,7 @@ return [
                     $response->data = [
                         'success' => false,
                         'message' => $response->statusText,
-                        'data' =>    [Yii::$app->request->getAbsoluteUrl(),Yii::$app->request->getUrl(),Yii::$app->request->getBaseUrl() ,Yii::$app->request->baseUrl ,Yii::$app->request->url ,Yii::$app->request->absoluteUrl]
+                        'data' => null
                     ];
                 } else if ($response->statusCode != 200 && $response->statusCode != 422) {
                     $response->data = [
@@ -72,43 +72,31 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => ['v1/vendor'],
                     'extraPatterns' => [
-                        'POST login' => 'login',
-                        'POST logout' => 'logout'
+                        'GET,POST,PUT,DELETE login' => 'login',
+                        'GET,POST,PUT,DELETE logout' => 'logout',
+                        'GET,POST,PUT,DELETE menu' => 'menu',
+                        'GET,POST,PUT,DELETE menu/{id}' => 'menu',
+
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
                     ]
                 ],
-                [
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => ['v1/menu'],
-                    'extraPatterns' => [
-                        'POST' => 'create', // 'xxxxx' refers to 'actionXxxxx'
-                        'PUT {id}' => 'update',
-                        'PATCH {id}' => 'update',
-                        'DELETE {id}' => 'delete',
-                        'GET {id}' => 'view',
-                        'GET' => 'index',
-                    ],
-                    'tokens' => [
-                        '{id}' => '<id:\\w+>'
-                    ]
-                ],
-                [
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => ['v1/vendor/menu'],
-                    'extraPatterns' => [
-                        'POST' => 'create', // 'xxxxx' refers to 'actionXxxxx'
-                        'PUT {id}' => 'update',
-                        'PATCH {id}' => 'update',
-                        'DELETE {id}' => 'delete',
-                        'GET {id}' => 'view',
-                        'GET' => 'index',
-                    ],
-                    'tokens' => [
-                        '{id}' => '<id:\\w+>'
-                    ]
-                ],
+//                [
+//                    'class' => 'yii\rest\UrlRule',
+//                    'controller' => ['v1/vendor/menu'],
+//                    'extraPatterns' => [
+//                        'POST' => 'create', // 'xxxxx' refers to 'actionXxxxx'
+//                        'PUT {id}' => 'update',
+//                        'PATCH {id}' => 'update',
+//                        'DELETE {id}' => 'delete',
+//                        'GET {id}' => 'view',
+//                        'GET' => 'index',
+//                    ],
+//                    'tokens' => [
+//                        '{id}' => '<id:\\w+>'
+//                    ]
+//                ],
             ],
         ]
     ],

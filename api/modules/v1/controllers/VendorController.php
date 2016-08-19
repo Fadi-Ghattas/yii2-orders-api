@@ -11,6 +11,7 @@
 
 namespace api\modules\v1\controllers;
 
+use common\models\MenuCategories;
 use Yii;
 use common\helpers\Helpers;
 use common\models\User;
@@ -104,12 +105,24 @@ class VendorController extends ActiveController
             //throw $e;
         }
     }
-    
+
+    public function actionMenu()
+    {
+        $get_data = Yii::$app->request->get();
+        if(empty($get_data))
+            return MenuCategories::getMenuCategories();
+        else if (!empty($get_data) && isset($get_data['id']))
+            return MenuCategories::getMenuCategoryItemsResponse($get_data['id']);
+    }
+
     public function beforeAction($event)
     {
         $request_action = explode('/',Yii::$app->getRequest()->getUrl());
         $actions = ['login' => ['POST'],
-                    'logout' => ['POST']];
+                    'logout' => ['POST'],
+                    'menu' => ['GET'],
+                    'view' => ['GET'],
+                    'update' => ['POST']];
         foreach ($actions as $action => $verb)
         {
             if(in_array($action , $request_action)){
@@ -147,7 +160,7 @@ class VendorController extends ActiveController
                 $response['data'] = null;
                 break;
             default:
-                throw new MethodNotAllowedHttpException("Method Not Allowed");
+                $response = $result;
         }
 
         return $response;

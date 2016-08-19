@@ -73,4 +73,5 @@ class MenuCategoryItem extends \yii\db\ActiveRecord
     {
         return new MenuCategoryItemQuery(get_called_class());
     }
+    
 }
