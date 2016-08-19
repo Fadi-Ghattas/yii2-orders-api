@@ -303,20 +303,16 @@ class Restaurants extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         $post_data = Yii::$app->request->post();
-
-
         if(empty($post_data))
             Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
-
-//        if(isset($post_data['email'])) {
-//            $user = User::find()->where(['id' => $this->user_id])->one();
-//            $user->email = $post_data['email'];
-//            $user->save();
-//        }
 
         $headers = Yii::$app->getRequest()->getHeaders();
         $auth_key = explode(' ',$headers['authorization'])[1];
         $restaurantManager = \common\models\User::findIdentityByAccessToken($auth_key);
+        if(empty($restaurantManager))
+            throw new NotFoundHttpException('User not found');
+        if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
+            throw new ForbiddenHttpException('This account is not a restaurant account');
         if(!$this->oldAttributes['status'])
             throw new ForbiddenHttpException('This account is deactivated');
         if($this->user_id != $restaurantManager->id){
@@ -358,6 +354,9 @@ class Restaurants extends \yii\db\ActiveRecord
             throw new ForbiddenHttpException('This account is not a restaurant account');
         if(!$restaurant->status)
             throw new ForbiddenHttpException('This account is deactivated');
+        if($restaurant->user_id != $restaurantManager->id){
+            throw new ForbiddenHttpException("You don't have permission to do this action");
+        }
 
         return $restaurant;
     }
