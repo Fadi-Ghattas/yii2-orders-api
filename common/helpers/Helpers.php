@@ -13,6 +13,11 @@ use yii\web\Response;
 
 class Helpers
 {
+
+    public static function formatResponse($success, $message, $data) {
+        return ['success' => $success, 'message' => $message, 'data' => $data];
+    }
+
     public static function UnprocessableEntityHttpException($message, $data)
     {
         $response = \Yii::$app->getResponse();

@@ -76,7 +76,6 @@ return [
                         'GET,POST,PUT,DELETE logout' => 'logout',
                         'GET,POST,PUT,DELETE menu' => 'menu',
                         'GET,POST,PUT,DELETE menu/{id}' => 'menu',
-
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

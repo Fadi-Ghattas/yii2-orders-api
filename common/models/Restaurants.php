@@ -201,6 +201,10 @@ class Restaurants extends \yii\db\ActiveRecord
         return $this->hasMany(MenuCategories::className(), ['restaurant_id' => 'id'])->where(['deleted_at' => null]);
     }
 
+    public function getMenuCategoriesAsArray()
+    {
+        return $this->hasMany(MenuCategories::className(), ['restaurant_id' => 'id'])->where(['deleted_at' => null])->asArray()->all();
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -342,5 +346,29 @@ class Restaurants extends \yii\db\ActiveRecord
         }
     }
 
+    public static function checkRestaurantAccess()
+    {
+        $headers = Yii::$app->getRequest()->getHeaders();
+        $restaurantManager = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
+        $restaurant = Restaurants::find()->where(['user_id' => $restaurantManager->id])->one();
+
+        if(empty($restaurantManager))
+            throw new NotFoundHttpException('User not found');
+        if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
+            throw new ForbiddenHttpException('This account is not a restaurant account');
+        if(!$restaurant->status)
+            throw new ForbiddenHttpException('This account is deactivated');
+
+        return $restaurant;
+    }
+
+    public static function IsRestaurantMenuCategoryNameUnique($restaurantMenuCategories, $NewMenuCategoryName)
+    {
+        foreach ($restaurantMenuCategories as $MenuCategories){
+            if($MenuCategories['name'] == $NewMenuCategoryName)
+                return false;
+        }
+        return true;
+    }
 
 }

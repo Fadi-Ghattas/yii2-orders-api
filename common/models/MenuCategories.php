@@ -80,33 +80,13 @@ class MenuCategories extends \yii\db\ActiveRecord
 
     public static function getMenuCategories()
     {
-        $headers = Yii::$app->getRequest()->getHeaders();
-        $restaurantManager = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
-        $restaurant = Restaurants::find()->where(['user_id' => $restaurantManager->id])->one();
-
-        if(empty($restaurantManager))
-            throw new NotFoundHttpException('User not found');
-        if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
-            throw new ForbiddenHttpException('This account is not a restaurant account');
-        if(!$restaurant->status)
-            throw new ForbiddenHttpException('This account is deactivated');
-
+        $restaurant = Restaurants::checkRestaurantAccess();
         return ['success' => 'true' , 'message' => 'get success', 'data' => Helpers::formatJsonIdName($restaurant->menuCategories)];
     }
 
     public static function getMenuCategoryItemsResponse($id)
     {
-        $headers = Yii::$app->getRequest()->getHeaders();
-        $restaurantManager = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
-        $restaurant = Restaurants::find()->where(['user_id' => $restaurantManager->id])->one();
-
-        if(empty($restaurantManager))
-            throw new NotFoundHttpException('User not found');
-        if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
-            throw new ForbiddenHttpException('This account is not a restaurant account');
-        if(!$restaurant->status)
-            throw new ForbiddenHttpException('This account is deactivated');
-
+        $restaurant = Restaurants::checkRestaurantAccess();
         $menuCategoryItems = MenuCategories::find()
             ->where(['menu_categories.id' => $id])
             ->joinWith(['menuCategoryItems'], true, 'INNER JOIN')
@@ -131,5 +111,26 @@ class MenuCategories extends \yii\db\ActiveRecord
         }
 
         return ['success' => 'true' , 'message' => 'get success', 'data' => $menuItems];
+    }
+
+    public static function updateCategory($id, $data)
+    {
+        $restaurant = Restaurants::checkRestaurantAccess();
+        if(Restaurants::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name']))
+        {
+            $menCategory = MenuCategories::find()->where(['id' => $id])->one();
+            $menCategory->name = $data['name'];
+            $isUpdated = $menCategory->save();
+            if($isUpdated)
+                return Helpers::formatResponse($isUpdated, 'update success', ['id' => $menCategory->id]);
+            return Helpers::formatResponse($isUpdated, 'update failed', null);
+        }
+        return Helpers::UnprocessableEntityHttpException('There is already category with the same name', null);
+    }
+
+    public function afterValidate() {
+        if ($this->hasErrors()) {
+            Helpers::UnprocessableEntityHttpException('validation failed' ,  $this->errors);
+        }
     }
 }

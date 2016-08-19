@@ -18,6 +18,7 @@ use common\models\User;
 use common\models\LoginForm;
 use common\models\Restaurants;
 use yii\helpers\Html;
+use yii\helpers\Json;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
@@ -48,15 +49,15 @@ class VendorController extends ActiveController
     {
         $post_data = Yii::$app->request->post();
 
-        if(!isset($post_data['email']) || !isset($post_data['password']))
+        if (!isset($post_data['email']) || !isset($post_data['password']))
             Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['email and password are required for login.']]);
 
         $restaurantManager = User::findByEmail($post_data['email']);
-        if(empty($restaurantManager))
+        if (empty($restaurantManager))
             throw new NotFoundHttpException('User not found.');
-        if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
+        if (User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
             throw new ForbiddenHttpException('This account is not a restaurant account');
-        if(!Restaurants::find()->where(['user_id' => $restaurantManager->id])->one()->status)
+        if (!Restaurants::find()->where(['user_id' => $restaurantManager->id])->one()->status)
             throw new ForbiddenHttpException('This account is deactivated');
 
         $model = new LoginForm();
@@ -64,7 +65,7 @@ class VendorController extends ActiveController
         $model->password = $post_data['password'];
         $model->email = $post_data['email'];
         if ($model->load($post_data, '') && $model->login()) {
-            return ['auth_key' => $restaurantManager['auth_key']];
+            return Helpers::formatResponse(true,'login success',['auth_key' => $restaurantManager['auth_key']]);
         } else {
             throw new ServerErrorHttpException(strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])));
         }
@@ -75,18 +76,18 @@ class VendorController extends ActiveController
     {
         $post_data = Yii::$app->request->post();
         $headers = Yii::$app->getRequest()->getHeaders();
-        $restaurantManager = User::findIdentityByAccessToken(explode(' ',$headers['authorization'])[1]);
+        $restaurantManager = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
 
-        if(empty($restaurantManager))
+        if (empty($restaurantManager))
             throw new NotFoundHttpException('User not found');
-        if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
+        if (User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
             throw new ForbiddenHttpException('This account is not a restaurant account');
 
 //        $user = User::findOne($restaurantManager->id);
-        $restaurants = Restaurants::find(['=','user_id',$restaurantManager->id])->one();
+        $restaurants = Restaurants::find(['=', 'user_id', $restaurantManager->id])->one();
         $restaurants->action = 'logout';
 
-        if($post_data['password'] != $restaurantManager['password_hash'])
+        if ($post_data['password'] != $restaurantManager['password_hash'])
             Helpers::UnprocessableEntityHttpException('validation failed', ['password' => ['The password incorrect']]);
 
         $transaction = Restaurants::getDb()->beginTransaction();
@@ -98,8 +99,8 @@ class VendorController extends ActiveController
             $restaurants->status = 0;
             $restaurants->save(false);
             $transaction->commit();
-            return ['success' => 'true' , 'message' => 'You have been logged out successful', 'data' => null];
-        } catch(\Exception $e) {
+            return Helpers::formatResponse(true,'You have been logged out successful' , null);
+        } catch (\Exception $e) {
             $transaction->rollback();
             throw new ServerErrorHttpException('Something went wrong please try again..');
             //throw $e;
@@ -108,25 +109,36 @@ class VendorController extends ActiveController
 
     public function actionMenu()
     {
-        $get_data = Yii::$app->request->get();
-        if(empty($get_data))
-            return MenuCategories::getMenuCategories();
-        else if (!empty($get_data) && isset($get_data['id']))
-            return MenuCategories::getMenuCategoryItemsResponse($get_data['id']);
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if($request->isGet) {
+            if(empty($get_data))
+                return MenuCategories::getMenuCategories();
+            else if(!empty($get_data) && isset($get_data['id']))
+                return MenuCategories::getMenuCategoryItemsResponse($get_data['id']);
+        } else if($request->isPut) {
+            if(empty(Json::decode($request->getRawBody())))
+                Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
+            if(!empty($get_data) && isset($get_data['id'])) {
+                return MenuCategories::updateCategory($get_data['id'], Json::decode($request->getRawBody()));
+            }
+        }
+
+        throw new MethodNotAllowedHttpException("Method Not Allowed");
     }
 
     public function beforeAction($event)
     {
-        $request_action = explode('/',Yii::$app->getRequest()->getUrl());
-        $actions = ['login' => ['POST'],
-                    'logout' => ['POST'],
-                    'menu' => ['GET'],
-                    'view' => ['GET'],
-                    'update' => ['POST']];
-        foreach ($actions as $action => $verb)
-        {
-            if(in_array($action , $request_action)){
-                if( !in_array(Yii::$app->getRequest()->getMethod() , $actions[$action]))
+        $request_action = explode('/', Yii::$app->getRequest()->getUrl());
+        $actions = [
+            'login' => ['POST'],
+            'logout' => ['POST'],
+            'menu' => ['GET','PUT']
+        ];
+        foreach ($actions as $action => $verb) {
+            if (in_array($action, $request_action)) {
+                if (!in_array(Yii::$app->getRequest()->getMethod(), $actions[$action]))
                     throw new MethodNotAllowedHttpException("Method Not Allowed");
             }
         }
@@ -135,34 +147,28 @@ class VendorController extends ActiveController
 
     public function afterAction($action, $result)
     {
-        $response = array();
         $result = parent::afterAction($action, $result);
 
-        switch ($action->id) {
-            case 'view':
-                $response['success'] = true;
-                $response['message'] = 'get success';
-                $response['data'] = $result;
-                break;
-            case 'update':
-                $response['success'] = true;
-                $response['message'] = 'update success';
-                $response['data']['id'] = $result['id'];
-                break;
-            case 'login':
-                $response['success'] = true;
-                $response['message'] = 'login success';
-                $response['data'] = $result;
-                break;
-            case 'logout':
-                $response['success'] = true;
-                $response['message'] = 'logout success';
-                $response['data'] = null;
-                break;
-            default:
-                $response = $result;
+        if(in_array($action->id, ['index','view','update','delete','create','options']))
+        {
+            $response = array();
+            switch ($action->id) {
+                case 'view':
+                    $response['success'] = true;
+                    $response['message'] = 'get success';
+                    $response['data'] = $result;
+                    break;
+                case 'update':
+                    $response['success'] = true;
+                    $response['message'] = 'update success';
+                    $response['data']['id'] = $result['id'];
+                    break;
+                default:
+                    throw new MethodNotAllowedHttpException("Method Not Allowed");
+            }
+            return $response;
         }
 
-        return $response;
+        return $result;
     }
 }
