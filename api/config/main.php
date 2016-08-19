@@ -33,7 +33,7 @@ return [
                 } else if ($response->statusCode != 200 && $response->statusCode != 422) {
                     $response->data = [
                         'success' => false,
-                        'message' => $response->data['message'],
+                        'message' => str_replace('Hash', 'Password', $response->data['message']),
                         'data' => null
                     ];
                 }

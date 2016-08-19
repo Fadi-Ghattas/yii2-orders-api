@@ -54,7 +54,7 @@ class MenuController extends ActiveController
             'update' => ['PUT'],
             'delete' => ['DELETE'],
             'view' => ['GET'],
-            'index' => ['GET'],
+//            'index' => ['GET'],
         ];
     }
 
