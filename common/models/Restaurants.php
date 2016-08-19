@@ -351,11 +351,10 @@ class Restaurants extends \yii\db\ActiveRecord
             throw new NotFoundHttpException('User not found');
         if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
             throw new ForbiddenHttpException('This account is not a restaurant account');
+        if(is_null($restaurant))
+            throw new ForbiddenHttpException("You don't have permission to do this action");
         if(!$restaurant->status)
             throw new ForbiddenHttpException('This account is deactivated');
-        if($restaurant->user_id != $restaurantManager->id){
-            throw new ForbiddenHttpException("You don't have permission to do this action");
-        }
 
         return $restaurant;
     }
