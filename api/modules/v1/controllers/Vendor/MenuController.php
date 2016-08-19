@@ -7,19 +7,16 @@
  */
 namespace api\modules\v1\controllers\vendor;
 
-use common\models\MenuCategories;
-use common\models\MenuCategoryItem;
+
 use Yii;
 use common\helpers\Helpers;
 use common\models\User;
 use common\models\Restaurants;
-use yii\helpers\Html;
+use common\models\MenuCategories;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
 use yii\web\ForbiddenHttpException;
-use yii\web\MethodNotAllowedHttpException;
-use yii\web\ServerErrorHttpException;
 use yii\web\NotFoundHttpException;
 
 class MenuController extends ActiveController
