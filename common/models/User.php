@@ -242,7 +242,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function afterValidate() {
         if ($this->hasErrors()) {
-            Helpers::UnprocessableEntityHttpException('validation failed' ,  $this->errors);
+            Helpers::UnprocessableEntityHttpException('validation failed' , ['data' => $this->errors]);
         }
     }
 }

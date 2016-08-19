@@ -308,7 +308,7 @@ class Restaurants extends \yii\db\ActiveRecord
 
         $headers = Yii::$app->getRequest()->getHeaders();
         $auth_key = explode(' ',$headers['authorization'])[1];
-        $restaurantManager = \common\models\User::findIdentityByAccessToken($auth_key);
+        $restaurantManager = User::findIdentityByAccessToken($auth_key);
         if(empty($restaurantManager))
             throw new NotFoundHttpException('User not found');
         if(User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
@@ -338,7 +338,7 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public function afterValidate(){
         if ($this->hasErrors()) {
-            Helpers::UnprocessableEntityHttpException('validation failed' ,  $this->errors);
+            Helpers::UnprocessableEntityHttpException('validation failed' ,  ['data' => $this->errors]);
         }
     }
 
