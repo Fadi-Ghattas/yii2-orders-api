@@ -95,9 +95,9 @@ class MenuController extends ActiveController
             ->asArray()->all();
 
         if(!is_null($menuCategoryItems[0]['deleted_at']))
-            return Helpers::UnprocessableEntityHttpException("This menu category was deleted and we can't get the menu items", null);
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This menu category was deleted and we can't get the menu items"]]);
         if($restaurant->id != intval($menuCategoryItems[0]['restaurant_id']))
-            return Helpers::UnprocessableEntityHttpException('This menu category is not belong to this restaurant',null);
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['This menu category is not belong to this restaurant']]);
 
         $menuItems = array();
         foreach ($menuCategoryItems[0]['menuCategoryItems'] as $menuItem)

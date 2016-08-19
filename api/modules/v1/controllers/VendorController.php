@@ -122,12 +122,12 @@ class VendorController extends ActiveController
             if(empty($request->post()))
                 Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
             return MenuCategories::createCategory($request->post());
-        } else if($request->isPut) {
+        } else if($request->isPut && !empty($get_data)) {
             if(empty(Json::decode($request->getRawBody())))
                 Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
-            if(!isset($get_data['id']))
-                Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide category id']]);
             return MenuCategories::updateCategory($get_data['id'], Json::decode($request->getRawBody()));
+        } else if($request->isDelete && !empty($get_data)){
+            return MenuCategories::deleteCategory($get_data['id']);
         }
 
         throw new MethodNotAllowedHttpException("Method Not Allowed");
@@ -139,7 +139,7 @@ class VendorController extends ActiveController
         $actions = [
             'login' => ['POST'],
             'logout' => ['POST'],
-            'menu' => ['GET','PUT','POST']
+            'menu' => ['GET','PUT','POST','DELETE']
         ];
         foreach ($actions as $action => $verb) {
             if (in_array($action, $request_action)) {

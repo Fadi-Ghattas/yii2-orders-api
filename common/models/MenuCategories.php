@@ -69,6 +69,14 @@ class MenuCategories extends \yii\db\ActiveRecord
         return $this->hasMany(MenuCategoryItem::className(), ['menu_category_id' => 'id']);
     }
 
+    public static function getMenuCategoryItemsAsArray($category_id)
+    {
+        return MenuCategories::find()
+                                ->where(['menu_categories.id' => $category_id])
+                                ->joinWith(['menuCategoryItems'], true, 'INNER JOIN')
+                                ->joinWith(['menuCategoryItems', 'menuCategoryItems.menuItem'], true, 'INNER JOIN')
+                                ->asArray()->all();
+    }
     /**
      * @inheritdoc
      * @return MenuCategoriesQuery the active query used by this AR class.
@@ -84,17 +92,13 @@ class MenuCategories extends \yii\db\ActiveRecord
         return ['success' => 'true' , 'message' => 'get success', 'data' => Helpers::formatJsonIdName($restaurant->menuCategories)];
     }
 
-    public static function getMenuCategoryItemsResponse($id)
+    public static function getMenuCategoryItemsResponse($category_id)
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        $menuCategoryItems = MenuCategories::find()
-            ->where(['menu_categories.id' => $id])
-            ->joinWith(['menuCategoryItems'], true, 'INNER JOIN')
-            ->joinWith(['menuCategoryItems', 'menuCategoryItems.menuItem'], true, 'INNER JOIN')
-            ->asArray()->all();
+        $menuCategoryItems = self::getMenuCategoryItemsAsArray($category_id);
 
         if(empty($menuCategoryItems))
-            return ['success' => 'true' , 'message' => 'get success', 'data' => $menuCategoryItems];
+            return Helpers::formatResponse(true, 'get success' , $menuCategoryItems);
         if(!is_null($menuCategoryItems[0]['deleted_at']))
             return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This menu category was deleted and we can't get the menu items"]]);
         if($restaurant->id != intval($menuCategoryItems[0]['restaurant_id']))
@@ -110,13 +114,13 @@ class MenuCategories extends \yii\db\ActiveRecord
             }
         }
 
-        return ['success' => 'true' , 'message' => 'get success', 'data' => $menuItems];
+        return Helpers::formatResponse(true, 'get success', $menuItems);
     }
 
     public static function createCategory($data)
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        if(Restaurants::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name'])){
+        if(self::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name'])){
             $menCategory = new MenuCategories();
             $menCategory->name = $data['name'];
             $menCategory->restaurant_id = $restaurant->id;
@@ -127,20 +131,43 @@ class MenuCategories extends \yii\db\ActiveRecord
         }
         return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['There is already category with the same name']]);
     }
-    
-    public static function updateCategory($id, $data)
+
+    public static function updateCategory($category_id, $data)
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        if(Restaurants::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name']))
+        if(self::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name']))
         {
-            $menCategory = MenuCategories::find()->where(['id' => $id])->one();
+            $menCategory = MenuCategories::find()->where(['id' => $category_id])->one();
             $menCategory->name = $data['name'];
             $isUpdated = $menCategory->save();
             if($isUpdated)
                 return Helpers::formatResponse($isUpdated, 'update success', ['id' => $menCategory->id]);
             return Helpers::formatResponse($isUpdated, 'update failed', null);
         }
-        return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['There is already category with the same name']]);
+        return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['There is already menu category with the same name']]);
+    }
+
+    public static function deleteCategory($category_id)
+    {
+        $restaurant = Restaurants::checkRestaurantAccess();
+        if(empty(self::getMenuCategoryItemsAsArray($category_id))) {
+            $menCategory = MenuCategories::find()->where(['id' => $category_id])->one();
+            $menCategory->deleted_at = date('Y-m-d H:i:s');
+            $isUpdated = $menCategory->save();
+            if($isUpdated)
+                return Helpers::formatResponse($isUpdated, 'deleted success', ['id' => $menCategory->id]);
+            return Helpers::formatResponse($isUpdated, 'deleted failed', null);
+        }
+        return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['There is already menu category items with this category']]);
+    }
+
+    public static function IsRestaurantMenuCategoryNameUnique($restaurantMenuCategories, $NewMenuCategoryName)
+    {
+        foreach ($restaurantMenuCategories as $MenuCategories){
+            if($MenuCategories['name'] == $NewMenuCategoryName)
+                return false;
+        }
+        return true;
     }
 
     public function afterValidate() {

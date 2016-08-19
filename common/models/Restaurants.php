@@ -361,13 +361,4 @@ class Restaurants extends \yii\db\ActiveRecord
         return $restaurant;
     }
 
-    public static function IsRestaurantMenuCategoryNameUnique($restaurantMenuCategories, $NewMenuCategoryName)
-    {
-        foreach ($restaurantMenuCategories as $MenuCategories){
-            if($MenuCategories['name'] == $NewMenuCategoryName)
-                return false;
-        }
-        return true;
-    }
-
 }
