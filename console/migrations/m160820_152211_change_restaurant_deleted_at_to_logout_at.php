@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m160820_152211_change_restaurant_deleted_at_to_logged_at extends Migration
+class m160820_152211_change_restaurant_deleted_at_to_logout_at extends Migration
 {
     public function up()
     {
