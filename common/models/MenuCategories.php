@@ -76,6 +76,7 @@ class MenuCategories extends \yii\db\ActiveRecord
                                 ->where(['menu_categories.id' => $category_id])
                                 ->joinWith(['menuCategoryItems'], true, 'INNER JOIN')
                                 ->joinWith(['menuCategoryItems', 'menuCategoryItems.menuItem'], true, 'INNER JOIN')
+                                ->orderBy('menu_items.created_at DESC')
                                 ->asArray()->all();
     }
     /**
@@ -110,7 +111,10 @@ class MenuCategories extends \yii\db\ActiveRecord
         {
             if(!empty($menuItem['menuItem'])) {
                 $singleMenuItem = array();
-                $singleMenuItem[$menuItem['menuItem']['id']] = $menuItem['menuItem']['name'];
+                $singleMenuItem['id'] = $menuItem['menuItem']['id'];
+                $singleMenuItem['name'] = $menuItem['menuItem']['name'];
+                $singleMenuItem['price'] = $menuItem['menuItem']['price'];
+                $singleMenuItem['status'] = $menuItem['menuItem']['status'];
                 $menuItems[] = $singleMenuItem;
             }
         }
