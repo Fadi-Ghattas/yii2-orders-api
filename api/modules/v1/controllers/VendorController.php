@@ -127,7 +127,6 @@ class VendorController extends ActiveController
             $restaurantManager->save(false);
             $restaurants->status = 0;
             $restaurants->logout_at = date('Y-m-d H:i:s');
-            $restaurants->updated_at = date('Y-m-d H:i:s');
             $restaurants->save(false);
             $transaction->commit();
             return Helpers::formatResponse(true,'You have been logged out successful' , null);
