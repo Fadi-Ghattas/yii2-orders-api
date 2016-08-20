@@ -19,7 +19,6 @@ use common\models\LoginForm;
 use common\models\Restaurants;
 use common\models\MenuCategories;
 use yii\helpers\Html;
-use yii\helpers\Json;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
@@ -101,11 +100,11 @@ class VendorController extends ActiveController
         if (empty($restaurantManager))
             throw new NotFoundHttpException('User not found');
 
-        if (User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
-            throw new ForbiddenHttpException('This account is not a restaurant account');
-
         if($post_data['email'] !=  $restaurantManager->email || $post_data['password'] != $restaurantManager->password_hash)
             Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['The email or password incorrect']]);
+
+        if (User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
+            throw new ForbiddenHttpException('This account is not a restaurant account');
 
 //        $user = User::findOne($restaurantManager->id);
         $restaurants = Restaurants::find(['=', 'user_id', $restaurantManager->id])->one();
@@ -133,11 +132,11 @@ class VendorController extends ActiveController
         $get_data = $request->get();
 
         if($request->isGet && empty($get_data)) {
-            return Restaurants::checkRestaurantAccess();
+            return Helpers::formatResponse(true, 'get success', Restaurants::checkRestaurantAccess()) ;
         }else if($request->isPut && empty($get_data)) {
-            if(empty(Json::decode($request->getRawBody())))
+            if(empty($request->post()))
                 Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
-            return Restaurants::updateRestaurant(Json::decode($request->getRawBody()));
+            return Restaurants::updateRestaurant($request->post());
         }
         throw new MethodNotAllowedHttpException("Method Not Allowed");
     }
@@ -157,9 +156,9 @@ class VendorController extends ActiveController
                 Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
             return MenuCategories::createCategory($request->post());
         } else if($request->isPut && !empty($get_data)) {
-            if(empty(Json::decode($request->getRawBody())))
+            if(empty($request->post()))
                 Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['please provide data']]);
-            return MenuCategories::updateCategory($get_data['id'], Json::decode($request->getRawBody()));
+            return MenuCategories::updateCategory($get_data['id'], $request->post());
         } else if($request->isDelete && !empty($get_data)){
             return MenuCategories::deleteCategory($get_data['id']);
         }
