@@ -107,7 +107,7 @@ class VendorController extends ActiveController
             throw new ForbiddenHttpException('This account is not a restaurant account');
 
 //        $user = User::findOne($restaurantManager->id);
-        $restaurants = Restaurants::find(['=', 'user_id', $restaurantManager->id])->one();
+        $restaurants = Restaurants::find(['user_id' => $restaurantManager->id])->one();
         $restaurants->action = 'logout';
 
         $transaction = Restaurants::getDb()->beginTransaction();
