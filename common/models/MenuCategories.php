@@ -90,6 +90,17 @@ class MenuCategories extends \yii\db\ActiveRecord
         return new MenuCategoriesQuery(get_called_class());
     }
 
+
+    public static function getCategory($category_id)
+    {
+        return MenuCategories::find()->where(['id' => $category_id])->andWhere(['deleted_at' => null])->one();
+    }
+
+    public static function isCategoryDeleted($category_id)
+    {
+        return empty(getCategory($category_id));
+    }
+
     public static function getMenuCategories()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
@@ -102,8 +113,8 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
-        if(empty(MenuCategories::find()->where(['id' => $category_id])->one()))
-            return Helpers::formatResponse(false, 'get failed', ['data' => ['category not found']]);
+        if(self::isCategoryDeleted($category_id))
+            return Helpers::formatResponse(false, 'get failed', ['data' => ["This category dos't exist"]]);
 
         $menuCategoryItems = self::getMenuCategoryItemsAsArray($category_id);
         if(empty($menuCategoryItems))
@@ -155,7 +166,7 @@ class MenuCategories extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         if(self::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name']))
         {
-            $menCategory = MenuCategories::find()->where(['id' => $category_id])->one();
+            $menCategory = self::getCategory($category_id);
 
             if(is_null($menCategory))
                 return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This category dos't exist"]]);
@@ -177,10 +188,7 @@ class MenuCategories extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         if(empty(self::getMenuCategoryItemsAsArray($category_id))) {
 
-            $menCategory = MenuCategories::find()
-                ->where(['id' => $category_id])
-                ->andWhere(['deleted_at' => null])
-                ->one();
+            $menCategory = $menCategory = self::getCategory($category_id);;
 
             if(is_null($menCategory))
                 return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This category dos't exist"]]);
