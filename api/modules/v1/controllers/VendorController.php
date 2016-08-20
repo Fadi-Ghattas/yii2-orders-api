@@ -123,7 +123,10 @@ class VendorController extends ActiveController
         try {
 //            $user->password_hash = 'RESTAURANT_DEACTIVATED';
 //            $user->save(false);
+            $restaurantManager->last_logged_at = null;
+            $restaurantManager->save(false);
             $restaurants->status = 0;
+            $restaurants->updated_at = date('Y-m-d H:i:s');
             $restaurants->save(false);
             $transaction->commit();
             return Helpers::formatResponse(true,'You have been logged out successful' , null);
