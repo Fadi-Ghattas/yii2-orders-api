@@ -188,7 +188,7 @@ class MenuCategories extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         if(empty(self::getMenuCategoryItemsAsArray($category_id))) {
 
-            $menCategory = $menCategory = self::getCategory($category_id);;
+            $menCategory = self::getCategory($category_id);;
 
             if(is_null($menCategory))
                 return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This category dos't exist"]]);

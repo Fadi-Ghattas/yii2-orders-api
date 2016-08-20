@@ -126,6 +126,7 @@ class VendorController extends ActiveController
             $restaurantManager->last_logged_at = null;
             $restaurantManager->save(false);
             $restaurants->status = 0;
+            $restaurants->logout_at = date('Y-m-d H:i:s');
             $restaurants->updated_at = date('Y-m-d H:i:s');
             $restaurants->save(false);
             $transaction->commit();
