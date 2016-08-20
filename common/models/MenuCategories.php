@@ -98,7 +98,7 @@ class MenuCategories extends \yii\db\ActiveRecord
 
     public static function isCategoryDeleted($category_id)
     {
-        return empty(getCategory($category_id));
+        return empty(self::getCategory($category_id));
     }
 
     public static function getMenuCategories()
