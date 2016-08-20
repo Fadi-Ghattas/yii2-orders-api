@@ -142,6 +142,9 @@ class MenuCategories extends \yii\db\ActiveRecord
 
     public static function updateCategory($category_id, $data)
     {
+        if(!isset($data['name']))
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['name' => ['name is required']]);
+        
         $restaurant = Restaurants::checkRestaurantAccess();
         if(self::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name']))
         {
