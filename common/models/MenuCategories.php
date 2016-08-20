@@ -12,6 +12,8 @@ use yii\web\ForbiddenHttpException;
  * @property string $id
  * @property string $name
  * @property string $restaurant_id
+ * @property string $created_at
+ * @property string $updated_at
  * @property string $deleted_at
  *
  * @property Restaurants $restaurant
@@ -91,8 +93,9 @@ class MenuCategories extends \yii\db\ActiveRecord
     public static function getMenuCategories()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        if(empty($restaurant->menuCategories))
-        return Helpers::formatResponse(true, 'get success', Helpers::formatJsonIdName($restaurant->menuCategories));
+        if(!empty($restaurant->menuCategories))
+            return Helpers::formatResponse(true, 'get success', Helpers::formatJsonIdName($restaurant->menuCategories));
+        return Helpers::formatResponse(false, 'get failed', ['data' => ['restaurant has no categories']]);
     }
 
     public static function getMenuCategoryItemsResponse($category_id)

@@ -9,6 +9,9 @@ use Yii;
  *
  * @property string $id
  * @property string $name
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $deleted_at
  *
  * @property Areas[] $areas
  */

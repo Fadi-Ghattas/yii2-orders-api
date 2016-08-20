@@ -14,6 +14,9 @@ use Yii;
  * @property integer $status
  * @property string $image
  * @property string $restaurant_id
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $deleted_at
  *
  * @property Restaurants $restaurant
  * @property MenuItemAddon[] $menuItemAddons

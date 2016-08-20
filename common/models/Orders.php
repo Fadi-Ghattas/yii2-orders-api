@@ -21,6 +21,7 @@ use Yii;
  * @property string $payment_method_id
  * @property string $created_at
  * @property string $updated_at
+ * @property string $deleted_at
  *
  * @property OrderItems[] $orderItems
  * @property Addresses $address

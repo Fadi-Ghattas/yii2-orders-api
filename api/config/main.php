@@ -23,20 +23,20 @@ return [
             'class' => 'yii\web\Response',
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                if($response->format == 'html'){
-                    $response->format = \yii\web\Response::FORMAT_JSON;
-                    $response->data = [
-                        'success' => false,
-                        'message' => $response->statusText,
-                        'data' => null
-                    ];
-                } else if ($response->statusCode != 200 && $response->statusCode != 422) {
-                    $response->data = [
-                        'success' => false,
-                        'message' => str_replace('Hash', 'Password', $response->data['message']),
-                        'data' => null
-                    ];
-                }
+//                if($response->format == 'html'){
+//                    $response->format = \yii\web\Response::FORMAT_JSON;
+//                    $response->data = [
+//                        'success' => false,
+//                        'message' => $response->statusText,
+//                        'data' => null
+//                    ];
+//                } else if ($response->statusCode != 200 && $response->statusCode != 422) {
+//                    $response->data = [
+//                        'success' => false,
+//                        'message' => str_replace('Hash', 'Password', $response->data['message']),
+//                        'data' => null
+//                    ];
+//                }
             },
         ],
         'user' => [

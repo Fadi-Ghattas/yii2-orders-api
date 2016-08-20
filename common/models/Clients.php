@@ -16,6 +16,7 @@ use Yii;
  * @property string $image
  * @property string $created_at
  * @property string $updated_at
+ * @property string $deleted_at
  * @property integer $user_id
  *
  * @property Addresses[] $addresses

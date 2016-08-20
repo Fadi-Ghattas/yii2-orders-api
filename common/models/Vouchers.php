@@ -16,6 +16,7 @@ use Yii;
  * @property string $expiry_date
  * @property string $created_at
  * @property string $updated_at
+ * @property string $deleted_at
  *
  * @property Orders[] $orders
  */

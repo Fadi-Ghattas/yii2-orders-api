@@ -16,6 +16,7 @@ use Yii;
  * @property string $note
  * @property string $created_at
  * @property string $updated_at
+ * @property string $deleted_at
  * @property string $choice_id
  *
  * @property ItemChoices $choice

@@ -13,6 +13,7 @@ use Yii;
  * @property string $value
  * @property string $created_at
  * @property string $updated_at
+ * @property string $deleted_at
  */
 class Commissions extends \yii\db\ActiveRecord
 {

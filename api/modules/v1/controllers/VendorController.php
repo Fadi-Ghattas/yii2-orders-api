@@ -72,13 +72,21 @@ class VendorController extends ActiveController
             throw new ForbiddenHttpException('This account is not a restaurant account');
         if (!Restaurants::find()->where(['user_id' => $restaurantManager->id])->one()->status)
             throw new ForbiddenHttpException('This account is deactivated');
+        if(!is_null($restaurantManager->last_logged_at))
+            throw new ForbiddenHttpException('You already logged in');
 
         $model = new LoginForm();
         $model->username = $post_data['email'];
         $model->password = $post_data['password'];
         $model->email = $post_data['email'];
         if ($model->load($post_data, '') && $model->login()) {
-            return Helpers::formatResponse(true,'login success',['auth_key' => $restaurantManager['auth_key']]);
+            try {
+                $restaurantManager->last_logged_at = date('Y-m-d H:i:s');;
+                if ($restaurantManager->save(false))
+                    return Helpers::formatResponse(true, 'login success', ['auth_key' => $restaurantManager['auth_key']]);
+            } catch (\Exception $e) {
+                throw $e;
+            }
         } else {
             throw new ServerErrorHttpException(strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])));
         }

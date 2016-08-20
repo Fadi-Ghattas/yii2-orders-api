@@ -20,6 +20,8 @@ use common\helpers\Helpers;
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
+ * @property string $deleted_at
+ * @property integer $last_logged_at
  * @property string $password write-only password
  */
 class User extends ActiveRecord implements IdentityInterface
