@@ -141,8 +141,8 @@ class MenuCategories extends \yii\db\ActiveRecord
             $menCategory->restaurant_id = $restaurant->id;
             $isCreated = $menCategory->save();
             if($isCreated)
-                return Helpers::formatResponse($isCreated, 'update success', ['id' => $menCategory->id]);
-            return Helpers::formatResponse($isCreated, 'update failed', null);
+                return Helpers::formatResponse($isCreated, 'create success', ['id' => $menCategory->id]);
+            return Helpers::formatResponse($isCreated, 'create failed', null);
         }
         return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['There is already category with the same name']]);
     }
