@@ -91,16 +91,20 @@ class MenuCategories extends \yii\db\ActiveRecord
     public static function getMenuCategories()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        return ['success' => 'true' , 'message' => 'get success', 'data' => Helpers::formatJsonIdName($restaurant->menuCategories)];
+        if(empty($restaurant->menuCategories))
+        return Helpers::formatResponse(true, 'get success', Helpers::formatJsonIdName($restaurant->menuCategories));
     }
 
     public static function getMenuCategoryItemsResponse($category_id)
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        $menuCategoryItems = self::getMenuCategoryItemsAsArray($category_id);
 
+        if(empty(MenuCategories::find()->where(['id' => $category_id])->one()))
+            return Helpers::formatResponse(false, 'get failed', ['data' => ['category not found']]);
+
+        $menuCategoryItems = self::getMenuCategoryItemsAsArray($category_id);
         if(empty($menuCategoryItems))
-            return Helpers::formatResponse(true, 'get success' , $menuCategoryItems);
+            return Helpers::formatResponse(false, 'get failed', ['data' => ['this category is empty']]);
         if(!is_null($menuCategoryItems[0]['deleted_at']))
             return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This menu category was deleted and we can't get the menu items"]]);
         if($restaurant->id != intval($menuCategoryItems[0]['restaurant_id']))
@@ -144,7 +148,7 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         if(!isset($data['name']))
             return Helpers::UnprocessableEntityHttpException('validation failed', ['name' => ['name is required']]);
-        
+
         $restaurant = Restaurants::checkRestaurantAccess();
         if(self::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name']))
         {
