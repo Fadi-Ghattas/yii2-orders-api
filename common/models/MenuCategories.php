@@ -90,7 +90,6 @@ class MenuCategories extends \yii\db\ActiveRecord
         return new MenuCategoriesQuery(get_called_class());
     }
 
-
     public static function getCategory($category_id)
     {
         return MenuCategories::find()->where(['id' => $category_id])->andWhere(['deleted_at' => null])->one();
@@ -104,9 +103,10 @@ class MenuCategories extends \yii\db\ActiveRecord
     public static function getMenuCategories()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        if(!empty($restaurant->menuCategories))
-            return Helpers::formatResponse(true, 'get success', Helpers::formatJsonIdName($restaurant->menuCategories));
-        return Helpers::formatResponse(false, 'get failed', ['data' => ['restaurant has no categories']]);
+        if(empty($restaurant->menuCategories))
+            return Helpers::formatResponse(false, 'get failed', ['error' => 'restaurant has no categories']);
+
+        return Helpers::formatResponse(true, 'get success', Helpers::formatJsonIdName($restaurant->menuCategories));
     }
 
     public static function getMenuCategoryItemsResponse($category_id)
@@ -114,15 +114,15 @@ class MenuCategories extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
 
         if(self::isCategoryDeleted($category_id))
-            return Helpers::formatResponse(false, 'get failed', ['data' => ["This category dos't exist"]]);
+            return Helpers::formatResponse(false, 'get failed', ['error' => "This category dos't exist"]);
 
         $menuCategoryItems = self::getMenuCategoryItemsAsArray($category_id);
         if(empty($menuCategoryItems))
-            return Helpers::formatResponse(false, 'get failed', ['data' => ['this category is empty']]);
+            return Helpers::formatResponse(false, 'get failed', ['error' => 'this category is empty']);
         if(!is_null($menuCategoryItems[0]['deleted_at']))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This menu category was deleted and we can't get the menu items"]]);
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This menu category was deleted and we can't get the menu items"]);
         if($restaurant->id != intval($menuCategoryItems[0]['restaurant_id']))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['This menu category is not belong to this restaurant']]);
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'This menu category is not belong to this restaurant']);
 
         $menuItems = array();
         foreach ($menuCategoryItems[0]['menuCategoryItems'] as $menuItem)
@@ -142,45 +142,49 @@ class MenuCategories extends \yii\db\ActiveRecord
 
     public static function createCategory($data)
     {
-        if(!isset($data['name']))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['name' => ['name is required']]);
-
         $restaurant = Restaurants::checkRestaurantAccess();
+
+        if(!isset($data['name']))
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'name is required']);
+
         if(self::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name'])){
             $menCategory = new MenuCategories();
             $menCategory->name = $data['name'];
             $menCategory->restaurant_id = $restaurant->id;
             $isCreated = $menCategory->save();
-            if($isCreated)
-                return Helpers::formatResponse($isCreated, 'create success', ['id' => $menCategory->id]);
-            return Helpers::formatResponse($isCreated, 'create failed', null);
+            if(!$isCreated)
+                return Helpers::formatResponse($isCreated, 'create failed', null);
+
+            return Helpers::formatResponse($isCreated, 'create success', ['id' => $menCategory->id]);
         }
-        return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['There is already category with the same name']]);
+        return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'There is already category with the same name']);
     }
 
     public static function updateCategory($category_id, $data)
     {
-        if(!isset($data['name']))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['name' => ['name is required']]);
-
         $restaurant = Restaurants::checkRestaurantAccess();
+
+        if(!isset($data['name']))
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'name is required']);
+
         if(self::IsRestaurantMenuCategoryNameUnique($restaurant->getMenuCategoriesAsArray(), $data['name']))
         {
             $menCategory = self::getCategory($category_id);
 
             if(is_null($menCategory))
-                return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This category dos't exist"]]);
+                return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This category dos't exist"]);
 
             if($menCategory->restaurant_id != $restaurant->id)
                 throw new ForbiddenHttpException("You don't have permission to do this action");
 
             $menCategory->name = $data['name'];
             $isUpdated = $menCategory->save();
-            if($isUpdated)
-                return Helpers::formatResponse($isUpdated, 'update success', ['id' => $menCategory->id]);
-            return Helpers::formatResponse($isUpdated, 'update failed', null);
+            if(!$isUpdated)
+                return Helpers::formatResponse($isUpdated, 'update failed', null);
+            
+            return Helpers::formatResponse($isUpdated, 'update success', ['id' => $menCategory->id]);
         }
-        return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['There is already menu category with the same name']]);
+        return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'There is already menu category with the same name']);
     }
 
     public static function deleteCategory($category_id)
@@ -191,18 +195,20 @@ class MenuCategories extends \yii\db\ActiveRecord
             $menCategory = self::getCategory($category_id);;
 
             if(is_null($menCategory))
-                return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ["This category dos't exist"]]);
+                return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This category dos't exist"]);
 
             if($menCategory->restaurant_id != $restaurant->id)
                 throw new ForbiddenHttpException("You don't have permission to do this action");
 
             $menCategory->deleted_at = date('Y-m-d H:i:s');
             $isUpdated = $menCategory->save();
-            if($isUpdated)
-                return Helpers::formatResponse($isUpdated, 'deleted success', ['id' => $menCategory->id]);
-            return Helpers::formatResponse($isUpdated, 'deleted failed', null);
+
+            if(!$isUpdated)
+                return Helpers::formatResponse($isUpdated, 'deleted failed', null);
+
+            return Helpers::formatResponse($isUpdated, 'deleted success', ['id' => $menCategory->id]);
         }
-        return Helpers::UnprocessableEntityHttpException('validation failed', ['data' => ['There is already menu category items with this category']]);
+        return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'There is already menu category items with this category']);
     }
 
     public static function IsRestaurantMenuCategoryNameUnique($restaurantMenuCategories, $NewMenuCategoryName)
@@ -216,17 +222,17 @@ class MenuCategories extends \yii\db\ActiveRecord
 
     public function afterValidate() {
         if ($this->hasErrors()) {
-            Helpers::UnprocessableEntityHttpException('validation failed' ,  ['data' => $this->errors]);
+            Helpers::UnprocessableEntityHttpException('validation failed' ,  ['error' => $this->errors]);
         }
     }
 
-    public function afterSave($insert, $changedAttributes)
+    public function beforeSave($insert)
     {
         if(!$this->isNewRecord)
             $this->updated_at = date('Y-m-d H:i:s');
         else
             $this->created_at = date('Y-m-d H:i:s');
 
-        parent::afterSave($insert, $changedAttributes); // TODO: Change the autogenerated stub
+        return parent::beforeSave($insert); // TODO: Change the autogenerated stub
     }
 }

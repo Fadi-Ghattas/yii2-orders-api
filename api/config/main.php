@@ -78,6 +78,8 @@ return [
                         'GET,POST,PUT,DELETE profile/{id}' => 'profile',
                         'GET,POST,PUT,DELETE menu' => 'menu',
                         'GET,POST,PUT,DELETE menu/{id}' => 'menu',
+                        'GET,POST,PUT,DELETE add-on' => 'add-on',
+                        'GET,POST,PUT,DELETE add-on/{id}' => 'add-on',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
