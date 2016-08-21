@@ -190,7 +190,7 @@ class Restaurants extends \yii\db\ActiveRecord
      */
     public function getItemChoices()
     {
-        return $this->hasMany(ItemChoices::className(), ['restaurant_id' => 'id']);
+        return $this->hasMany(ItemChoices::className(), ['restaurant_id' => 'id'])->Where(['deleted_at' => null]);
     }
 
     /**

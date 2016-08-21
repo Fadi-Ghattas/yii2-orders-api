@@ -80,6 +80,8 @@ return [
                         'GET,POST,PUT,DELETE menu/{id}' => 'menu',
                         'GET,POST,PUT,DELETE add-on' => 'add-on',
                         'GET,POST,PUT,DELETE add-on/{id}' => 'add-on',
+                        'GET,POST,PUT,DELETE item-choices' => 'item-choices',
+                        'GET,POST,PUT,DELETE item-choices/{id}' => 'item-choices',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

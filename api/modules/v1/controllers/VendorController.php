@@ -12,13 +12,16 @@
 namespace api\modules\v1\controllers;
 
 
-use common\models\Addons;
+
+
 use Yii;
 use common\helpers\Helpers;
 use common\models\User;
 use common\models\LoginForm;
 use common\models\Restaurants;
 use common\models\MenuCategories;
+use common\models\Addons;
+use common\models\ItemChoices;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
@@ -176,7 +179,8 @@ class VendorController extends ActiveController
         throw new MethodNotAllowedHttpException("Method Not Allowed");
     }
 
-    public function actionAddOn(){
+    public function actionAddOn()
+    {
         $request = Yii::$app->request;
         $get_data = $request->get();
 
@@ -196,7 +200,29 @@ class VendorController extends ActiveController
         } else if($request->isDelete && !empty($get_data)){
             return Addons::deleteAddOn($get_data['id']);
         }
+    }
+    
+    public function actionItemChoices()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
 
+        if($request->isGet) {
+            if(empty($get_data))
+                return ItemChoices::getRestaurantItemsChoices();
+            else if(!empty($get_data) && isset($get_data['id']))
+                return ItemChoices::getRestaurantItemChoice($get_data['id']);
+        } else if($request->isPost && empty($get_data)){
+            if(empty($request->post()))
+                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+            return ItemChoices::createItemChoice($request->post());
+        } else if($request->isPut && !empty($get_data)) {
+            if(empty($request->post()))
+                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+            return ItemChoices::updateItemChoice($get_data['id'], $request->post());
+        } else if($request->isDelete && !empty($get_data)){
+            return ItemChoices::deleteItemChoice($get_data['id']);
+        }
     }
 
     public function beforeAction($event)
@@ -208,6 +234,7 @@ class VendorController extends ActiveController
             'menu' => ['GET','PUT','POST','DELETE'],
             'profile' => ['GET','PUT'],
             'add-on' => ['GET','PUT','POST','DELETE'],
+            'item-choices' => ['GET','PUT','POST','DELETE'],
         ];
 
         foreach ($actions as $action => $verb) {
