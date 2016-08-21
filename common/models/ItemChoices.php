@@ -177,7 +177,7 @@ class ItemChoices extends \yii\db\ActiveRecord
         $ItemChoice = self::getItemChoice($item_choice_id);
 
         if (is_null($ItemChoice))
-            return $ItemChoice::UnprocessableEntityHttpException('validation failed', ['error' => "This item choices dos't exist"]);
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This item choices dos't exist"]);
 
         if ($ItemChoice->restaurant_id != $restaurant->id)
             throw new ForbiddenHttpException("You don't have permission to do this action");

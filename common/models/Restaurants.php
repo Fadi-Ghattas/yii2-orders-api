@@ -158,7 +158,7 @@ class Restaurants extends \yii\db\ActiveRecord
      */
     public function getBlacklistedClients()
     {
-        return $this->hasMany(BlacklistedClients::className(), ['restaurant_id' => 'id']);
+        return $this->hasMany(BlacklistedClients::className(), ['restaurant_id' => 'id'])->where(['deleted_at' => null]);
     }
 
     /**

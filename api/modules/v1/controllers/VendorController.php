@@ -14,6 +14,7 @@ namespace api\modules\v1\controllers;
 
 
 
+use common\models\BlacklistedClients;
 use Yii;
 use common\helpers\Helpers;
 use common\models\User;
@@ -200,6 +201,8 @@ class VendorController extends ActiveController
         } else if($request->isDelete && !empty($get_data)){
             return Addons::deleteAddOn($get_data['id']);
         }
+
+        throw new MethodNotAllowedHttpException("Method Not Allowed");
     }
     
     public function actionItemChoices()
@@ -223,6 +226,27 @@ class VendorController extends ActiveController
         } else if($request->isDelete && !empty($get_data)){
             return ItemChoices::deleteItemChoice($get_data['id']);
         }
+
+        throw new MethodNotAllowedHttpException("Method Not Allowed");
+    }
+
+    public function actionBlacklistedClients()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if($request->isGet) {
+            if(empty($get_data))
+                return BlacklistedClients::getRestaurantBlacklistedClients();
+        } else if($request->isPost && empty($get_data)){
+            if(empty($request->post()))
+                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+            return BlacklistedClients::createItemBlacklistedClient($request->post());
+        } else if($request->isDelete && !empty($get_data)){
+            return BlacklistedClients::deleteBlacklistedClient($get_data['id']);
+        }
+        
+        throw new MethodNotAllowedHttpException("Method Not Allowed");
     }
 
     public function beforeAction($event)
@@ -235,6 +259,7 @@ class VendorController extends ActiveController
             'profile' => ['GET','PUT'],
             'add-on' => ['GET','PUT','POST','DELETE'],
             'item-choices' => ['GET','PUT','POST','DELETE'],
+            'blacklisted-clients' => ['GET','POST','DELETE'],
         ];
 
         foreach ($actions as $action => $verb) {

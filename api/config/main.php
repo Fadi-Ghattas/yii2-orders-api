@@ -82,6 +82,8 @@ return [
                         'GET,POST,PUT,DELETE add-on/{id}' => 'add-on',
                         'GET,POST,PUT,DELETE item-choices' => 'item-choices',
                         'GET,POST,PUT,DELETE item-choices/{id}' => 'item-choices',
+                        'GET,POST,PUT,DELETE blacklisted-clients' => 'blacklisted-clients',
+                        'GET,POST,PUT,DELETE blacklisted-clients/{id}' => 'blacklisted-clients',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
