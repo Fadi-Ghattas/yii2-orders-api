@@ -11,10 +11,6 @@
 
 namespace api\modules\v1\controllers;
 
-
-
-
-use common\models\BlacklistedClients;
 use Yii;
 use common\helpers\Helpers;
 use common\models\User;
@@ -23,6 +19,8 @@ use common\models\Restaurants;
 use common\models\MenuCategories;
 use common\models\Addons;
 use common\models\ItemChoices;
+use common\models\BlacklistedClients;
+use common\models\Reviews;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
@@ -249,6 +247,19 @@ class VendorController extends ActiveController
         throw new MethodNotAllowedHttpException("Method Not Allowed");
     }
 
+    public function actionReviews()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+        
+        if($request->isGet) {
+            if(empty($get_data))
+                return Reviews::getReviews();
+        }
+
+        throw new MethodNotAllowedHttpException("Method Not Allowed");
+    }
+
     public function beforeAction($event)
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
@@ -260,6 +271,7 @@ class VendorController extends ActiveController
             'add-on' => ['GET','PUT','POST','DELETE'],
             'item-choices' => ['GET','PUT','POST','DELETE'],
             'blacklisted-clients' => ['GET','POST','DELETE'],
+            'reviews' => ['GET'],
         ];
 
         foreach ($actions as $action => $verb) {

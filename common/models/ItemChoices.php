@@ -104,16 +104,21 @@ class ItemChoices extends \yii\db\ActiveRecord
         return new ItemChoicesQuery(get_called_class());
     }
 
-    public static function getItemChoice($item_choice_id)
+    public static function getItemChoice($restaurant_id, $item_choice_id)
     {
-        return ItemChoices::find()->where(['id' => $item_choice_id])->andWhere(['deleted_at' => null])->one();
+        return self::find()->where(['restaurant_id' => $restaurant_id])->andWhere(['id' => $item_choice_id])->andWhere(['deleted_at' => null])->one();
+    }
+
+    public static function getItemChoiceByName($restaurant_id, $item_choice_name)
+    {
+        return self::find()->where(['restaurant_id' => $restaurant_id])->andWhere(['name'=> $item_choice_name])->andWhere(['deleted_at' => null])->one();
     }
 
     public static function getRestaurantItemsChoices()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
         if (empty($restaurant->itemChoices))
-            return Helpers::formatResponse(false, 'get failed', ['error' => "restaurant has no items of choices"]);
+            return Helpers::formatResponse(false, 'get failed', [['error' => "restaurant has no items of choices"]]);
 
         return Helpers::formatResponse(true, 'get success', $restaurant->itemChoices);
     }
@@ -121,9 +126,9 @@ class ItemChoices extends \yii\db\ActiveRecord
     public static function getRestaurantItemChoice($item_choice_id)
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        $itemChoice = self::getItemChoice($item_choice_id);
+        $itemChoice = self::getItemChoice($restaurant->id, $item_choice_id);
         if (empty($itemChoice))
-            return Helpers::formatResponse(false, 'get failed', ['error' => "this item of choices dos't exist"]);
+            return Helpers::formatResponse(false, 'get failed', [['error' => "this item of choices dos't exist"]]);
 
         return Helpers::formatResponse(false, 'get success', $itemChoice);
     }
@@ -134,9 +139,14 @@ class ItemChoices extends \yii\db\ActiveRecord
 
         if (!isset($data['name']))
             return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'name is required']);
+        if(!empty(self::getItemChoiceByName($restaurant->id, $data['name'])))
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'There is already item of choice with the same name']);
 
         $ItemChoice = new ItemChoices();
-        $ItemChoice->name = $data['name'];
+        foreach ($ItemChoice->attributes as $attributeKey => $attribute){
+            if (isset($data[$attributeKey]))
+                $ItemChoice->$attributeKey = $data[$attributeKey];
+        }
         $ItemChoice->status = 1;
         $ItemChoice->restaurant_id = $restaurant->id;
         $isCreated = $ItemChoice->save();
@@ -149,13 +159,15 @@ class ItemChoices extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
-        $ItemChoice = self::getItemChoice($item_choice_id);
+        $ItemChoice = self::getItemChoice($restaurant->id, $item_choice_id);
 
-        if (is_null($ItemChoice))
+        if (empty($ItemChoice))
             return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This Item of Choices dos't exist"]);
-
         if ($ItemChoice->restaurant_id != $restaurant->id)
             throw new ForbiddenHttpException("You don't have permission to do this action");
+        $CheckUniqueItemChoice = self::getItemChoiceByName($restaurant->id, $data['name']);
+        if(!empty($CheckUniqueItemChoice) && $CheckUniqueItemChoice->id != $item_choice_id)
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'There is already AddOn with the same name']);
 
         foreach ($data as $DataKey => $DataValue) {
             if (array_key_exists($DataKey, $ItemChoice->oldAttributes)) {
@@ -174,11 +186,10 @@ class ItemChoices extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
-        $ItemChoice = self::getItemChoice($item_choice_id);
+        $ItemChoice = self::getItemChoice($restaurant->id, $item_choice_id);
 
         if (is_null($ItemChoice))
             return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This item choices dos't exist"]);
-
         if ($ItemChoice->restaurant_id != $restaurant->id)
             throw new ForbiddenHttpException("You don't have permission to do this action");
 

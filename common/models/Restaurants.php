@@ -27,6 +27,7 @@ use common\helpers\Helpers;
  * @property double $longitude
  * @property double $latitude
  * @property string $image
+ * @property string $image_background
  * @property string $contact_number
  * @property integer $status
  * @property string $created_at
@@ -85,7 +86,7 @@ class Restaurants extends \yii\db\ActiveRecord
             [['minimum_order_amount', 'delivery_fee', 'rank', 'longitude', 'latitude'], 'number'],
             [['action','time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
             [['halal', 'featured', 'disable_ordering', 'delivery_duration', 'status', 'user_id'], 'integer'],
-            [['name', 'phone_number', 'contact_number' ,'image'], 'string', 'max' => 255],
+            [['name', 'phone_number', 'contact_number' ,'image', 'image_background'], 'string', 'max' => 255],
             [['working_opening_hours','working_closing_hours','time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['phone_number'],  'udokmeci\yii2PhoneValidator\PhoneValidator','country'=> 'MY', 'strict'=>false],
@@ -201,10 +202,6 @@ class Restaurants extends \yii\db\ActiveRecord
         return $this->hasMany(MenuCategories::className(), ['restaurant_id' => 'id'])->where(['deleted_at' => null]);
     }
 
-    public function getMenuCategoriesAsArray()
-    {
-        return $this->hasMany(MenuCategories::className(), ['restaurant_id' => 'id'])->where(['deleted_at' => null])->asArray()->all();
-    }
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -270,10 +267,10 @@ class Restaurants extends \yii\db\ActiveRecord
             'latitude',
             'image',
             'areas' => function() {
-                return Helpers::formatJsonIdName($this->areas);
+                return $this->areas;
             },
             'cuisine' => function(){
-                return  Helpers::formatJsonIdName($this->cuisines);
+                return  $this->cuisines;
             },
             'paymentMethod' => function(){
                 return $this->paymentMethodRestaurants;

@@ -8,21 +8,19 @@ use Yii;
  * This is the model class for table "clients".
  *
  * @property string $id
- * @property string $address_id
  * @property integer $active
  * @property integer $status
  * @property string $phone_number
  * @property integer $reg_id
  * @property string $image
+ * @property integer $user_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property integer $user_id
  *
  * @property Addresses[] $addresses
  * @property BlacklistedClients[] $blacklistedClients
  * @property User $user
- * @property Addresses $address
  * @property FavoriteRestaurants[] $favoriteRestaurants
  * @property Feedbacks[] $feedbacks
  * @property Orders[] $orders
@@ -45,12 +43,11 @@ class Clients extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['address_id', 'active', 'status', 'phone_number', 'reg_id', 'user_id'], 'required'],
-            [['address_id', 'active', 'status', 'reg_id', 'user_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['active', 'status', 'reg_id', 'user_id'], 'required'],
+            [['active', 'status', 'reg_id', 'user_id'], 'integer'],
+            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['phone_number', 'image'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
-            [['address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Addresses::className(), 'targetAttribute' => ['address_id' => 'id']],
         ];
     }
 
@@ -61,7 +58,6 @@ class Clients extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'address_id' => 'Address ID',
             'active' => 'Active',
             'status' => 'Status',
             'phone_number' => 'Phone Number',
@@ -70,6 +66,7 @@ class Clients extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'user_id' => 'User ID',
+            'deleted_at' => 'Deleted At',
         ];
     }
 
@@ -94,15 +91,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getAddress()
-    {
-        return $this->hasOne(Addresses::className(), ['id' => 'address_id']);
+        return User::find()->where(['id' => $this->user_id])->where(['deleted_at' => null])->select(['id','email'])->asArray()->one();
     }
 
     /**
@@ -152,5 +141,21 @@ class Clients extends \yii\db\ActiveRecord
     public static function find()
     {
         return new ClientsQuery(get_called_class());
+    }
+
+    public function fields()
+    {
+        return [
+            'id',
+            'active',
+            'status',
+            'phone_number',
+            'reg_id',
+            'image',
+            'user' => function(){
+                return $this->getUser();
+            }
+        ];
+
     }
 }

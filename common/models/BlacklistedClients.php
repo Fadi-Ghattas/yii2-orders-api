@@ -2,24 +2,24 @@
 
 namespace common\models;
 
+use common\helpers\Helpers;
 use Yii;
 use yii\web\NotFoundHttpException;
 
 /**
- * This is the model class for table "blacklisted_clients".
- *
- * @property string $id
- * @property string $reason
- * @property string $restaurant_id
- * @property string $client_id
- * @property string $created_at
- * @property string $updated_at
- * @property string $deleted_at
- * 
- *
- * @property Clients $client
- * @property Restaurants $restaurant
- */
+* This is the model class for table "blacklisted_clients".
+*
+* @property string $id
+* @property string $reason
+* @property string $restaurant_id
+* @property string $client_id
+* @property string $created_at
+* @property string $updated_at
+* @property string $deleted_at
+*
+* @property Clients $client
+* @property Restaurants $restaurant
+*/
 class BlacklistedClients extends \yii\db\ActiveRecord
 {
     /**
@@ -39,7 +39,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
             [['reason', 'restaurant_id', 'client_id'], 'required'],
             [['reason'], 'string'],
             [['restaurant_id', 'client_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['client_id' => 'id']],
             [['restaurant_id'], 'exist', 'skipOnError' => true, 'targetClass' => Restaurants::className(), 'targetAttribute' => ['restaurant_id' => 'id']],
         ];
@@ -57,6 +57,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
             'client_id' => 'Client ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'deleted_at' => 'Deleted At',
         ];
     }
 
@@ -65,7 +66,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
      */
     public function getClient()
     {
-        return $this->hasOne(Clients::className(), ['id' => 'client_id'])->joinWith(['user']);
+        return Clients::find()->where(['id'=>$this->client_id])->one();
     }
 
     /**
@@ -88,8 +89,9 @@ class BlacklistedClients extends \yii\db\ActiveRecord
     public static function getRestaurantBlacklistedClients()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
+
         if (empty($restaurant->blacklistedClients))
-            return Helpers::formatResponse(false, 'get failed', ['error' => "restaurant has no blacklisted clients"]);
+            return Helpers::formatResponse(false, 'get failed', [['error' => "restaurant has no blacklisted clients"]]);
 
         return Helpers::formatResponse(true, 'get success', $restaurant->blacklistedClients);
     }
@@ -106,9 +108,14 @@ class BlacklistedClients extends \yii\db\ActiveRecord
         if(is_null($Client))
             throw new NotFoundHttpException('client not found');
 
+        if(!empty(BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $Client->id])->one()))
+            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'This client is already blocked']);
+
         $BlacklistedClient = new BlacklistedClients();
-        $BlacklistedClient->client_id = $Client->id;
-        $BlacklistedClient->reason = 'not specified';
+        foreach ($BlacklistedClient->attributes as $attributeKey => $attribute){
+            if (isset($data[$attributeKey]))
+                $BlacklistedClient->$attributeKey = $data[$attributeKey];
+        }
         $BlacklistedClient->restaurant_id = $restaurant->id;
         $isCreated = $BlacklistedClient->save();
         if (!$isCreated)
@@ -120,7 +127,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
-        $BlacklistedClient = BlacklistedClients::find()->where(['client_id' => $blacklisted_client_id])->andWhere(['deleted_at' => null])->one();
+        $BlacklistedClient = BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $blacklisted_client_id])->andWhere(['deleted_at' => null])->one();
 
         if (is_null($BlacklistedClient))
             return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This blacklisted client dos't exist"]);

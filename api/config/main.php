@@ -22,21 +22,21 @@ return [
         'response' => [
             'class' => 'yii\web\Response',
             'on beforeSend' => function ($event) {
-                $response = $event->sender;
-                if($response->format == 'html'){
-                    $response->format = \yii\web\Response::FORMAT_JSON;
-                    $response->data = [
-                        'success' => false,
-                        'message' => $response->statusText,
-                        'data' => null
-                    ];
-                } else if ($response->statusCode != 200 && $response->statusCode != 422) {
-                    $response->data = [
-                        'success' => false,
-                        'message' => str_replace('Hash', 'Password', $response->data['message']),
-                        'data' => null
-                    ];
-                }
+//                $response = $event->sender;
+//                if($response->format == 'html'){
+//                    $response->format = \yii\web\Response::FORMAT_JSON;
+//                    $response->data = [
+//                        'success' => false,
+//                        'message' => $response->statusText,
+//                        'data' => null
+//                    ];
+//                } else if ($response->statusCode != 200 && $response->statusCode != 422) {
+//                    $response->data = [
+//                        'success' => false,
+//                        'message' => str_replace('Hash', 'Password', $response->data['message']),
+//                        'data' => null
+//                    ];
+//                }
             },
         ],
         'user' => [
@@ -84,6 +84,17 @@ return [
                         'GET,POST,PUT,DELETE item-choices/{id}' => 'item-choices',
                         'GET,POST,PUT,DELETE blacklisted-clients' => 'blacklisted-clients',
                         'GET,POST,PUT,DELETE blacklisted-clients/{id}' => 'blacklisted-clients',
+                        'GET,POST,PUT,DELETE reviews' => 'reviews',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\w+>'
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['v1/common'],
+                    'extraPatterns' => [
+                        'GET,POST,PUT,DELETE states' => 'states',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
