@@ -267,6 +267,7 @@ class Restaurants extends \yii\db\ActiveRecord
             'longitude',
             'latitude',
             'image',
+            'image_background',
             'areas' => function() {
                 return $this->areas;
             },

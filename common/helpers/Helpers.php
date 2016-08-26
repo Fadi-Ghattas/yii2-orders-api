@@ -23,9 +23,7 @@ class Helpers
         $response = \Yii::$app->getResponse();
         $response->setStatusCode(422);
         $response->format = Response::FORMAT_JSON;
-        $response->data = ['success' => false,
-                           'message' => $message,
-                           'data' => $data];
+        $response->data = self::formatResponse(false, $message, $data);
         $response->send();
         die();
     }
