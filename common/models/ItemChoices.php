@@ -118,7 +118,7 @@ class ItemChoices extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
         if (empty($restaurant->itemChoices))
-            return Helpers::formatResponse(false, 'get failed', [['error' => "restaurant has no items of choices"]]);
+            return Helpers::formatResponse(false, 'get failed', ['error' => "restaurant has no items of choices"]);
 
         return Helpers::formatResponse(true, 'get success', $restaurant->itemChoices);
     }
@@ -128,7 +128,7 @@ class ItemChoices extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         $itemChoice = self::getItemChoice($restaurant->id, $item_choice_id);
         if (empty($itemChoice))
-            return Helpers::formatResponse(false, 'get failed', [['error' => "this item of choices dos't exist"]]);
+            return Helpers::formatResponse(false, 'get failed', ['error' => "this item of choices dos't exist"]);
 
         return Helpers::formatResponse(false, 'get success', $itemChoice);
     }

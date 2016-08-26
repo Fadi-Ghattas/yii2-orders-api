@@ -15,6 +15,7 @@ use Yii;
  * @property integer $discount
  * @property string $image
  * @property integer $is_taxable
+ * @property integer $is_verified
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
@@ -44,7 +45,7 @@ class MenuItems extends \yii\db\ActiveRecord
         return [
             [['name', 'description', 'price', 'status', 'is_taxable'], 'required'],
             [['price'], 'number'],
-            [['status', 'discount', 'is_taxable'], 'integer'],
+            [['status', 'discount', 'is_taxable','is_verified'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['name', 'description', 'image'], 'string', 'max' => 255],
         ];

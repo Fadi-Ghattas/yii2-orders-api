@@ -96,4 +96,9 @@ class Areas extends \yii\db\ActiveRecord
     {
         return new AreasQuery(get_called_class());
     }
+
+    public function fields()
+    {
+        return ['id','name'];
+    }
 }

@@ -30,6 +30,7 @@ use common\helpers\Helpers;
  * @property string $image_background
  * @property string $contact_number
  * @property integer $status
+ * @property integer $is_verified_global
  * @property string $created_at
  * @property string $updated_at
  * @property string $logout_at
@@ -85,12 +86,12 @@ class Restaurants extends \yii\db\ActiveRecord
             [['name', 'minimum_order_amount', 'time_order_open', 'time_order_close', 'delivery_fee', 'rank', 'halal', 'featured', 'working_opening_hours', 'working_closing_hours', 'disable_ordering', 'delivery_duration', 'phone_number', 'contact_number', 'longitude','latitude', 'image', 'status', 'user_id'], 'required'],
             [['minimum_order_amount', 'delivery_fee', 'rank', 'longitude', 'latitude'], 'number'],
             [['action','time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
-            [['halal', 'featured', 'disable_ordering', 'delivery_duration', 'status', 'user_id'], 'integer'],
+            [['halal', 'featured', 'disable_ordering', 'delivery_duration', 'status', 'user_id', 'is_verified_global'], 'integer'],
             [['name', 'phone_number', 'contact_number' ,'image', 'image_background'], 'string', 'max' => 255],
             [['working_opening_hours','working_closing_hours','time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
-            [['phone_number'],  'udokmeci\yii2PhoneValidator\PhoneValidator','country'=> 'MY', 'strict'=>false],
-            [['contact_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
+//            [['phone_number'],  'udokmeci\yii2PhoneValidator\PhoneValidator','country'=> 'MY', 'strict'=>false],
+//            [['contact_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
         ];
     }
 

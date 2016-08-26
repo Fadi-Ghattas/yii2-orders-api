@@ -111,7 +111,7 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
         if(empty($restaurant->menuCategories))
-            return Helpers::formatResponse(false, 'get failed', [['error' => 'restaurant has no categories']]);
+            return Helpers::formatResponse(false, 'get failed', ['error' => 'restaurant has no categories']);
 
         return Helpers::formatResponse(true, 'get success', $restaurant->menuCategories);
     }
@@ -121,11 +121,11 @@ class MenuCategories extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
 
         if(self::isCategoryDeleted($restaurant->id, $category_id))
-            return Helpers::formatResponse(false, 'get failed', [['error' => "This category dos't exist"]]);
+            return Helpers::formatResponse(false, 'get failed', ['error' => "This category dos't exist"]);
 
         $menuCategoryItems = self::getMenuCategoryItemsAsArray($restaurant->id, $category_id);
         if(empty($menuCategoryItems))
-            return Helpers::formatResponse(false, 'get failed', [['error' => 'this category is empty']]);
+            return Helpers::formatResponse(false, 'get failed', ['error' => 'this category is empty']);
         if(!is_null($menuCategoryItems[0]['deleted_at']))
             return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This menu category was deleted and we can't get the menu items"]);
         if($restaurant->id != intval($menuCategoryItems[0]['restaurant_id']))

@@ -91,7 +91,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
 
         if (empty($restaurant->blacklistedClients))
-            return Helpers::formatResponse(false, 'get failed', [['error' => "restaurant has no blacklisted clients"]]);
+            return Helpers::formatResponse(false, 'get failed', ['error' => "restaurant has no blacklisted clients"]);
 
         return Helpers::formatResponse(true, 'get success', $restaurant->blacklistedClients);
     }

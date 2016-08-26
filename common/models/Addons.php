@@ -113,7 +113,7 @@ class Addons extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
         if (empty($restaurant->addons))
-            return Helpers::formatResponse(false, 'get failed', [['error' => "restaurant has no add-on's"]]);
+            return Helpers::formatResponse(false, 'get failed', ['error' => "restaurant has no add-on's"]);
 
         return Helpers::formatResponse(true, 'get success', $restaurant->addons);
     }
@@ -123,7 +123,7 @@ class Addons extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         $add_on = self::getAddOn($restaurant->id, $add_on_id);
         if (empty($add_on))
-            return Helpers::formatResponse(false, 'get failed', [['error' => "this add-on dos't exist"]]);
+            return Helpers::formatResponse(false, 'get failed', ['error' => "this add-on dos't exist"]);
 
         return Helpers::formatResponse(false, 'get success', $add_on);
     }

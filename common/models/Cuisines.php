@@ -75,4 +75,9 @@ class Cuisines extends \yii\db\ActiveRecord
     {
         return new CuisinesQuery(get_called_class());
     }
+
+    public function fields()
+    {
+        return ['id','name'];
+    }
 }
