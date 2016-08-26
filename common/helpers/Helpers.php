@@ -15,7 +15,17 @@ class Helpers
 {
 
     public static function formatResponse($success, $message, $data) {
-        return ['success' => $success, 'message' => $message, 'data' => (!is_null($data) ? [$data] : $data)];
+        if(!is_array($data))
+        {
+            return ['success' => $success,
+                    'message' => $message,
+                    'data' => (!is_null($data) ? [$data] : $data)];
+        } else {
+
+            return ['success' => $success,
+                    'message' => $message,
+                    'data' => $data];
+        }
     }
 
     public static function UnprocessableEntityHttpException($message, $data)
