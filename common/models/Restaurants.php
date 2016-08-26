@@ -292,7 +292,7 @@ class Restaurants extends \yii\db\ActiveRecord
     {
         $post_data = Yii::$app->request->post();
         if(empty($post_data))
-            Helpers::UnprocessableEntityHttpException('validation failed', ['error' => ['please provide data']]);
+            Helpers::HttpException(422, 'validation failed', ['error' => ['please provide data']]);
 
         $headers = Yii::$app->getRequest()->getHeaders();
         $auth_key = explode(' ',$headers['authorization'])[1];
@@ -327,7 +327,7 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public function afterValidate(){
         if ($this->hasErrors()) {
-            Helpers::UnprocessableEntityHttpException('validation failed' ,  ['error' => $this->errors]);
+            Helpers::HttpException(422,'validation failed' ,  ['error' => $this->errors]);
         }
     }
 

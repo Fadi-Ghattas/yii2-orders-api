@@ -5,11 +5,10 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
-        'urlManagerFrontEnd' => [
-            'class' => 'yii\web\urlManager',
-            'baseUrl' => '/',
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
+        'formatter' => [
+            'dateFormat' => 'd-M-Y',
+            'datetimeFormat' => 'd-M-Y H:i:s',
+            'timeFormat' => 'H:i:s',
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -20,12 +19,18 @@ return [
             'useFileTransport' => false,
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => 'host4.movetothecloud.com',
+                'host' => '',
                 'username' => 'mailer@jommakan.com',
-                'password' => 'Med123456',
+                'password' => '',
                 'port' => '587',
                 'encryption' => 'tls',
             ],
+        ],
+        'urlManagerFrontEnd' => [
+            'class' => 'yii\web\urlManager',
+            'baseUrl' => '/',
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
         ],
         'urlManagerBackend' => [
             'class' => 'yii\web\urlManager',

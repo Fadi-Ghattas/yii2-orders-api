@@ -87,11 +87,14 @@ class MenuCategories extends \yii\db\ActiveRecord
         return MenuCategories::find()
             ->where(['menu_categories.restaurant_id' => $restaurant_id])
             ->andWhere(['menu_categories.id' => $category_id])
+            ->andWhere(['menu_items.deleted_at' => null])
+            ->andWhere(['menu_categories.deleted_at' => null])
             ->joinWith(['menuCategoryItems'], true, 'INNER JOIN')
             ->joinWith(['menuCategoryItems', 'menuCategoryItems.menuItem'], true, 'INNER JOIN')
             ->orderBy('menu_items.created_at DESC')
             ->asArray()->all();
     }
+
 
     public static function getCategory($restaurant_id ,$category_id)
     {
@@ -120,6 +123,7 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
+
         if(self::isCategoryDeleted($restaurant->id, $category_id))
             return Helpers::formatResponse(false, 'get failed', ['error' => "This category dos't exist"]);
 
@@ -127,9 +131,9 @@ class MenuCategories extends \yii\db\ActiveRecord
         if(empty($menuCategoryItems))
             return Helpers::formatResponse(false, 'get failed', ['error' => 'this category is empty']);
         if(!is_null($menuCategoryItems[0]['deleted_at']))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This menu category was deleted and we can't get the menu items"]);
+            return Helpers::HttpException(422,'validation failed', ['error' => "This menu category was deleted and we can't get the menu items"]);
         if($restaurant->id != intval($menuCategoryItems[0]['restaurant_id']))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'This menu category is not belong to this restaurant']);
+            return Helpers::HttpException(422,'validation failed', ['error' => 'This menu category is not belong to this restaurant']);
 
         $menuItems = array();
         foreach ($menuCategoryItems[0]['menuCategoryItems'] as $menuItem)
@@ -152,10 +156,10 @@ class MenuCategories extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
 
         if(!isset($data['name']))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'name is required']);
+            return Helpers::HttpException(422,'validation failed', ['error' => 'name is required']);
 
         if(self::getMenuCategoryByName($restaurant->id, $data['name']))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'There is already category with the same name']);
+            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already category with the same name']);
 
         $menCategory = new MenuCategories();
         foreach ($menCategory->attributes as $attributeKey => $attribute){
@@ -176,14 +180,14 @@ class MenuCategories extends \yii\db\ActiveRecord
         $menCategory = self::getCategory($restaurant->id, $category_id);
 
         if(is_null($menCategory))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This category dos't exist"]);
+            return Helpers::HttpException(422,'validation failed', ['error' => "This category dos't exist"]);
 
         if($menCategory->restaurant_id != $restaurant->id)
             throw new ForbiddenHttpException("You don't have permission to do this action");
 
         $CheckUniqueMenuCategory = self::getMenuCategoryByName($restaurant->id, $data['name']);
         if(!empty($CheckUniqueMenuCategory) && $CheckUniqueMenuCategory->id != $category_id)
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'There is already menu category with the same name']);
+            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu category with the same name']);
 
         foreach ($data as $DataKey => $DataValue) {
             if (array_key_exists($DataKey, $menCategory->oldAttributes)) {
@@ -203,12 +207,12 @@ class MenuCategories extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
 
         if(!empty(self::getMenuCategoryItemsAsArray($restaurant->id, $category_id)))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'There is already menu category items with this category']);
+            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu category items with this category']);
 
         $menCategory = self::getCategory($restaurant->id, $category_id);
 
         if(empty($menCategory))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This category dos't exist"]);
+            return Helpers::HttpException(422,'validation failed', ['error' => "This category dos't exist"]);
 
         if($menCategory->restaurant_id != $restaurant->id)
             throw new ForbiddenHttpException("You don't have permission to do this action");
@@ -224,7 +228,7 @@ class MenuCategories extends \yii\db\ActiveRecord
 
     public function afterValidate() {
         if ($this->hasErrors()) {
-            Helpers::UnprocessableEntityHttpException('validation failed' ,  ['error' => $this->errors]);
+            Helpers::HttpException(422,'validation failed' ,  ['error' => $this->errors]);
         }
     }
 

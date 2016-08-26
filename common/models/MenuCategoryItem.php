@@ -73,5 +73,12 @@ class MenuCategoryItem extends \yii\db\ActiveRecord
     {
         return new MenuCategoryItemQuery(get_called_class());
     }
-    
+
+    public function afterValidate()
+    {
+        if ($this->hasErrors()) {
+            Helpers::UnprocessableEntityHttpException('validation failed', ['error' => $this->errors]);
+        }
+    }
+
 }

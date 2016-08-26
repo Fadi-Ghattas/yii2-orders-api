@@ -11,6 +11,7 @@
 
 namespace api\modules\v1\controllers;
 
+
 use Yii;
 use common\helpers\Helpers;
 use common\models\User;
@@ -21,6 +22,7 @@ use common\models\Addons;
 use common\models\ItemChoices;
 use common\models\BlacklistedClients;
 use common\models\Reviews;
+use common\models\MenuItems;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
@@ -64,7 +66,7 @@ class VendorController extends ActiveController
         $post_data = Yii::$app->request->post();
 
         if (!isset($post_data['email']) || !isset($post_data['password']))
-            Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'email and password are required for login']);
+            Helpers::HttpException(422, 'validation failed', ['error' => 'email and password are required for login']);
 
         $restaurantManager = User::findByEmail($post_data['email']);
         if (empty($restaurantManager))
@@ -89,9 +91,9 @@ class VendorController extends ActiveController
                 throw $e;
             }
         } else {
-            Helpers::UnprocessableEntityHttpException(strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])), null);
+            Helpers::HttpException(422,strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])), null);
         }
-        Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'Please provide valid data']);
+        Helpers::HttpException(422,'validation failed', ['error' => 'Please provide valid data']);
     }
 
     public function actionLogout()
@@ -100,17 +102,17 @@ class VendorController extends ActiveController
         $headers = Yii::$app->getRequest()->getHeaders();
 
         if(empty($post_data))
-            Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'Please provide data']);
+            Helpers::HttpException(422,'validation failed', ['error' => 'Please provide data']);
 
         if(!isset($post_data['email']) || !isset($post_data['password']))
-            Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'The email and password are required']);
+            Helpers::HttpException(422,'validation failed', ['error' => 'The email and password are required']);
 
         $restaurantManager = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
         if (empty($restaurantManager))
             throw new NotFoundHttpException('User not found');
 
         if($post_data['email'] !=  $restaurantManager->email || $post_data['password'] != $restaurantManager->password_hash)
-            Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'The email or password incorrect']);
+            Helpers::HttpException(422,'validation failed', ['error' => 'The email or password incorrect']);
 
         if (User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
             throw new ForbiddenHttpException('This account is not a restaurant account');
@@ -147,7 +149,7 @@ class VendorController extends ActiveController
             return Helpers::formatResponse(true, 'get success', Restaurants::checkRestaurantAccess()) ;
         }else if($request->isPut && empty($get_data)) {
             if(empty($request->post()))
-                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return Restaurants::updateRestaurant($request->post());
         }
         throw new MethodNotAllowedHttpException("Method Not Allowed");
@@ -165,11 +167,11 @@ class VendorController extends ActiveController
                 return MenuCategories::getMenuCategoryItemsResponse($get_data['id']);
         } else if($request->isPost && empty($get_data)){
             if(empty($request->post()))
-                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return MenuCategories::createCategory($request->post());
         } else if($request->isPut && !empty($get_data)) {
             if(empty($request->post()))
-                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return MenuCategories::updateCategory($get_data['id'], $request->post());
         } else if($request->isDelete && !empty($get_data)){
             return MenuCategories::deleteCategory($get_data['id']);
@@ -190,11 +192,11 @@ class VendorController extends ActiveController
                 return Addons::getRestaurantAddOn($get_data['id']);
         } else if($request->isPost && empty($get_data)){
             if(empty($request->post()))
-                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return Addons::createAddOn($request->post());
         } else if($request->isPut && !empty($get_data)) {
             if(empty($request->post()))
-                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return Addons::updateAddOn($get_data['id'], $request->post());
         } else if($request->isDelete && !empty($get_data)){
             return Addons::deleteAddOn($get_data['id']);
@@ -215,11 +217,11 @@ class VendorController extends ActiveController
                 return ItemChoices::getRestaurantItemChoice($get_data['id']);
         } else if($request->isPost && empty($get_data)){
             if(empty($request->post()))
-                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return ItemChoices::createItemChoice($request->post());
         } else if($request->isPut && !empty($get_data)) {
             if(empty($request->post()))
-                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return ItemChoices::updateItemChoice($get_data['id'], $request->post());
         } else if($request->isDelete && !empty($get_data)){
             return ItemChoices::deleteItemChoice($get_data['id']);
@@ -238,12 +240,35 @@ class VendorController extends ActiveController
                 return BlacklistedClients::getRestaurantBlacklistedClients();
         } else if($request->isPost && empty($get_data)){
             if(empty($request->post()))
-                Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'please provide data']);
+                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return BlacklistedClients::createItemBlacklistedClient($request->post());
         } else if($request->isDelete && !empty($get_data)){
             return BlacklistedClients::deleteBlacklistedClient($get_data['id']);
         }
         
+        throw new MethodNotAllowedHttpException("Method Not Allowed");
+    }
+
+    public function actionMenuItems(){
+
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if($request->isGet) {
+            if(!empty($get_data) && isset($get_data['id']))
+                return MenuItems::getRestaurantMenuItem($get_data['id']);
+        } else if($request->isPost && empty($get_data)){
+            if(empty($request->post()))
+                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+            return MenuItems::createMenuItem($request->post());
+        } else if($request->isPut && !empty($get_data)) {
+            if(empty($request->post()))
+                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+            return MenuItems::updateMenuItem($get_data['id'], $request->post());
+        } else if($request->isDelete && !empty($get_data)){
+            return MenuItems::deleteMenuItem($get_data['id']);
+        }
+
         throw new MethodNotAllowedHttpException("Method Not Allowed");
     }
 
@@ -272,6 +297,7 @@ class VendorController extends ActiveController
             'item-choices' => ['GET','PUT','POST','DELETE'],
             'blacklisted-clients' => ['GET','POST','DELETE'],
             'reviews' => ['GET'],
+            'menu-items' => ['GET','PUT','POST','DELETE'],
         ];
 
         foreach ($actions as $action => $verb) {

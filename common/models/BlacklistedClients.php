@@ -101,7 +101,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
 
         if (!isset($data['client_id']))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'client_id is required']);
+            return Helpers::HttpException(422,'validation failed', ['error' => 'client_id is required']);
 
         $Client = Clients::find()->where(['id' => $data['client_id']])->andWhere(['deleted_at' => null])->one();
 
@@ -109,7 +109,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
             throw new NotFoundHttpException('client not found');
 
         if(!empty(BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $Client->id])->one()))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => 'This client is already blocked']);
+            return Helpers::HttpException(422,'validation failed', ['error' => 'This client is already blocked']);
 
         $BlacklistedClient = new BlacklistedClients();
         foreach ($BlacklistedClient->attributes as $attributeKey => $attribute){
@@ -130,7 +130,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
         $BlacklistedClient = BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $blacklisted_client_id])->andWhere(['deleted_at' => null])->one();
 
         if (is_null($BlacklistedClient))
-            return Helpers::UnprocessableEntityHttpException('validation failed', ['error' => "This blacklisted client dos't exist"]);
+            return Helpers::HttpException(422,'validation failed', ['error' => "This blacklisted client dos't exist"]);
 
         if ($BlacklistedClient->restaurant_id != $restaurant->id)
             throw new ForbiddenHttpException("You don't have permission to do this action");
@@ -146,7 +146,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            Helpers::UnprocessableEntityHttpException('validation failed', ['error' => $this->errors]);
+            Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
         }
     }
 

@@ -15,13 +15,12 @@ class Helpers
 {
 
     public static function formatResponse($success, $message, $data) {
-        if(!is_array($data))
+        if(!isset($data[0]))
         {
             return ['success' => $success,
                     'message' => $message,
                     'data' => (!is_null($data) ? [$data] : $data)];
         } else {
-
             return ['success' => $success,
                     'message' => $message,
                     'data' => $data];
@@ -32,6 +31,16 @@ class Helpers
     {
         $response = \Yii::$app->getResponse();
         $response->setStatusCode(422);
+        $response->format = Response::FORMAT_JSON;
+        $response->data = self::formatResponse(false, $message, $data);
+        $response->send();
+        die();
+    }
+
+    public static function HttpException($status_code,$message, $data)
+    {
+        $response = \Yii::$app->getResponse();
+        $response->setStatusCode($status_code);
         $response->format = Response::FORMAT_JSON;
         $response->data = self::formatResponse(false, $message, $data);
         $response->send();

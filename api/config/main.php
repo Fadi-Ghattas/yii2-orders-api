@@ -85,6 +85,8 @@ return [
                         'GET,POST,PUT,DELETE blacklisted-clients' => 'blacklisted-clients',
                         'GET,POST,PUT,DELETE blacklisted-clients/{id}' => 'blacklisted-clients',
                         'GET,POST,PUT,DELETE reviews' => 'reviews',
+                        'GET,POST,PUT,DELETE menu-items' => 'menu-items',
+                        'GET,POST,PUT,DELETE menu-items/{id}' => 'menu-items',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

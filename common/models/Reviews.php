@@ -100,7 +100,7 @@ class Reviews extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            Helpers::UnprocessableEntityHttpException('validation failed', ['error' => $this->errors]);
+            Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
         }
     }
 
