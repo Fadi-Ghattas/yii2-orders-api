@@ -186,24 +186,24 @@ class MenuItems extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
-        if(!isset($data['category_id']))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'category_id is required']);
+        if(!isset($data['categories']))
+            return Helpers::HttpException(422,'validation failed', ['error' => 'one category at least is required']);
 
-        if(empty($data['category_id']))
-            return Helpers::HttpException(422,'validation failed', ['error' => "category_id can't be blank"]);
+        if(empty($data['categories']))
+            return Helpers::HttpException(422,'validation failed', ['error' => "categories can't be blank"]);
 
-        //check if the category belong to the restaurant
-        if(empty(MenuCategories::getCategory($restaurant->id, $data['category_id'])))
-            return Helpers::HttpException(403,"You don't have permission to do this action", null);
-
-        if(MenuCategories::isCategoryDeleted($restaurant->id, $data['category_id']))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'This category is deleted']);
-
+        if(isset($data['categories']) && !empty($data['categories']))
+        {
+            foreach ($data['categories'] as $category) {
+                if(empty(MenuCategories::getCategory($restaurant->id, $category['id'])))//check's if addOn belong to the restaurant
+                    return Helpers::HttpException(422,'validation failed', ['error' => "There is category dos't exist"]);
+            }
+        }
         if(isset($data['addOns']) && !empty($data['addOns']))
         {
             foreach ($data['addOns'] as $addOn) {
                 if(empty(Addons::getAddOn($restaurant->id, $addOn['id'])))//check's if addOn belong to the restaurant
-                    return Helpers::HttpException(422,'validation failed', ['error' => "There is add ons dos't exist"]);
+                    return Helpers::HttpException(422,'validation failed', ['error' => "There is add-on dos't exist"]);
             }
         }
 
@@ -215,6 +215,9 @@ class MenuItems extends \yii\db\ActiveRecord
             }
         }
 
+        if(!empty(self::getMenuItemByName($restaurant->id, $data['name'])))
+            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu item with the same name']);
+
         $menuItem = new MenuItems();
         foreach ($menuItem->attributes as $attributeKey => $attribute){
             if (isset($data[$attributeKey]))
@@ -223,18 +226,21 @@ class MenuItems extends \yii\db\ActiveRecord
         $menuItem->status = 1;
         $menuItem->validate();
 
-        if(!empty(self::getMenuItemByName($restaurant->id, $data['name'])))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu item with the same name']);
+
 
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
         try {
             $menuItem->save();
-            $menuCategoryItem = new MenuCategoryItem();
-            $menuCategoryItem->menu_item_id = $menuItem->id;
-            $menuCategoryItem->menu_category_id = $data['category_id'];
-            $menuCategoryItem->save();
-            $menuCategoryItem->validate();
+
+            foreach ($data['categories'] as $category) {
+                $menuCategoryItem = new MenuCategoryItem();
+                $menuCategoryItem->menu_item_id = $menuItem->id;
+                $menuCategoryItem->menu_category_id = $category['id'];
+                $menuCategoryItem->save();
+                $menuCategoryItem->validate();
+            }
+
             if(isset($data['addOns']) && !empty($data['addOns']))
             {
                 foreach ($data['addOns'] as $addOn){

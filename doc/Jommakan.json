@@ -58,7 +58,7 @@
 		{
 			"id": "0093d719-e0d1-a48c-0055-5768ea299a31",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items",
+			"url": "localhost/jommakan/api/web/v1/vendors/menu-items",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -68,12 +68,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472322361119,
+			"time": 1472336800058,
 			"name": "Create Restaurant Menu Item",
 			"description": "",
 			"collectionId": "05c17f4d-02a4-31fc-2f5d-efc5ad044e0e",
 			"responses": [],
-			"rawModeData": "{  \n      \"category_id\": \"2\",\n      \"name\": \"VFFF\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 10,\n      \"image\": null,\n      \"is_taxable\": 1,\n      \"addOns\": [\n        {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n      ],\n      \"ItemChoices\": [\n        {\n          \"id\": \"1\"\n        }\n      ]\n    \n}"
+			"rawModeData": "{  \n      \"name\": \"VFfffFF\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 10,\n      \"image\": null,\n      \"is_taxable\": 1,\n      \"categories\": [\n         {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n          ],\n      \"addOns\": [\n        {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n      ],\n      \"ItemChoices\": [\n        {\n          \"id\": \"1\"\n        }\n      ]\n    \n}"
 		},
 		{
 			"id": "0517cdbe-9a4e-9d34-42e7-dee5ea9beede",
