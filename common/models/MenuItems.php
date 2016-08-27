@@ -174,11 +174,17 @@ class MenuItems extends \yii\db\ActiveRecord
         $menuItem->status = 1;
         $menuItem->validate();
 
-        if(!empty(self::getMenuItemByName($restaurant->id, $data['name'])))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu item with the same name']);
-
         if(!isset($data['category_id']))
             return Helpers::HttpException(422,'validation failed', ['error' => 'category_id is required']);
+        //check if the category belong to the restaurant
+        if(empty(MenuCategories::getCategory($restaurant->id, $data['category_id'])))
+            return Helpers::HttpException(403,"You don't have permission to do this action", null);
+
+        if(MenuCategories::isCategoryDeleted($restaurant->id, $data['category_id']))
+            return Helpers::HttpException(422,'validation failed', ['error' => 'This category is deleted']);
+
+        if(!empty(self::getMenuItemByName($restaurant->id, $data['name'])))
+            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu item with the same name']);
 
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
@@ -204,33 +210,35 @@ class MenuItems extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         $menuItem = self::getMenuItem($restaurant->id, $menu_item_id);
 
-        if (empty($menuItem))
-            return Helpers::HttpException(422,'validation failed', ['error' => "This menu item dos't exist"]);
-        $CheckUniqueMenuItem = self::getMenuItemByName($restaurant->id, $data['name']);
-
-        if(!empty($CheckUniqueMenuItem) && $CheckUniqueMenuItem->id != $menu_item_id)
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu item with the same name']);
-
         if((isset($data['old_category_id']) && !isset($data['category_id'])) || (!isset($data['old_category_id']) && isset($data['category_id'])))
             return Helpers::HttpException(422,'validation failed', ['error' => 'old_category_id and category_id are required']);
+
+        $checkOldCategory = empty(MenuCategories::getCategory($restaurant->id, $data['old_category_id']));
+        $checkNewCategory = empty(MenuCategories::getCategory($restaurant->id, $data['category_id']));
+        if($checkOldCategory || $checkNewCategory)//check if the old category and the new category belong to the restaurant
+            return Helpers::HttpException(403, "You don't have permission to do this action", null);
+
+        if(MenuCategories::isCategoryDeleted($restaurant->id, $data['category_id']))
+            return Helpers::HttpException(422,'validation failed', ['error' => 'This category is deleted']);
+
+        if (empty($menuItem))
+            return Helpers::HttpException(422,'validation failed', ['error' => "This menu item dos't exist"]);
+
+        $CheckUniqueMenuItem = self::getMenuItemByName($restaurant->id, $data['name']);
+        if(!empty($CheckUniqueMenuItem) && $CheckUniqueMenuItem->id != $menu_item_id)
+            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu item with the same name']);
 
         foreach ($data as $DataKey => $DataValue) {
             if (array_key_exists($DataKey, $menuItem->oldAttributes)) {
                 $menuItem->$DataKey = $DataValue;
             }
         }
-
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
         try {
             $menuItem->save();
             if(isset($data['old_category_id']) && isset($data['category_id']))
             {
-                $checkOldCategory = empty(MenuCategories::getCategory($restaurant->id, $data['old_category_id']));
-                $checkNewCategory = empty(MenuCategories::getCategory($restaurant->id, $data['category_id']));
-                if($checkOldCategory || $checkNewCategory)//check if the old category and the new category belong to the restaurant
-                    return Helpers::HttpException(403, "You don't have permission to do this action", null);
-
                 $menuCategoryItem = MenuCategoryItem::findOne(['menu_item_id' => $menuItem->id , 'menu_category_id' => $data['old_category_id']]);
                 if(empty($menuCategoryItem)){
                     $menuCategoryItem = new MenuCategoryItem();
