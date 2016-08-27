@@ -68,12 +68,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472312359801,
+			"time": 1472322361119,
 			"name": "Create Restaurant Menu Item",
 			"description": "",
 			"collectionId": "05c17f4d-02a4-31fc-2f5d-efc5ad044e0e",
 			"responses": [],
-			"rawModeData": "{\n      \"category_id\": \"1\",\n      \"name\": \"Tony mendu1333\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 1201,\n      \"image\": null,\n      \"is_taxable\": 1\n    }"
+			"rawModeData": "{  \n      \"category_id\": \"2\",\n      \"name\": \"VFFF\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 10,\n      \"image\": null,\n      \"is_taxable\": 1,\n      \"addOns\": [\n        {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n      ],\n      \"ItemChoices\": [\n        {\n          \"id\": \"1\"\n        }\n      ]\n    \n}"
 		},
 		{
 			"id": "0517cdbe-9a4e-9d34-42e7-dee5ea9beede",
@@ -1963,7 +1963,7 @@
 		{
 			"id": "843be4eb-3d43-480e-4dae-3d2864e3bd4a",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items/1",
+			"url": "localhost/jommakan/api/web/v1/vendors/menu-items/21",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "PUT",
@@ -1973,12 +1973,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472312355410,
+			"time": 1472336103354,
 			"name": "Update Restaurant Menu Item",
 			"description": "",
 			"collectionId": "05c17f4d-02a4-31fc-2f5d-efc5ad044e0e",
 			"responses": [],
-			"rawModeData": "{\n      \"old_category_id\": \"1\",\n      \"category_id\": \"2\",\n      \"name\": \"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 1201,\n      \"image\": null,\n      \"is_taxable\": 1\n    }"
+			"rawModeData": "{  \n      \"name\": \"VFFF\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 10,\n      \"image\": null,\n      \"is_taxable\": 1,\n      \"categories\": [\n         {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n          ],\n      \"addOns\": [\n        {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n      ],\n      \"ItemChoices\": [\n        {\n          \"id\": \"1\"\n        },{\n          \"id\": \"2\"\n        }\n      ]\n    \n}"
 		},
 		{
 			"id": "953c3165-561e-3f20-727a-f5f9eae759c5",
@@ -2708,7 +2708,7 @@
 		{
 			"id": "9b1c6719-83a7-6281-a42a-bfcf4affdd74",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items/1",
+			"url": "localhost/jommakan/api/web/v1/vendors/menu-items/21",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -2718,7 +2718,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472312364793,
+			"time": 1472327834532,
 			"name": "Get Restaurant Menu Item",
 			"description": "",
 			"collectionId": "05c17f4d-02a4-31fc-2f5d-efc5ad044e0e",
