@@ -144,6 +144,7 @@ class MenuCategories extends \yii\db\ActiveRecord
                 $singleMenuItem['name'] = $menuItem['menuItem']['name'];
                 $singleMenuItem['price'] = $menuItem['menuItem']['price'];
                 $singleMenuItem['status'] = $menuItem['menuItem']['status'];
+                $singleMenuItem['is_verified'] = $menuItem['menuItem']['is_verified'];
                 $menuItems[] = $singleMenuItem;
             }
         }
