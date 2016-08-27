@@ -122,8 +122,7 @@ class MenuCategories extends \yii\db\ActiveRecord
     public static function getMenuCategoryItemsResponse($category_id)
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-
-
+        
         if(self::isCategoryDeleted($restaurant->id, $category_id))
             return Helpers::formatResponse(false, 'get failed', ['error' => "This category dos't exist"]);
 
