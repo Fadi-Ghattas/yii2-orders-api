@@ -92,7 +92,7 @@ class MenuItems extends \yii\db\ActiveRecord
      */
     public function getMenuItemAddons()
     {
-        return $this->hasMany(MenuItemAddon::className(), ['menu_item_id' => 'id'])->all();
+        return $this->hasMany(MenuItemAddon::className(), ['menu_item_id' => 'id']);
     }
 
     /**
@@ -101,7 +101,7 @@ class MenuItems extends \yii\db\ActiveRecord
     public function getAddons()
     {
         return $this->hasMany(Addons::className(), ['id' => 'addon_id'])->viaTable('menu_item_addon', ['menu_item_id' => 'id'])
-            ->where(['deleted_at' => null])->all();
+            ->where(['deleted_at' => null]);
     }
 
     /**
@@ -109,7 +109,7 @@ class MenuItems extends \yii\db\ActiveRecord
      */
     public function getMenuItemChoices()
     {
-        return $this->hasMany(MenuItemChoice::className(), ['menu_item_id' => 'id'])->all();
+        return $this->hasMany(MenuItemChoice::className(), ['menu_item_id' => 'id']);
     }
 
     /**
@@ -118,7 +118,7 @@ class MenuItems extends \yii\db\ActiveRecord
     public function getChoices()
     {
         return $this->hasMany(ItemChoices::className(), ['id' => 'choice_id'])->viaTable('menu_item_choice', ['menu_item_id' => 'id'])
-            ->where(['deleted_at' => null])->all();
+            ->where(['deleted_at' => null]);
     }
 
     /**
@@ -313,8 +313,6 @@ class MenuItems extends \yii\db\ActiveRecord
                         return Helpers::HttpException(422,'validation failed', ['error' => "category id is required"]);
                     if(empty($Category['id']))
                         return Helpers::HttpException(422,'validation failed', ['error' => "category id can't be blank"]);
-                    if(!is_int($Category['id']))
-                        return Helpers::HttpException(422,'validation failed', ['error' => "category id must be integer"]);
 
                     if (!array_key_exists($Category['id'], $menuCategoryItems)) {
 
@@ -342,7 +340,7 @@ class MenuItems extends \yii\db\ActiveRecord
                     return Helpers::HttpException(422,'validation failed', ['error' => "addOns can't be blank"]);
 
                 $newAddons = $data['addOns'];
-                $menuItemAddons = $menuItem->getMenuItemAddons();
+                $menuItemAddons = $menuItem->menuItemAddons;
 
                 $models = [];
                 foreach ($menuItemAddons as $MenuItemAddon) {
@@ -357,8 +355,6 @@ class MenuItems extends \yii\db\ActiveRecord
                         return Helpers::HttpException(422,'validation failed', ['error' => "add-on id is required"]);
                     if(empty($Addon['id']))
                         return Helpers::HttpException(422,'validation failed', ['error' => "add-on id can't be blank"]);
-                    if(!is_int($Addon['id']))
-                        return Helpers::HttpException(422,'validation failed', ['error' => "add-on id must be integer"]);
 
                     if (!array_key_exists($Addon['id'], $menuItemAddons)) {
 
@@ -387,7 +383,7 @@ class MenuItems extends \yii\db\ActiveRecord
                     return Helpers::HttpException(422,'validation failed', ['error' => "ItemChoices can't be blank"]);
 
                 $newItemChoices = $data['ItemChoices'];
-                $menuItemChoices = $menuItem->getMenuItemChoices();
+                $menuItemChoices = $menuItem->menuItemChoices;
 
                 $models = [];
                 foreach ($menuItemChoices as $MenuItemChoice) {
@@ -397,13 +393,11 @@ class MenuItems extends \yii\db\ActiveRecord
                 $menuItemChoices = $models;
 
                 foreach ($newItemChoices as $ItemChoice) {
-                    
+
                     if(!isset($ItemChoice['id']))
                         return Helpers::HttpException(422,'validation failed', ['error' => "item choice id is required"]);
                     if(empty($ItemChoice['id']))
                         return Helpers::HttpException(422,'validation failed', ['error' => "item choice id can't be blank"]);
-                    if(!is_int($ItemChoice['id']))
-                        return Helpers::HttpException(422,'validation failed', ['error' => "item choice id must be integer"]);
 
                     if (!array_key_exists($ItemChoice['id'], $menuItemChoices)) {
 
@@ -485,10 +479,10 @@ class MenuItems extends \yii\db\ActiveRecord
                   return self::getMenuItemCategories($restaurant->id, $this->id);
                 },
                 'addOns' => function(){
-                    return $this->getAddons();
+                    return $this->addons;
                 },
                 'ItemChoices'=> function(){
-                    return $this->getChoices();
+                    return $this->choices;
                 }
         ];
     }

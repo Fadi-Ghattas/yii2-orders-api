@@ -27,9 +27,6 @@ use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
-use yii\web\ForbiddenHttpException;
-use yii\web\MethodNotAllowedHttpException;
-use yii\web\NotFoundHttpException;
 
 class VendorController extends ActiveController
 {

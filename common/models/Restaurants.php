@@ -353,8 +353,53 @@ class Restaurants extends \yii\db\ActiveRecord
     {
         $restaurants = Restaurants::checkRestaurantAccess();
         $model['Restaurants'] = $data;
+
         $restaurants->load($model);
         $restaurants->validate();
+
+//        if(isset($data['areas'])) {
+//
+//            if(empty($data['areas']))
+//                return Helpers::HttpException(422,'validation failed', ['error' => "areas can't be blank"]);
+//
+//            $newAreas = $data['areas'];
+//            $areaRestaurants = $restaurants->areaRestaurants;
+//
+//            $models = [];
+//            foreach ($areaRestaurants as $AreaRestaurant) {
+//                $models[$AreaRestaurant->area_id] = $AreaRestaurant;
+//            }
+//
+//            $areaRestaurants = $models;
+//
+//            foreach ($newAreas as $Area) {
+//
+//                if(!isset($Area['id']))
+//                    return Helpers::HttpException(422,'validation failed', ['error' => "area id is required"]);
+//                if(empty($Area['id']))
+//                    return Helpers::HttpException(422,'validation failed', ['error' => "area id can't be blank"]);
+//
+//                if (!array_key_exists($Area['id'], $areaRestaurants)) {
+//
+//                    if(empty(MenuItems::getMenuItem($restaurants->id, $Area['id'])))
+//                        return Helpers::HttpException(422,'validation failed', ['error' => "There area dos't exist"]);
+//
+//                    $menuItemChoice = new AreaRestaurant();
+//                    $menuItemChoice->area_id = $Area['id'];
+//                    $menuItemChoice->restaurant_id = $restaurants->id;
+//                    $menuItemChoice->validate();
+//                    $menuItemChoice->save();
+//                } else {
+//                    unset($menuItemChoices[$ItemChoice['id']]);
+//                }
+//            }
+//
+//            if (!empty($menuItemChoices))
+//                foreach ($menuItemChoices as $MenuItemChoice)
+//                    $MenuItemChoice->delete();
+//        }
+
+
         $isUpdated = $restaurants->save();
         if($isUpdated)
             return Helpers::formatResponse($isUpdated, 'update success', ['id' => $restaurants->id]);

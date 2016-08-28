@@ -66,7 +66,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
      */
     public function getClient()
     {
-        return Clients::find()->where(['id'=>$this->client_id])->one();
+        return $this->hasOne(Clients::className(), ['id' => 'client_id']);
     }
 
     /**
@@ -160,7 +160,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
             'id',
             'reason',
             'client' => function(){
-                return $this->getClient();
+                return $this->client;
             }
         ];
 
