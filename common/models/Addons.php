@@ -160,11 +160,12 @@ class Addons extends \yii\db\ActiveRecord
             return Helpers::HttpException(422,'validation failed', ['error' => "This add-on dos't exist"]);
         if ($addOn->restaurant_id != $restaurant->id)
             throw new ForbiddenHttpException("You don't have permission to do this action");
-        //check restaurant add-on name if is it unique before update
-        $CheckUniqueAddOn = self::getAddOnByName($restaurant->id, $data['name']);
-        if(!empty($CheckUniqueAddOn) && $CheckUniqueAddOn->id != $add_on_id)
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already AddOn with the same name']);
-
+        if(isset($data['name'])) {
+            //check restaurant add-on name if is it unique before update
+            $CheckUniqueAddOn = self::getAddOnByName($restaurant->id, $data['name']);
+            if (!empty($CheckUniqueAddOn) && $CheckUniqueAddOn->id != $add_on_id)
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'There is already AddOn with the same name']);
+        }
         foreach ($data as $DataKey => $DataValue) {
             if (array_key_exists($DataKey, $addOn->oldAttributes)) {
                 $addOn->$DataKey = $DataValue;
