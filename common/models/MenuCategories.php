@@ -95,7 +95,6 @@ class MenuCategories extends \yii\db\ActiveRecord
             ->asArray()->all();
     }
 
-
     public static function getCategory($restaurant_id ,$category_id)
     {
         return MenuCategories::find()->where(['restaurant_id' => $restaurant_id])->andWhere(['id' => $category_id])->andWhere(['deleted_at' => null])->one();
@@ -156,18 +155,15 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
-        if(!isset($data['name']))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'name is required']);
+        $menCategory = new MenuCategories();
+        $model['MenuCategories'] = $data;
+        $menCategory->load($model);
+        $menCategory->restaurant_id = $restaurant->id;
+        $menCategory->validate();
 
         if(self::getMenuCategoryByName($restaurant->id, $data['name']))
             return Helpers::HttpException(422,'validation failed', ['error' => 'There is already category with the same name']);
 
-        $menCategory = new MenuCategories();
-        foreach ($menCategory->attributes as $attributeKey => $attribute){
-            if (isset($data[$attributeKey]))
-                $menCategory->$attributeKey = $data[$attributeKey];
-        }
-        $menCategory->restaurant_id = $restaurant->id;
         $isCreated = $menCategory->save();
         if(!$isCreated)
             return Helpers::formatResponse($isCreated, 'create failed', null);
@@ -177,25 +173,21 @@ class MenuCategories extends \yii\db\ActiveRecord
     public static function updateCategory($category_id, $data)
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-
         $menCategory = self::getCategory($restaurant->id, $category_id);
 
         if(is_null($menCategory))
             return Helpers::HttpException(422,'validation failed', ['error' => "This category dos't exist"]);
 
-        if($menCategory->restaurant_id != $restaurant->id)
-            throw new ForbiddenHttpException("You don't have permission to do this action");
+        $model['MenuCategories'] = $data;
+        $menCategory->load($model);
+        $menCategory->validate();
 
-        $CheckUniqueMenuCategory = self::getMenuCategoryByName($restaurant->id, $data['name']);
-        if(!empty($CheckUniqueMenuCategory) && $CheckUniqueMenuCategory->id != $category_id)
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu category with the same name']);
-
-        foreach ($data as $DataKey => $DataValue) {
-            if (array_key_exists($DataKey, $menCategory->oldAttributes)) {
-                $menCategory->$DataKey = $DataValue;
-            }
+        if (isset($data['name'])) {
+            $CheckUniqueMenuCategory = self::getMenuCategoryByName($restaurant->id, $data['name']);
+            if (!empty($CheckUniqueMenuCategory) && $CheckUniqueMenuCategory->id != $category_id)
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'There is already menu category with the same name']);
         }
-        
+
         $isUpdated = $menCategory->save();
         if(!$isUpdated)
             return Helpers::formatResponse($isUpdated, 'update failed', null);
@@ -215,9 +207,6 @@ class MenuCategories extends \yii\db\ActiveRecord
         if(empty($menCategory))
             return Helpers::HttpException(422,'validation failed', ['error' => "This category dos't exist"]);
 
-        if($menCategory->restaurant_id != $restaurant->id)
-            throw new ForbiddenHttpException("You don't have permission to do this action");
-
         $menCategory->deleted_at = date('Y-m-d H:i:s');
         $isUpdated = $menCategory->save();
 
@@ -229,7 +218,7 @@ class MenuCategories extends \yii\db\ActiveRecord
 
     public function afterValidate() {
         if ($this->hasErrors()) {
-            Helpers::HttpException(422,'validation failed' ,  ['error' => $this->errors]);
+            return Helpers::HttpException(422,'validation failed' ,  ['error' => $this->errors]);
         }
     }
 

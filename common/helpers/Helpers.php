@@ -13,7 +13,7 @@ use yii\web\Response;
 
 class Helpers
 {
-
+    //web
     public static function formatResponse($success, $message, $data) {
         if(!isset($data[0]))
         {
@@ -25,16 +25,6 @@ class Helpers
                     'message' => $message,
                     'data' => $data];
         }
-    }
-
-    public static function UnprocessableEntityHttpException($message, $data)
-    {
-        $response = \Yii::$app->getResponse();
-        $response->setStatusCode(422);
-        $response->format = Response::FORMAT_JSON;
-        $response->data = self::formatResponse(false, $message, $data);
-        $response->send();
-        die();
     }
 
     public static function HttpException($status_code,$message, $data)
@@ -68,4 +58,45 @@ class Helpers
         }
         return $formatted_json;
     }
+
+    //db
+    public static function linkManyToMany($relationship_model, $related_id ,$new_entities, $old_entities, $entity_id, $relationship_entity_id , $restaurant_id = 0)
+    {
+        $models = [];
+        foreach ($old_entities as $old_entity) {
+            $models[$old_entity->$entity_id] = $old_entity;
+        }
+        $old_entities = $models;
+
+        foreach ($new_entities as $entity) {
+
+            if(!isset($entity['id']))
+                return Helpers::HttpException(422,'validation failed', ['error' => "add-on id is required"]);
+            if(empty($entity['id']))
+                return Helpers::HttpException(422,'validation failed', ['error' => "add-on id can't be blank"]);
+            if(!intval($entity['id']))
+                return Helpers::HttpException(422,'validation failed', ['error' => "add-on id must be integer"]);
+
+            if (!array_key_exists($entity['id'], $old_entities)) {
+
+//                if ($restaurant_id) {
+//                    if (empty(Addons::getAddOn($restaurant_id, $entity['id'])))
+//                        return Helpers::HttpException(422, 'validation failed', ['error' => "There add-on dos't exist"]);
+//                }
+                
+                $model_entity = $relationship_model;
+                $model_entity->$entity_id = $entity['id'];
+                $model_entity->$relationship_entity_id = $related_id;
+                $model_entity->validate();
+                $model_entity->save();
+            } else {
+                unset($old_entities[$entity['id']]);
+            }
+        }
+
+        if (!empty($old_entities))
+            foreach ($old_entities as $old_entity)
+                $old_entity->delete();
+    }
+    
 }

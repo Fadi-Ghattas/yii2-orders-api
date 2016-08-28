@@ -292,7 +292,7 @@ class Restaurants extends \yii\db\ActiveRecord
     {
         $post_data = Yii::$app->request->post();
         if(empty($post_data))
-            Helpers::HttpException(422, 'validation failed', ['error' => ['please provide data']]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => ['please provide data']]);
 
         $headers = Yii::$app->getRequest()->getHeaders();
         $auth_key = explode(' ',$headers['authorization'])[1];
@@ -327,7 +327,7 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public function afterValidate(){
         if ($this->hasErrors()) {
-            Helpers::HttpException(422,'validation failed' ,  ['error' => $this->errors]);
+            return Helpers::HttpException(422,'validation failed' ,  ['error' => $this->errors]);
         }
     }
 
@@ -352,11 +352,9 @@ class Restaurants extends \yii\db\ActiveRecord
     public static function updateRestaurant($data)
     {
         $restaurants = Restaurants::checkRestaurantAccess();
-        foreach ($data as $DataKey => $DataValue){
-            if(array_key_exists($DataKey, $restaurants->oldAttributes)){
-                $restaurants->$DataKey = $DataValue;
-            }
-        }
+        $model['Restaurants'] = $data;
+        $restaurants->load($model);
+        $restaurants->validate();
         $isUpdated = $restaurants->save();
         if($isUpdated)
             return Helpers::formatResponse($isUpdated, 'update success', ['id' => $restaurants->id]);

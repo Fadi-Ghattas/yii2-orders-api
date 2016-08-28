@@ -137,18 +137,16 @@ class ItemChoices extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
-        if (!isset($data['name']))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'name is required']);
-        if(!empty(self::getItemChoiceByName($restaurant->id, $data['name'])))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already item of choice with the same name']);
-
         $ItemChoice = new ItemChoices();
-        foreach ($ItemChoice->attributes as $attributeKey => $attribute){
-            if (isset($data[$attributeKey]))
-                $ItemChoice->$attributeKey = $data[$attributeKey];
-        }
+        $model['ItemChoices'] = $data;
+        $ItemChoice->load($model);
         $ItemChoice->status = 1;
         $ItemChoice->restaurant_id = $restaurant->id;
+        $ItemChoice->validate();
+
+        if(!empty(self::getItemChoiceByName($restaurant->id, $data['name'])))
+            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already item of choice with the same name']);
+        
         $isCreated = $ItemChoice->save();
         if (!$isCreated)
             return Helpers::formatResponse($isCreated, 'create failed', null);
@@ -158,21 +156,19 @@ class ItemChoices extends \yii\db\ActiveRecord
     public static function updateItemChoice($item_choice_id, $data)
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-
         $ItemChoice = self::getItemChoice($restaurant->id, $item_choice_id);
 
         if (empty($ItemChoice))
             return Helpers::HttpException(422,'validation failed', ['error' => "This Item of Choices dos't exist"]);
-        if ($ItemChoice->restaurant_id != $restaurant->id)
-            throw new ForbiddenHttpException("You don't have permission to do this action");
-        $CheckUniqueItemChoice = self::getItemChoiceByName($restaurant->id, $data['name']);
-        if(!empty($CheckUniqueItemChoice) && $CheckUniqueItemChoice->id != $item_choice_id)
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already AddOn with the same name']);
 
-        foreach ($data as $DataKey => $DataValue) {
-            if (array_key_exists($DataKey, $ItemChoice->oldAttributes)) {
-                $ItemChoice->$DataKey = $DataValue;
-            }
+        $model['ItemChoices'] = $data;
+        $ItemChoice->load($model);
+        $ItemChoice->validate();
+
+        if (isset($data['name'])) {
+            $CheckUniqueItemChoice = self::getItemChoiceByName($restaurant->id, $data['name']);
+            if (!empty($CheckUniqueItemChoice) && $CheckUniqueItemChoice->id != $item_choice_id)
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'There is already AddOn with the same name']);
         }
 
         $isUpdated = $ItemChoice->save();
@@ -185,13 +181,10 @@ class ItemChoices extends \yii\db\ActiveRecord
     public static function deleteItemChoice($item_choice_id)
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-
         $ItemChoice = self::getItemChoice($restaurant->id, $item_choice_id);
 
-        if (is_null($ItemChoice))
+        if (empty($ItemChoice))
             return Helpers::HttpException(422,'validation failed', ['error' => "This item choices dos't exist"]);
-        if ($ItemChoice->restaurant_id != $restaurant->id)
-            throw new ForbiddenHttpException("You don't have permission to do this action");
 
         $ItemChoice->deleted_at = date('Y-m-d H:i:s');
         $isUpdated = $ItemChoice->save();
@@ -205,7 +198,7 @@ class ItemChoices extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
         }
     }
 

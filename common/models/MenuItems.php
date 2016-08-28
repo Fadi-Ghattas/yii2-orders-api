@@ -214,18 +214,15 @@ class MenuItems extends \yii\db\ActiveRecord
                     return Helpers::HttpException(422,'validation failed', ['error' => "There is item choices dos't exist"]);
             }
         }
-        
+
         $menuItem = new MenuItems();
-        foreach ($menuItem->attributes as $attributeKey => $attribute){
-            if (isset($data[$attributeKey]))
-                $menuItem->$attributeKey = $data[$attributeKey];
-        }
+        $model['MenuItems'] = $data;
+        $menuItem->load($model);
         $menuItem->status = 1;
         $menuItem->validate();
 
         if(!empty(self::getMenuItemByName($restaurant->id, $data['name'])))
             return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu item with the same name']);
-
 
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
@@ -278,18 +275,16 @@ class MenuItems extends \yii\db\ActiveRecord
         if (empty($menuItem))
             return Helpers::HttpException(422,'validation failed', ['error' => "This menu item dos't exist"]);
 
+        
+        $model['MenuItems'] = $data;
+        $menuItem->load($model);
+        $menuItem->validate();
+
         if(isset($data['name'])) {
             $CheckUniqueMenuItem = self::getMenuItemByName($restaurant->id, $data['name']);
             if(!empty($CheckUniqueMenuItem) && $CheckUniqueMenuItem->id != $menu_item_id)
                 return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu item with the same name']);
         }
-        
-        foreach ($data as $DataKey => $DataValue) {
-            if (array_key_exists($DataKey, $menuItem->oldAttributes)) {
-                $menuItem->$DataKey = $DataValue;
-            }
-        }
-        $menuItem->validate();
 
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
@@ -298,6 +293,9 @@ class MenuItems extends \yii\db\ActiveRecord
             $menuItem->save();
 
             if(isset($data['categories'])) {
+
+                if(empty($data['categories']))
+                    return Helpers::HttpException(422,'validation failed', ['error' => "categories can't be blank"]);
 
                 $newCategories = $data['categories'];
                 $menuCategoryItems = $menuItem->getRelatedMenuCategoryItems();
@@ -311,8 +309,12 @@ class MenuItems extends \yii\db\ActiveRecord
 
                 foreach ($newCategories as $Category) {
 
+                    if(!isset($Category['id']))
+                        return Helpers::HttpException(422,'validation failed', ['error' => "category id is required"]);
                     if(empty($Category['id']))
                         return Helpers::HttpException(422,'validation failed', ['error' => "category id can't be blank"]);
+                    if(!is_int($Category['id']))
+                        return Helpers::HttpException(422,'validation failed', ['error' => "category id must be integer"]);
 
                     if (!array_key_exists($Category['id'], $menuCategoryItems)) {
 
@@ -336,6 +338,9 @@ class MenuItems extends \yii\db\ActiveRecord
 
             if(isset($data['addOns'])) {
 
+                if(empty($data['addOns']))
+                    return Helpers::HttpException(422,'validation failed', ['error' => "addOns can't be blank"]);
+
                 $newAddons = $data['addOns'];
                 $menuItemAddons = $menuItem->getMenuItemAddons();
 
@@ -348,8 +353,12 @@ class MenuItems extends \yii\db\ActiveRecord
 
                 foreach ($newAddons as $Addon) {
 
+                    if(!isset($Addon['id']))
+                        return Helpers::HttpException(422,'validation failed', ['error' => "add-on id is required"]);
                     if(empty($Addon['id']))
                         return Helpers::HttpException(422,'validation failed', ['error' => "add-on id can't be blank"]);
+                    if(!is_int($Addon['id']))
+                        return Helpers::HttpException(422,'validation failed', ['error' => "add-on id must be integer"]);
 
                     if (!array_key_exists($Addon['id'], $menuItemAddons)) {
 
@@ -374,6 +383,9 @@ class MenuItems extends \yii\db\ActiveRecord
 
             if(isset($data['ItemChoices'])) {
 
+                if(empty($data['ItemChoices']))
+                    return Helpers::HttpException(422,'validation failed', ['error' => "ItemChoices can't be blank"]);
+
                 $newItemChoices = $data['ItemChoices'];
                 $menuItemChoices = $menuItem->getMenuItemChoices();
 
@@ -385,9 +397,13 @@ class MenuItems extends \yii\db\ActiveRecord
                 $menuItemChoices = $models;
 
                 foreach ($newItemChoices as $ItemChoice) {
-
+                    
+                    if(!isset($ItemChoice['id']))
+                        return Helpers::HttpException(422,'validation failed', ['error' => "item choice id is required"]);
                     if(empty($ItemChoice['id']))
-                        return Helpers::HttpException(422,'validation failed', ['error' => "item choiceid can't be blank"]);
+                        return Helpers::HttpException(422,'validation failed', ['error' => "item choice id can't be blank"]);
+                    if(!is_int($ItemChoice['id']))
+                        return Helpers::HttpException(422,'validation failed', ['error' => "item choice id must be integer"]);
 
                     if (!array_key_exists($ItemChoice['id'], $menuItemChoices)) {
 
@@ -411,10 +427,10 @@ class MenuItems extends \yii\db\ActiveRecord
 
             $transaction->commit();
             return Helpers::formatResponse(true, 'update success', ['id' => $menuItem->id]);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $transaction->rollBack();
-//            return Helpers::formatResponse(false, 'update failed', null);
-            throw $e;
+            return Helpers::formatResponse(false, 'update failed', null);
+            //throw $e;
         }
         return Helpers::formatResponse(false, 'update failed', null);
     }
@@ -439,7 +455,7 @@ class MenuItems extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
         }
     }
 
@@ -463,7 +479,8 @@ class MenuItems extends \yii\db\ActiveRecord
                 'discount',
                 'image',
                 'is_taxable',
-                'categories' => function(){
+                'is_verified',
+                'categories' => function() {
                   $restaurant = Restaurants::checkRestaurantAccess();
                   return self::getMenuItemCategories($restaurant->id, $this->id);
                 },

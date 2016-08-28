@@ -227,7 +227,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function afterValidate() {
         if ($this->hasErrors()) {
-            Helpers::HttpException(422,'validation failed' , ['error' => $this->errors]);
+            return Helpers::HttpException(422,'validation failed' , ['error' => $this->errors]);
         }
     }
 

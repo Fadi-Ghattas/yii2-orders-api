@@ -104,19 +104,17 @@ class BlacklistedClients extends \yii\db\ActiveRecord
             return Helpers::HttpException(422,'validation failed', ['error' => 'client_id is required']);
 
         $Client = Clients::find()->where(['id' => $data['client_id']])->andWhere(['deleted_at' => null])->one();
-
-        if(is_null($Client))
-            throw new NotFoundHttpException('client not found');
-
+        if(empty($Client))
+            return Helpers::HttpException(422,'validation failed', ['error' => 'client not found']);
         if(!empty(BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $Client->id])->one()))
             return Helpers::HttpException(422,'validation failed', ['error' => 'This client is already blocked']);
 
         $BlacklistedClient = new BlacklistedClients();
-        foreach ($BlacklistedClient->attributes as $attributeKey => $attribute){
-            if (isset($data[$attributeKey]))
-                $BlacklistedClient->$attributeKey = $data[$attributeKey];
-        }
+        $model['BlacklistedClients'] = $data;
+        $BlacklistedClient->load($model);
         $BlacklistedClient->restaurant_id = $restaurant->id;
+        $BlacklistedClient->validate();
+
         $isCreated = $BlacklistedClient->save();
         if (!$isCreated)
             return Helpers::formatResponse($isCreated, 'create failed', null);
@@ -128,12 +126,8 @@ class BlacklistedClients extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
 
         $BlacklistedClient = BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $blacklisted_client_id])->andWhere(['deleted_at' => null])->one();
-
-        if (is_null($BlacklistedClient))
+        if (empty($BlacklistedClient))
             return Helpers::HttpException(422,'validation failed', ['error' => "This blacklisted client dos't exist"]);
-
-        if ($BlacklistedClient->restaurant_id != $restaurant->id)
-            throw new ForbiddenHttpException("You don't have permission to do this action");
 
         $isDeleted = $BlacklistedClient->delete();
 
@@ -146,7 +140,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
         }
     }
 

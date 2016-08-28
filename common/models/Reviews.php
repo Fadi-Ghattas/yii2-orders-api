@@ -100,7 +100,7 @@ class Reviews extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
         }
     }
 

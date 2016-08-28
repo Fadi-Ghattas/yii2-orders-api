@@ -66,34 +66,35 @@ class VendorController extends ActiveController
         $post_data = Yii::$app->request->post();
 
         if (!isset($post_data['email']) || !isset($post_data['password']))
-            Helpers::HttpException(422, 'validation failed', ['error' => 'email and password are required for login']);
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'email and password are required for login']);
 
         $restaurantManager = User::findByEmail($post_data['email']);
         if (empty($restaurantManager))
-            throw new NotFoundHttpException('User not found.');
+            return Helpers::HttpException(404, 'user not found', null);
         if (User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
-            throw new ForbiddenHttpException('This account is not a restaurant account');
+            return Helpers::HttpException(403, "This account is not a restaurant account", null);
         if (!Restaurants::find()->where(['user_id' => $restaurantManager->id])->one()->status)
-            throw new ForbiddenHttpException('This account is deactivated');
+            return Helpers::HttpException(403, "This account is deactivated", null);
         if(!is_null($restaurantManager->last_logged_at))
-            throw new ForbiddenHttpException('You already logged in');
+            return Helpers::HttpException(403, "You already logged in", null);
 
         $model = new LoginForm();
         $model->username = $post_data['email'];
         $model->password = $post_data['password'];
         $model->email = $post_data['email'];
-        if ($model->load($post_data, '') && $model->login()) {
+        if ($model->load($post_data) && $model->login()) {
             try {
                 $restaurantManager->last_logged_at = date('Y-m-d H:i:s');;
                 if ($restaurantManager->save(false))
                     return Helpers::formatResponse(true, 'login success', ['auth_key' => $restaurantManager['auth_key']]);
             } catch (\Exception $e) {
-                throw $e;
+                return Helpers::HttpException(500, "Something went wrong please try again..", null);
+//                throw $e;
             }
         } else {
-            Helpers::HttpException(422,strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])), null);
+            return Helpers::HttpException(422,strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])), null);
         }
-        Helpers::HttpException(422,'validation failed', ['error' => 'Please provide valid data']);
+        return Helpers::HttpException(422,'validation failed', ['error' => 'Please provide valid data']);
     }
 
     public function actionLogout()
@@ -102,20 +103,20 @@ class VendorController extends ActiveController
         $headers = Yii::$app->getRequest()->getHeaders();
 
         if(empty($post_data))
-            Helpers::HttpException(422,'validation failed', ['error' => 'Please provide data']);
+            return Helpers::HttpException(422,'validation failed', ['error' => 'Please provide data']);
 
         if(!isset($post_data['email']) || !isset($post_data['password']))
-            Helpers::HttpException(422,'validation failed', ['error' => 'The email and password are required']);
+            return Helpers::HttpException(422,'validation failed', ['error' => 'The email and password are required']);
 
         $restaurantManager = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
         if (empty($restaurantManager))
-            throw new NotFoundHttpException('User not found');
+            return Helpers::HttpException(404, 'user not found', null);
 
         if($post_data['email'] !=  $restaurantManager->email || $post_data['password'] != $restaurantManager->password_hash)
-            Helpers::HttpException(422,'validation failed', ['error' => 'The email or password incorrect']);
+            return Helpers::HttpException(422,'validation failed', ['error' => 'The email or password incorrect']);
 
         if (User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
-            throw new ForbiddenHttpException('This account is not a restaurant account');
+            return Helpers::HttpException(403, "This account is not a restaurant account", null);
 
 //        $user = User::findOne($restaurantManager->id);
         $restaurants = Restaurants::find()->where(['user_id' => $restaurantManager->id])->one();
@@ -135,8 +136,8 @@ class VendorController extends ActiveController
             return Helpers::formatResponse(true,'You have been logged out successful' , null);
         } catch (\Exception $e) {
             $transaction->rollback();
-//            throw new ServerErrorHttpException('Something went wrong please try again..');
-            throw $e;
+            return Helpers::HttpException(500, "Something went wrong please try again..", null);
+//            throw $e;
         }
     }
 
@@ -149,10 +150,10 @@ class VendorController extends ActiveController
             return Helpers::formatResponse(true, 'get success', Restaurants::checkRestaurantAccess()) ;
         }else if($request->isPut && empty($get_data)) {
             if(empty($request->post()))
-                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return Restaurants::updateRestaurant($request->post());
         }
-        throw new MethodNotAllowedHttpException("Method Not Allowed");
+        return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
     public function actionMenu()
@@ -167,17 +168,17 @@ class VendorController extends ActiveController
                 return MenuCategories::getMenuCategoryItemsResponse($get_data['id']);
         } else if($request->isPost && empty($get_data)){
             if(empty($request->post()))
-                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return MenuCategories::createCategory($request->post());
         } else if($request->isPut && !empty($get_data)) {
             if(empty($request->post()))
-                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return MenuCategories::updateCategory($get_data['id'], $request->post());
         } else if($request->isDelete && !empty($get_data)){
             return MenuCategories::deleteCategory($get_data['id']);
         }
 
-        throw new MethodNotAllowedHttpException("Method Not Allowed");
+        return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
     public function actionAddOn()
@@ -192,17 +193,17 @@ class VendorController extends ActiveController
                 return Addons::getRestaurantAddOn($get_data['id']);
         } else if($request->isPost && empty($get_data)){
             if(empty($request->post()))
-                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return Addons::createAddOn($request->post());
         } else if($request->isPut && !empty($get_data)) {
             if(empty($request->post()))
-                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return Addons::updateAddOn($get_data['id'], $request->post());
         } else if($request->isDelete && !empty($get_data)){
             return Addons::deleteAddOn($get_data['id']);
         }
 
-        throw new MethodNotAllowedHttpException("Method Not Allowed");
+        return Helpers::HttpException(405, "Method Not Allowed", null);
     }
     
     public function actionItemChoices()
@@ -217,17 +218,17 @@ class VendorController extends ActiveController
                 return ItemChoices::getRestaurantItemChoice($get_data['id']);
         } else if($request->isPost && empty($get_data)){
             if(empty($request->post()))
-                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return ItemChoices::createItemChoice($request->post());
         } else if($request->isPut && !empty($get_data)) {
             if(empty($request->post()))
-                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return ItemChoices::updateItemChoice($get_data['id'], $request->post());
         } else if($request->isDelete && !empty($get_data)){
             return ItemChoices::deleteItemChoice($get_data['id']);
         }
 
-        throw new MethodNotAllowedHttpException("Method Not Allowed");
+        return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
     public function actionBlacklistedClients()
@@ -240,13 +241,13 @@ class VendorController extends ActiveController
                 return BlacklistedClients::getRestaurantBlacklistedClients();
         } else if($request->isPost && empty($get_data)){
             if(empty($request->post()))
-                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return BlacklistedClients::createItemBlacklistedClient($request->post());
         } else if($request->isDelete && !empty($get_data)){
             return BlacklistedClients::deleteBlacklistedClient($get_data['id']);
         }
-        
-        throw new MethodNotAllowedHttpException("Method Not Allowed");
+
+        return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
     public function actionMenuItems(){
@@ -259,17 +260,17 @@ class VendorController extends ActiveController
                 return MenuItems::getRestaurantMenuItem($get_data['id']);
         } else if($request->isPost && empty($get_data)){
             if(empty($request->post()))
-                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return MenuItems::createMenuItem($request->post());
         } else if($request->isPut && !empty($get_data)) {
             if(empty($request->post()))
-                Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
             return MenuItems::updateMenuItem($get_data['id'], $request->post());
         } else if($request->isDelete && !empty($get_data)){
             return MenuItems::deleteMenuItem($get_data['id']);
         }
 
-        throw new MethodNotAllowedHttpException("Method Not Allowed");
+        return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
     public function actionReviews()
@@ -282,7 +283,7 @@ class VendorController extends ActiveController
                 return Reviews::getReviews();
         }
 
-        throw new MethodNotAllowedHttpException("Method Not Allowed");
+        return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
     public function beforeAction($event)
@@ -303,7 +304,7 @@ class VendorController extends ActiveController
         foreach ($actions as $action => $verb) {
             if (in_array($action, $request_action)) {
                 if (!in_array(Yii::$app->getRequest()->getMethod(), $actions[$action]))
-                    throw new MethodNotAllowedHttpException("Method Not Allowed");
+                    return Helpers::HttpException(405, "Method Not Allowed", null);
             }
         }
         return parent::beforeAction($event);

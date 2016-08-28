@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\helpers\Helpers;
 use Yii;
 
 /**
@@ -77,7 +78,7 @@ class MenuCategoryItem extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            Helpers::UnprocessableEntityHttpException('validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
         }
     }
 
