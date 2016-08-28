@@ -49,7 +49,7 @@ class MenuItems extends \yii\db\ActiveRecord
             [['name', 'description', 'price', 'status', 'is_taxable'], 'required'],
             [['price'], 'number'],
             [['status', 'discount', 'is_taxable','is_verified'], 'integer'],
-            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['created_at', 'updated_at', 'deleted_at','name'], 'safe'],
             [['name', 'description', 'image'], 'string', 'max' => 255],
         ];
     }
@@ -279,10 +279,11 @@ class MenuItems extends \yii\db\ActiveRecord
         if (empty($menuItem))
             return Helpers::HttpException(422,'validation failed', ['error' => "This menu item dos't exist"]);
 
-        $CheckUniqueMenuItem = self::getMenuItemByName($restaurant->id, $data['name']);
-        if(!empty($CheckUniqueMenuItem) && $CheckUniqueMenuItem->id != $menu_item_id)
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu item with the same name']);
-
+        if(isset($data['name'])) {
+            $CheckUniqueMenuItem = self::getMenuItemByName($restaurant->id, $data['name']);
+            if(!empty($CheckUniqueMenuItem) && $CheckUniqueMenuItem->id != $menu_item_id)
+                return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu item with the same name']);
+        }
         
         foreach ($data as $DataKey => $DataValue) {
             if (array_key_exists($DataKey, $menuItem->oldAttributes)) {
@@ -293,6 +294,7 @@ class MenuItems extends \yii\db\ActiveRecord
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
         try {
+            $menuItem->validate();
             $menuItem->save();
 
             if(isset($data['categories'])) {
