@@ -133,7 +133,7 @@ class VendorController extends ActiveController
             return Helpers::formatResponse(true,'You have been logged out successful' , null);
         } catch (\Exception $e) {
             $transaction->rollback();
-            return Helpers::HttpException(500, "Something went wrong please try again..", null);
+            return Helpers::HttpException(422, 'logout failed',['error'=>'something went wrong please try again..']);
 //            throw $e;
         }
     }
