@@ -117,9 +117,6 @@ class ItemChoices extends \yii\db\ActiveRecord
     public static function getRestaurantItemsChoices()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        if (empty($restaurant->itemChoices))
-            return Helpers::formatResponse(false, 'get failed', ['error' => "restaurant has no items of choices"]);
-
         return Helpers::formatResponse(true, 'get success', $restaurant->itemChoices);
     }
 
@@ -128,7 +125,7 @@ class ItemChoices extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         $itemChoice = self::getItemChoice($restaurant->id, $item_choice_id);
         if (empty($itemChoice))
-            return Helpers::formatResponse(false, 'get failed', ['error' => "this item of choices dos't exist"]);
+            return Helpers::HttpException(404, 'get failed', ['error' => "this item of choices dos't exist"]);
 
         return Helpers::formatResponse(true, 'get success', $itemChoice);
     }
@@ -145,11 +142,11 @@ class ItemChoices extends \yii\db\ActiveRecord
         $ItemChoice->validate();
 
         if(!empty(self::getItemChoiceByName($restaurant->id, $data['name'])))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already item of choice with the same name']);
+            return Helpers::HttpException(409,'name conflict', ['error' => 'There is already item of choice with the same name']);
         
         $isCreated = $ItemChoice->save();
         if (!$isCreated)
-            return Helpers::formatResponse($isCreated, 'create failed', null);
+            return Helpers::HttpException(422, 'create failed', null);
         return Helpers::formatResponse($isCreated, 'create success', ['id' => $ItemChoice->id]);
     }
 
@@ -159,7 +156,7 @@ class ItemChoices extends \yii\db\ActiveRecord
         $ItemChoice = self::getItemChoice($restaurant->id, $item_choice_id);
 
         if (empty($ItemChoice))
-            return Helpers::HttpException(422,'validation failed', ['error' => "This Item of Choices dos't exist"]);
+            return Helpers::HttpException(404, 'update failed', ['error' => "This Item of Choices dos't exist"]);
 
         $model['ItemChoices'] = $data;
         $ItemChoice->load($model);
@@ -168,12 +165,12 @@ class ItemChoices extends \yii\db\ActiveRecord
         if (isset($data['name'])) {
             $CheckUniqueItemChoice = self::getItemChoiceByName($restaurant->id, $data['name']);
             if (!empty($CheckUniqueItemChoice) && $CheckUniqueItemChoice->id != $item_choice_id)
-                return Helpers::HttpException(422, 'validation failed', ['error' => 'There is already AddOn with the same name']);
+                return Helpers::HttpException(409, 'name conflict', ['error' => 'There is already AddOn with the same name']);
         }
 
         $isUpdated = $ItemChoice->save();
         if (!$isUpdated)
-            return Helpers::formatResponse($isUpdated, 'update failed', null);
+            return Helpers::HttpException(422, 'update failed', null);
 
         return Helpers::formatResponse($isUpdated, 'update success', ['id' => $ItemChoice->id]);
     }
@@ -184,13 +181,13 @@ class ItemChoices extends \yii\db\ActiveRecord
         $ItemChoice = self::getItemChoice($restaurant->id, $item_choice_id);
 
         if (empty($ItemChoice))
-            return Helpers::HttpException(422,'validation failed', ['error' => "This item choices dos't exist"]);
+            return Helpers::HttpException(404,'deleted failed', ['error' => "This item choices dos't exist"]);
 
         $ItemChoice->deleted_at = date('Y-m-d H:i:s');
         $isUpdated = $ItemChoice->save();
 
         if (!$isUpdated)
-            return Helpers::formatResponse($isUpdated, 'deleted failed', null);
+            return Helpers::HttpException(422, 'deleted failed', null);
 
         return Helpers::formatResponse($isUpdated, 'deleted success', ['id' => $ItemChoice->id]);
     }

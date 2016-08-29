@@ -15,7 +15,7 @@ class Helpers
 {
     //web
     public static function formatResponse($success, $message, $data) {
-        if(!isset($data[0]))
+        if(!isset($data[0]) && !empty($data))
         {
             return ['success' => $success,
                     'message' => $message,

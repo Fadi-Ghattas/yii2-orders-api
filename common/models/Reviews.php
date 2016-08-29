@@ -91,9 +91,6 @@ class Reviews extends \yii\db\ActiveRecord
     public static function getReviews()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        if (empty($restaurant->reviews))
-            return Helpers::formatResponse(false, 'get failed', ['error' => "restaurant has no reviews"]);
-
         return Helpers::formatResponse(true, 'get success', $restaurant->reviews);
     }
 

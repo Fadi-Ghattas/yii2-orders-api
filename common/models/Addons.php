@@ -112,9 +112,6 @@ class Addons extends \yii\db\ActiveRecord
     public static function getRestaurantAddOns()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        if (empty($restaurant->addons))
-            return Helpers::formatResponse(false, 'get failed', ['error' => "restaurant has no add-on's"]);
-
         return Helpers::formatResponse(true, 'get success', $restaurant->addons);
     }
 
@@ -123,7 +120,7 @@ class Addons extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         $add_on = self::getAddOn($restaurant->id, $add_on_id);
         if (empty($add_on))
-            return Helpers::formatResponse(false, 'get failed', ['error' => "this add-on dos't exist"]);
+            return Helpers::HttpException(404, 'get failed', ['error' => "this add-on dos't exist"]);
 
         return Helpers::formatResponse(true, 'get success', $add_on);
     }
@@ -140,11 +137,11 @@ class Addons extends \yii\db\ActiveRecord
         $addOn->validate();
         
         if(!empty(self::getAddOnByName($restaurant->id, $data['name'])))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already add-on with the same name']);
+            return Helpers::HttpException(409,'name conflict', ['error' => 'There is already add-on with the same name']);
 
         $isCreated = $addOn->save();
         if (!$isCreated)
-            return Helpers::formatResponse($isCreated, 'create failed', null);
+            return Helpers::HttpException(422, 'create failed', null);
         return Helpers::formatResponse($isCreated, 'create success', ['id' => $addOn->id]);
     }
 
@@ -155,7 +152,7 @@ class Addons extends \yii\db\ActiveRecord
         $addOn = self::getAddOn($restaurant->id, $add_on_id);
 
         if (empty($addOn))
-            return Helpers::HttpException(422,'validation failed', ['error' => "This add-on dos't exist"]);
+            return Helpers::HttpException(404,'update failed', ['error' => "This add-on dos't exist"]);
 
         $model['Addons'] = $data;
         $addOn->load($model);
@@ -165,12 +162,12 @@ class Addons extends \yii\db\ActiveRecord
             //check restaurant add-on name if is it unique before update
             $CheckUniqueAddOn = self::getAddOnByName($restaurant->id, $data['name']);
             if (!empty($CheckUniqueAddOn) && $CheckUniqueAddOn->id != $add_on_id)
-                return Helpers::HttpException(422, 'validation failed', ['error' => 'There is already AddOn with the same name']);
+                return Helpers::HttpException(409, 'name conflict', ['error' => 'There is already AddOn with the same name']);
         }
 
         $isUpdated = $addOn->save();
         if (!$isUpdated)
-            return Helpers::formatResponse($isUpdated, 'update failed', null);
+            return Helpers::HttpException(422, 'update failed', null);
 
         return Helpers::formatResponse($isUpdated, 'update success', ['id' => $addOn->id]);
     }
@@ -182,13 +179,13 @@ class Addons extends \yii\db\ActiveRecord
         $addOn = self::getAddOn($restaurant->id, $add_on_id);
 
         if (empty($addOn))
-            return Helpers::HttpException(422,'validation failed', ['error' => "This add-on dos't exist"]);
+            return Helpers::HttpException(404, 'deleted failed', ['error' => "This add-on dos't exist"]);
 
         $addOn->deleted_at = date('Y-m-d H:i:s');
         $isUpdated = $addOn->save();
 
         if (!$isUpdated)
-            return Helpers::formatResponse($isUpdated, 'deleted failed', null);
+            return Helpers::HttpException(422, 'deleted failed', null);
 
         return Helpers::formatResponse($isUpdated, 'deleted success', ['id' => $addOn->id]);
     }

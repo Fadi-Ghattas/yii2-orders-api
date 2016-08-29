@@ -89,10 +89,6 @@ class BlacklistedClients extends \yii\db\ActiveRecord
     public static function getRestaurantBlacklistedClients()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-
-        if (empty($restaurant->blacklistedClients))
-            return Helpers::formatResponse(false, 'get failed', ['error' => "restaurant has no blacklisted clients"]);
-
         return Helpers::formatResponse(true, 'get success', $restaurant->blacklistedClients);
     }
 
@@ -105,7 +101,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
 
         $Client = Clients::find()->where(['id' => $data['client_id']])->andWhere(['deleted_at' => null])->one();
         if(empty($Client))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'client not found']);
+            return Helpers::HttpException(404,'create failed', ['error' => 'client not found']);
         if(!empty(BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $Client->id])->one()))
             return Helpers::HttpException(422,'validation failed', ['error' => 'This client is already blocked']);
 
@@ -117,7 +113,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
 
         $isCreated = $BlacklistedClient->save();
         if (!$isCreated)
-            return Helpers::formatResponse($isCreated, 'create failed', null);
+            return Helpers::HttpException(422, 'create failed', null);
         return Helpers::formatResponse($isCreated, 'create success', ['id' => $BlacklistedClient->id]);
     }
 
@@ -127,12 +123,12 @@ class BlacklistedClients extends \yii\db\ActiveRecord
 
         $BlacklistedClient = BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $blacklisted_client_id])->andWhere(['deleted_at' => null])->one();
         if (empty($BlacklistedClient))
-            return Helpers::HttpException(422,'validation failed', ['error' => "This blacklisted client dos't exist"]);
+            return Helpers::HttpException(404,'deleted failed', ['error' => "This blacklisted client dos't exist"]);
 
         $isDeleted = $BlacklistedClient->delete();
 
         if (!$isDeleted)
-            return Helpers::formatResponse($isDeleted, 'deleted failed', null);
+            return Helpers::HttpException(422, 'deleted failed', null);
 
         return Helpers::formatResponse($isDeleted, 'deleted success', null);
     }

@@ -30,12 +30,6 @@ return [
                         'message' => $response->statusText,
                         'data' => null
                     ];
-                } else if ($response->statusCode != 200 && $response->statusCode != 422) {
-                    $response->data = [
-                        'success' => false,
-                        'message' => str_replace('Hash', 'Password', $response->data['message']),
-                        'data' => null
-                    ];
                 }
             },
         ],

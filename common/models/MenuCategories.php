@@ -112,9 +112,6 @@ class MenuCategories extends \yii\db\ActiveRecord
     public static function getMenuCategories()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        if(empty($restaurant->menuCategories))
-            return Helpers::formatResponse(false, 'get failed', ['error' => 'restaurant has no categories']);
-
         return Helpers::formatResponse(true, 'get success', $restaurant->menuCategories);
     }
 
@@ -122,13 +119,12 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
-        
         if(self::isCategoryDeleted($restaurant->id, $category_id))
-            return Helpers::formatResponse(false, 'get failed', ['error' => "This category dos't exist"]);
+            return Helpers::HttpException(404, 'get failed', ['error' => "This category dos't exist"]);
 
         $menuCategoryItems = self::getMenuCategoryItemsAsArray($restaurant->id, $category_id);
         if(empty($menuCategoryItems))
-            return Helpers::formatResponse(false, 'get failed', ['error' => 'this category is empty']);
+            return Helpers::formatResponse(true, 'get success', $menuCategoryItems);
         if(!is_null($menuCategoryItems[0]['deleted_at']))
             return Helpers::HttpException(422,'validation failed', ['error' => "This menu category was deleted and we can't get the menu items"]);
         if($restaurant->id != intval($menuCategoryItems[0]['restaurant_id']))
@@ -162,11 +158,11 @@ class MenuCategories extends \yii\db\ActiveRecord
         $menCategory->validate();
 
         if(self::getMenuCategoryByName($restaurant->id, $data['name']))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already category with the same name']);
+            return Helpers::HttpException(409,'name conflict', ['error' => 'There is already category with the same name']);
 
         $isCreated = $menCategory->save();
         if(!$isCreated)
-            return Helpers::formatResponse($isCreated, 'create failed', null);
+            return Helpers::HttpException(422, 'create failed', null);
         return Helpers::formatResponse($isCreated, 'create success', ['id' => $menCategory->id]);
     }
 
@@ -175,8 +171,8 @@ class MenuCategories extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         $menCategory = self::getCategory($restaurant->id, $category_id);
 
-        if(is_null($menCategory))
-            return Helpers::HttpException(422,'validation failed', ['error' => "This category dos't exist"]);
+        if(empty($menCategory))
+            return Helpers::HttpException(404,'update failed', ['error' => "This category dos't exist"]);
 
         $model['MenuCategories'] = $data;
         $menCategory->load($model);
@@ -185,12 +181,12 @@ class MenuCategories extends \yii\db\ActiveRecord
         if (isset($data['name'])) {
             $CheckUniqueMenuCategory = self::getMenuCategoryByName($restaurant->id, $data['name']);
             if (!empty($CheckUniqueMenuCategory) && $CheckUniqueMenuCategory->id != $category_id)
-                return Helpers::HttpException(422, 'validation failed', ['error' => 'There is already menu category with the same name']);
+                return Helpers::HttpException(409, 'name conflict', ['error' => 'There is already menu category with the same name']);
         }
 
         $isUpdated = $menCategory->save();
         if(!$isUpdated)
-            return Helpers::formatResponse($isUpdated, 'update failed', null);
+            return Helpers::HttpException(422, 'update failed', null);
 
         return Helpers::formatResponse($isUpdated, 'update success', ['id' => $menCategory->id]);
     }
@@ -205,13 +201,13 @@ class MenuCategories extends \yii\db\ActiveRecord
         $menCategory = self::getCategory($restaurant->id, $category_id);
 
         if(empty($menCategory))
-            return Helpers::HttpException(422,'validation failed', ['error' => "This category dos't exist"]);
+            return Helpers::HttpException(404,'deleted failed', ['error' => "This category dos't exist"]);
 
         $menCategory->deleted_at = date('Y-m-d H:i:s');
         $isUpdated = $menCategory->save();
 
         if(!$isUpdated)
-            return Helpers::formatResponse($isUpdated, 'deleted failed', null);
+            return Helpers::HttpException(422, 'deleted failed', null);
 
         return Helpers::formatResponse($isUpdated, 'deleted success', ['id' => $menCategory->id]);
     }

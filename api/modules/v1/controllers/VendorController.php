@@ -67,29 +67,29 @@ class VendorController extends ActiveController
 
         $restaurantManager = User::findByEmail($post_data['email']);
         if (empty($restaurantManager))
-            return Helpers::HttpException(404, 'user not found', null);
+            return Helpers::HttpException(404 ,'failed', ['error' => 'user not found']);
         if (User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
-            return Helpers::HttpException(403, "This account is not a restaurant account", null);
+            return Helpers::HttpException(403, "forbidden", ['error'=> "This account is not a restaurant account"]);
         if (!Restaurants::find()->where(['user_id' => $restaurantManager->id])->one()->status)
-            return Helpers::HttpException(403, "This account is deactivated", null);
+            return Helpers::HttpException(403, "forbidden" , ['error' =>  "This account is deactivated"]);
         if(!is_null($restaurantManager->last_logged_at))
-            return Helpers::HttpException(403, "You already logged in", null);
+            return Helpers::HttpException(403, "forbidden" , ['error'=> "You already logged in"]);
 
         $model = new LoginForm();
         $model->username = $post_data['email'];
         $model->password = $post_data['password'];
         $model->email = $post_data['email'];
-        if ($model->load($post_data) && $model->login()) {
+        if ($model->load($post_data, '') && $model->login()) {
             try {
                 $restaurantManager->last_logged_at = date('Y-m-d H:i:s');;
                 if ($restaurantManager->save(false))
                     return Helpers::formatResponse(true, 'login success', ['auth_key' => $restaurantManager['auth_key']]);
             } catch (\Exception $e) {
-                return Helpers::HttpException(500, "Something went wrong please try again..", null);
+                return Helpers::HttpException(422, 'login failed',['error'=>'something went wrong please try again..']);
 //                throw $e;
             }
         } else {
-            return Helpers::HttpException(422,strip_tags(Html::errorSummary($model, ['header' => '', 'footer' => ''])), null);
+            return Helpers::HttpException(422,$model->errors, null);
         }
         return Helpers::HttpException(422,'validation failed', ['error' => 'Please provide valid data']);
     }
