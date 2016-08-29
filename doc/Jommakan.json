@@ -58,7 +58,7 @@
 		{
 			"id": "0093d719-e0d1-a48c-0055-5768ea299a31",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu-items",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -68,12 +68,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472336800058,
+			"time": 1472455334527,
 			"name": "Create Restaurant Menu Item",
 			"description": "",
 			"collectionId": "05c17f4d-02a4-31fc-2f5d-efc5ad044e0e",
 			"responses": [],
-			"rawModeData": "{  \n      \"name\": \"VFfffFF\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 10,\n      \"image\": null,\n      \"is_taxable\": 1,\n      \"categories\": [\n         {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n          ],\n      \"addOns\": [\n        {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n      ],\n      \"ItemChoices\": [\n        {\n          \"id\": \"1\"\n        }\n      ]\n    \n}"
+			"rawModeData": "{  \n      \"name\": \"cccxxx\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 10,\n      \"image\": null,\n      \"is_taxable\": 1,\n      \"categories\": [\n         {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n          ],\n      \"addOns\": [\n        {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n      ],\n      \"ItemChoices\": [\n        {\n          \"id\": \"1\"\n        }\n      ]\n    \n}"
 		},
 		{
 			"id": "0517cdbe-9a4e-9d34-42e7-dee5ea9beede",
@@ -1933,12 +1933,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472312350922,
+			"time": 1472367153452,
 			"name": "Delete Restaurant Menu Item",
 			"description": "",
 			"collectionId": "05c17f4d-02a4-31fc-2f5d-efc5ad044e0e",
 			"responses": [],
-			"rawModeData": "{\n      \"old_category_id\": \"1\",\n      \"category_id\": \"2\",\n      \"name\": \"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 1201,\n      \"image\": null,\n      \"is_taxable\": 1\n    }"
+			"rawModeData": ""
 		},
 		{
 			"id": "765a00c2-1a29-676c-28d7-7275eee0b082",
@@ -1963,7 +1963,7 @@
 		{
 			"id": "843be4eb-3d43-480e-4dae-3d2864e3bd4a",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu-items/21",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items/27",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "PUT",
@@ -1973,12 +1973,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472336103354,
+			"time": 1472455328615,
 			"name": "Update Restaurant Menu Item",
 			"description": "",
 			"collectionId": "05c17f4d-02a4-31fc-2f5d-efc5ad044e0e",
 			"responses": [],
-			"rawModeData": "{  \n      \"name\": \"VFFF\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 10,\n      \"image\": null,\n      \"is_taxable\": 1,\n      \"categories\": [\n         {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n          ],\n      \"addOns\": [\n        {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n      ],\n      \"ItemChoices\": [\n        {\n          \"id\": \"1\"\n        },{\n          \"id\": \"2\"\n        }\n      ]\n    \n}"
+			"rawModeData": "{  \n      \"name\": \"cccxxx\",\n      \"description\": \"LOrem Text Menu\",\n      \"price\": \"12.02\",\n      \"status\": 0,\n      \"discount\": 10,\n      \"image\": null,\n      \"is_taxable\": 1,\n      \"categories\": [\n         {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n          ],\n      \"addOns\": [\n        {\n          \"id\": \"1\"\n        },\n        {\n          \"id\": \"2\"\n        }\n      ],\n      \"ItemChoices\": [\n        {\n          \"id\": \"1\"\n        },{\n          \"id\": \"2\"\n        }\n      ]\n    \n}"
 		},
 		{
 			"id": "953c3165-561e-3f20-727a-f5f9eae759c5",
@@ -2708,7 +2708,7 @@
 		{
 			"id": "9b1c6719-83a7-6281-a42a-bfcf4affdd74",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu-items/21",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items/27",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -2718,7 +2718,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472327834532,
+			"time": 1472455338327,
 			"name": "Get Restaurant Menu Item",
 			"description": "",
 			"collectionId": "05c17f4d-02a4-31fc-2f5d-efc5ad044e0e",
@@ -5452,7 +5452,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1471633153779,
+			"time": 1472455313792,
 			"name": "Update Restaurant",
 			"description": "#####Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key) (required) | Obtained from login\r\n\r\n#####JSON Parameters:\r\n   \r\n- phone_number (string) (optional) | MY ISO PhoneNumber Eg: +6018-2031218 or 0060182031218 or 006018-2031218\r\n- minimum_order_amount (decimal) (optional)\r\n- working_opening_hours (time) (optional) | format: 'H:m:s'\r\n- working_closing_hours (time) (optional) | format: 'H:m:s'\r\n- time_order_open (time) (optional) | format: 'H:m:s'\r\n- time_order_close (time) (optional) | format: 'H:m:s'\r\n- delivery_fee (decimal) (optional)\r\n- disable_ordering (bit) (optional) | 1 or 0\r\n- \r\n\r\n#####JSON Unauditable Parameters:\r\n\r\n- name (string)\r\n- status halal (bit) | 1 or 0\r\n- image (string) | Image URL\r\n- longitude (double)\r\n- latitude (double)\r\n- rank (decimal)\r\n- featured (bit) | 1 or 0\r\n- halal (bit) | 1 or 0\r\n",
 			"collectionId": "05c17f4d-02a4-31fc-2f5d-efc5ad044e0e",
@@ -6472,8 +6472,7 @@
 					"owner": "262964"
 				}
 			],
-			"rawModeData": "{\n   \"delivery_fee\": \"2.00\"\n}",
-			"folder": "3559e6b7-8ae8-0c43-3361-bc8992722d0f"
+			"rawModeData": "{\n   \"delivery_fee\": \"2.00\",\n   \"areas\": [\n        {\n          \"id\": 89\n        },\n        {\n          \"id\": 154\n        }\n      ]\n}"
 		},
 		{
 			"id": "d4645d65-aa27-ac3e-b9f9-01269d5bab7e",

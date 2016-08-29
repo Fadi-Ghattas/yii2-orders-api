@@ -113,6 +113,7 @@ class Restaurants extends \yii\db\ActiveRecord
             'disable_ordering' => 'Disable Ordering',
             'delivery_duration' => 'Delivery Duration',
             'phone_number' => 'Phone Number',
+            'contact_number' => 'Contact Number',
             'working_opening_hours' => 'Working Opening Hours',
             'working_closing_hours' => 'Working Closing Hours',
             'longitude' => 'Longitude',
@@ -357,52 +358,61 @@ class Restaurants extends \yii\db\ActiveRecord
         $restaurants->load($model);
         $restaurants->validate();
 
-//        if(isset($data['areas'])) {
-//
-//            if(empty($data['areas']))
-//                return Helpers::HttpException(422,'validation failed', ['error' => "areas can't be blank"]);
-//
-//            $newAreas = $data['areas'];
-//            $areaRestaurants = $restaurants->areaRestaurants;
-//
-//            $models = [];
-//            foreach ($areaRestaurants as $AreaRestaurant) {
-//                $models[$AreaRestaurant->area_id] = $AreaRestaurant;
-//            }
-//
-//            $areaRestaurants = $models;
-//
-//            foreach ($newAreas as $Area) {
-//
-//                if(!isset($Area['id']))
-//                    return Helpers::HttpException(422,'validation failed', ['error' => "area id is required"]);
-//                if(empty($Area['id']))
-//                    return Helpers::HttpException(422,'validation failed', ['error' => "area id can't be blank"]);
-//
-//                if (!array_key_exists($Area['id'], $areaRestaurants)) {
-//
-//                    if(empty(MenuItems::getMenuItem($restaurants->id, $Area['id'])))
-//                        return Helpers::HttpException(422,'validation failed', ['error' => "There area dos't exist"]);
-//
-//                    $menuItemChoice = new AreaRestaurant();
-//                    $menuItemChoice->area_id = $Area['id'];
-//                    $menuItemChoice->restaurant_id = $restaurants->id;
-//                    $menuItemChoice->validate();
-//                    $menuItemChoice->save();
-//                } else {
-//                    unset($menuItemChoices[$ItemChoice['id']]);
-//                }
-//            }
-//
-//            if (!empty($menuItemChoices))
-//                foreach ($menuItemChoices as $MenuItemChoice)
-//                    $MenuItemChoice->delete();
-//        }
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        try {
 
+            $restaurants->save();
 
-        $isUpdated = $restaurants->save();
-        if($isUpdated)
-            return Helpers::formatResponse($isUpdated, 'update success', ['id' => $restaurants->id]);
-        return Helpers::formatResponse($isUpdated, 'update failed', null);
+            if(isset($data['areas'])) {
+
+                if(empty($data['areas']))
+                    return Helpers::HttpException(422,'validation failed', ['error' => "areas can't be blank"]);
+
+                $newAreas = $data['areas'];
+                $areaRestaurants = $restaurants->areaRestaurants;
+
+                $models = [];
+                foreach ($areaRestaurants as $AreaRestaurant) {
+                    $models[$AreaRestaurant->area_id] = $AreaRestaurant;
+                }
+
+                $areaRestaurants = $models;
+
+                foreach ($newAreas as $Area) {
+
+                    if(!isset($Area['id']))
+                        return Helpers::HttpException(422,'validation failed', ['error' => "area id is required"]);
+                    if(empty($Area['id']))
+                        return Helpers::HttpException(422,'validation failed', ['error' => "area id can't be blank"]);
+
+                    if (!array_key_exists($Area['id'], $areaRestaurants)) {
+
+                        if(empty(MenuItems::getMenuItem($restaurants->id, $Area['id'])))
+                            return Helpers::HttpException(422,'validation failed', ['error' => "There area dos't exist"]);
+
+                        $areaRestaurant = new AreaRestaurant();
+                        $areaRestaurant->area_id = $Area['id'];
+                        $areaRestaurant->restaurant_id = $restaurants->id;
+                        $areaRestaurant->validate();
+                        $areaRestaurant->save();
+                    } else {
+                        unset($areaRestaurants[$Area['id']]);
+                    }
+                }
+
+                if (!empty($areaRestaurants))
+                    foreach ($areaRestaurants as $AreaRestaurant)
+                        $AreaRestaurant->delete();
+            }
+
+            $transaction->commit();
+            return Helpers::formatResponse(true, 'update success', ['id' => $restaurants->id]);
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            return Helpers::formatResponse(false, 'update failed', null);
+            //throw $e;
+        }
+        return Helpers::formatResponse(false, 'update failed', null);
     }
 }
