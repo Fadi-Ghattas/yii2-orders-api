@@ -80,7 +80,6 @@ class VendorController extends ActiveController
         $model->password = $post_data['password'];
         $model->email = $post_data['email'];
         if ($model->load($post_data, '') && $model->login()) {
-            
             try {
                 $restaurantManager->last_logged_at = date('Y-m-d H:i:s');;
                 if ($restaurantManager->save(false))
