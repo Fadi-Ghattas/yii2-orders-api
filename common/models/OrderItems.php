@@ -12,16 +12,16 @@ use Yii;
  * @property string $item_id
  * @property string $price
  * @property integer $quantity
- * @property string $addon
  * @property string $note
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
- * @property string $choice_id
  *
- * @property ItemChoices $choice
+ * @property OrderItemAddon[] $orderItemAddons
+ * @property Addons[] $addons
+ * @property OrderItemChoices[] $orderItemChoices
+ * @property ItemChoices[] $itemChoices
  * @property MenuItems $item
- * @property Orders $order
  */
 class OrderItems extends \yii\db\ActiveRecord
 {
@@ -39,15 +39,12 @@ class OrderItems extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'item_id', 'price', 'quantity', 'addon', 'choice_id'], 'required'],
-            [['order_id', 'item_id', 'quantity', 'choice_id'], 'integer'],
+            [['order_id', 'item_id', 'price', 'quantity'], 'required'],
+            [['order_id', 'item_id', 'quantity'], 'integer'],
             [['price'], 'number'],
             [['note'], 'string'],
-            [['created_at', 'updated_at'], 'safe'],
-            [['addon'], 'string', 'max' => 255],
-            [['choice_id'], 'exist', 'skipOnError' => true, 'targetClass' => ItemChoices::className(), 'targetAttribute' => ['choice_id' => 'id']],
+            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => MenuItems::className(), 'targetAttribute' => ['item_id' => 'id']],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Orders::className(), 'targetAttribute' => ['order_id' => 'id']],
         ];
     }
 
@@ -62,20 +59,43 @@ class OrderItems extends \yii\db\ActiveRecord
             'item_id' => 'Item ID',
             'price' => 'Price',
             'quantity' => 'Quantity',
-            'addon' => 'Addon',
             'note' => 'Note',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'choice_id' => 'Choice ID',
+            'deleted_at' => 'Deleted At',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getChoice()
+    public function getOrderItemAddons()
     {
-        return $this->hasOne(ItemChoices::className(), ['id' => 'choice_id']);
+        return $this->hasMany(OrderItemAddon::className(), ['order_item_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAddons()
+    {
+        return $this->hasMany(Addons::className(), ['id' => 'addon_id'])->viaTable('order_item_addon', ['order_item_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getOrderItemChoices()
+    {
+        return $this->hasMany(OrderItemChoices::className(), ['order_item_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getItemChoices()
+    {
+        return $this->hasMany(ItemChoices::className(), ['id' => 'item_choice_id'])->viaTable('order_item_choices', ['order_item_id' => 'id']);
     }
 
     /**
@@ -84,14 +104,6 @@ class OrderItems extends \yii\db\ActiveRecord
     public function getItem()
     {
         return $this->hasOne(MenuItems::className(), ['id' => 'item_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getOrder()
-    {
-        return $this->hasOne(Orders::className(), ['id' => 'order_id']);
     }
 
     /**

@@ -16,17 +16,16 @@ use Yii;
  * @property string $commission_amount
  * @property string $address_id
  * @property string $note
- * @property integer $status
  * @property string $voucher_id
  * @property string $payment_method_id
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ * @property string $status_id
  *
- * @property OrderItems[] $orderItems
+ * @property OrderStatus $status
  * @property Addresses $address
  * @property Clients $client
- * @property PaymentMethods $paymentMethod
  * @property Restaurants $restaurant
  * @property Vouchers $voucher
  */
@@ -46,16 +45,16 @@ class Orders extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['restaurant_id', 'client_id', 'reference_number', 'total', 'total_with_voucher', 'commission_amount', 'address_id', 'status', 'voucher_id', 'payment_method_id'], 'required'],
-            [['restaurant_id', 'client_id', 'address_id', 'status', 'voucher_id', 'payment_method_id'], 'integer'],
+            [['restaurant_id', 'client_id', 'reference_number', 'total', 'commission_amount', 'address_id', 'payment_method_id', 'status_id'], 'required'],
+            [['restaurant_id', 'client_id', 'address_id', 'voucher_id', 'payment_method_id', 'status_id'], 'integer'],
             [['total', 'total_with_voucher', 'commission_amount'], 'number'],
             [['note'], 'string'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['reference_number'], 'string', 'max' => 255],
             [['reference_number'], 'unique'],
+            [['status_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrderStatus::className(), 'targetAttribute' => ['status_id' => 'id']],
             [['address_id'], 'exist', 'skipOnError' => true, 'targetClass' => Addresses::className(), 'targetAttribute' => ['address_id' => 'id']],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['client_id' => 'id']],
-            [['payment_method_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethods::className(), 'targetAttribute' => ['payment_method_id' => 'id']],
             [['restaurant_id'], 'exist', 'skipOnError' => true, 'targetClass' => Restaurants::className(), 'targetAttribute' => ['restaurant_id' => 'id']],
             [['voucher_id'], 'exist', 'skipOnError' => true, 'targetClass' => Vouchers::className(), 'targetAttribute' => ['voucher_id' => 'id']],
         ];
@@ -76,20 +75,21 @@ class Orders extends \yii\db\ActiveRecord
             'commission_amount' => 'Commission Amount',
             'address_id' => 'Address ID',
             'note' => 'Note',
-            'status' => 'Status',
             'voucher_id' => 'Voucher ID',
             'payment_method_id' => 'Payment Method ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'deleted_at' => 'Deleted At',
+            'status_id' => 'Status ID',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getOrderItems()
+    public function getStatus()
     {
-        return $this->hasMany(OrderItems::className(), ['order_id' => 'id']);
+        return $this->hasOne(OrderStatus::className(), ['id' => 'status_id']);
     }
 
     /**
@@ -106,14 +106,6 @@ class Orders extends \yii\db\ActiveRecord
     public function getClient()
     {
         return $this->hasOne(Clients::className(), ['id' => 'client_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPaymentMethod()
-    {
-        return $this->hasOne(PaymentMethods::className(), ['id' => 'payment_method_id']);
     }
 
     /**
