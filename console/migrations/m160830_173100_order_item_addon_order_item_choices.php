@@ -50,7 +50,7 @@ class m160830_173100_order_item_addon_order_item_choices extends Migration
 
 
         $this->dropColumn('order_items', 'addon');
-        $this->truncateTable('item_choices');
+        //$this->truncateTable('item_choices');
         $this->dropForeignKey('order_items_choice_id_foreign', 'order_items');
         $this->dropColumn('order_items', 'choice_id');
 
