@@ -19,7 +19,7 @@ class Helpers
         {
             return ['success' => $success,
                     'message' => $message,
-                    'data' => (!is_null($data) ? [$data] : $data)];
+                    'data' => [$data] ];
         } else {
             return ['success' => $success,
                     'message' => $message,

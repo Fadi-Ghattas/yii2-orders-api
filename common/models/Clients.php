@@ -11,7 +11,6 @@ use Yii;
  * @property integer $active
  * @property integer $status
  * @property string $phone_number
- * @property integer $reg_id
  * @property string $image
  * @property integer $user_id
  * @property string $created_at
@@ -43,8 +42,8 @@ class Clients extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['active', 'status', 'reg_id', 'user_id'], 'required'],
-            [['active', 'status', 'reg_id', 'user_id'], 'integer'],
+            [['active', 'status', 'user_id'], 'required'],
+            [['active', 'status', 'user_id'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['phone_number', 'image'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -61,7 +60,6 @@ class Clients extends \yii\db\ActiveRecord
             'active' => 'Active',
             'status' => 'Status',
             'phone_number' => 'Phone Number',
-            'reg_id' => 'Reg ID',
             'image' => 'Image',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -150,7 +148,6 @@ class Clients extends \yii\db\ActiveRecord
             'active',
             'status',
             'phone_number',
-            'reg_id',
             'image',
             'user' => function(){
                 return $this->getUser();

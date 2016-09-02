@@ -9,6 +9,7 @@ use Yii;
  *
  * @property string $order_item_id
  * @property string $item_choice_id
+ * @property string $price
  *
  * @property ItemChoices $itemChoice
  * @property OrderItems $orderItem
@@ -31,6 +32,7 @@ class OrderItemChoices extends \yii\db\ActiveRecord
         return [
             [['order_item_id', 'item_choice_id'], 'required'],
             [['order_item_id', 'item_choice_id'], 'integer'],
+            [['price'], 'number'],
             [['item_choice_id'], 'exist', 'skipOnError' => true, 'targetClass' => ItemChoices::className(), 'targetAttribute' => ['item_choice_id' => 'id']],
             [['order_item_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrderItems::className(), 'targetAttribute' => ['order_item_id' => 'id']],
         ];
@@ -44,6 +46,7 @@ class OrderItemChoices extends \yii\db\ActiveRecord
         return [
             'order_item_id' => 'Order Item ID',
             'item_choice_id' => 'Item Choice ID',
+            'price' => 'Price',
         ];
     }
 

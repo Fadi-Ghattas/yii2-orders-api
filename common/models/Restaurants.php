@@ -6,7 +6,6 @@ namespace common\models;
 use Yii;
 use yii\web\ForbiddenHttpException;
 use common\helpers\Helpers;
-
 /**
  * This is the model class for table "restaurants".
  *
@@ -27,14 +26,15 @@ use common\helpers\Helpers;
  * @property double $longitude
  * @property double $latitude
  * @property string $image
- * @property string $image_background
- * @property string $contact_number
  * @property integer $status
- * @property integer $is_verified_global
  * @property string $created_at
  * @property string $updated_at
- * @property string $logout_at
  * @property integer $user_id
+ * @property string $logout_at
+ * @property string $image_background
+ * @property integer $is_verified_global
+ * @property string $country_id
+ * @property string $owner_number
  *
  * @property Addons[] $addons
  * @property AreaRestaurant[] $areaRestaurants
@@ -48,7 +48,7 @@ use common\helpers\Helpers;
  * @property Orders[] $orders
  * @property PaymentMethodRestaurant[] $paymentMethodRestaurants
  * @property User $user
- * @property Owners $owner
+ * @property Countries $country
  * @property Reviews[] $reviews
  */
 class Restaurants extends \yii\db\ActiveRecord
@@ -83,15 +83,16 @@ class Restaurants extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'minimum_order_amount', 'time_order_open', 'time_order_close', 'delivery_fee', 'rank', 'halal', 'featured', 'working_opening_hours', 'working_closing_hours', 'disable_ordering', 'delivery_duration', 'phone_number', 'contact_number', 'longitude','latitude', 'image', 'status', 'user_id'], 'required'],
+            [['name', 'minimum_order_amount', 'time_order_open', 'time_order_close', 'delivery_fee', 'rank', 'halal', 'featured', 'working_opening_hours', 'working_closing_hours', 'disable_ordering', 'delivery_duration', 'phone_number', 'owner_number', 'country_id','longitude','latitude', 'image', 'status', 'user_id'], 'required'],
             [['minimum_order_amount', 'delivery_fee', 'rank', 'longitude', 'latitude'], 'number'],
             [['action','time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
-            [['halal', 'featured', 'disable_ordering', 'delivery_duration', 'status', 'user_id', 'is_verified_global'], 'integer'],
-            [['name', 'phone_number', 'contact_number' ,'image', 'image_background'], 'string', 'max' => 255],
+            [['halal', 'featured', 'disable_ordering', 'delivery_duration', 'status', 'user_id', 'is_verified_global', 'country_id'], 'integer'],
+            [['name', 'phone_number', 'owner_number' ,'image', 'image_background'], 'string', 'max' => 255],
             [['working_opening_hours','working_closing_hours','time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],
 //            [['phone_number'],  'udokmeci\yii2PhoneValidator\PhoneValidator','country'=> 'MY', 'strict'=>false],
-//            [['contact_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
+//            [['owner_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
         ];
     }
 
@@ -110,12 +111,11 @@ class Restaurants extends \yii\db\ActiveRecord
             'rank' => 'Rank',
             'halal' => 'Halal',
             'featured' => 'Featured',
+            'working_opening_hours' => 'Working Opening Hours',
+            'working_closing_hours' => 'Working Closing Hours',
             'disable_ordering' => 'Disable Ordering',
             'delivery_duration' => 'Delivery Duration',
             'phone_number' => 'Phone Number',
-            'contact_number' => 'Contact Number',
-            'working_opening_hours' => 'Working Opening Hours',
-            'working_closing_hours' => 'Working Closing Hours',
             'longitude' => 'Longitude',
             'latitude' => 'Latitude',
             'image' => 'Image',
@@ -123,12 +123,11 @@ class Restaurants extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'user_id' => 'User ID',
-            'mangerName' => 'Manger Name',
-            'mangerEmail' => 'Manger Email',
-            'mangerPassWord' => 'Manger PassWord',
-            'ownerName' => 'Owner Name',
-            'ownerContactNumber' => 'Owner Contact Number',
-            'ownerEmail' => 'Owner Email'
+            'logout_at' => 'Logout At',
+            'image_background' => 'Image Background',
+            'is_verified_global' => 'Is Verified Global',
+            'country_id' => 'Country ID',
+            'owner_number' => 'Owner Number',
         ];
     }
 
@@ -226,6 +225,14 @@ class Restaurants extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(Countries::className(), ['id' => 'country_id']);
     }
 
     /**

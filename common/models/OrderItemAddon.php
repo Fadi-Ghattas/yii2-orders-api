@@ -9,6 +9,8 @@ use Yii;
  *
  * @property string $order_item_id
  * @property string $addon_id
+ * @property string $price
+ * @property integer $quantity
  *
  * @property Addons $addon
  * @property OrderItems $orderItem
@@ -30,7 +32,8 @@ class OrderItemAddon extends \yii\db\ActiveRecord
     {
         return [
             [['order_item_id', 'addon_id'], 'required'],
-            [['order_item_id', 'addon_id'], 'integer'],
+            [['order_item_id', 'addon_id', 'quantity'], 'integer'],
+            [['price'], 'number'],
             [['addon_id'], 'exist', 'skipOnError' => true, 'targetClass' => Addons::className(), 'targetAttribute' => ['addon_id' => 'id']],
             [['order_item_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrderItems::className(), 'targetAttribute' => ['order_item_id' => 'id']],
         ];
@@ -44,6 +47,8 @@ class OrderItemAddon extends \yii\db\ActiveRecord
         return [
             'order_item_id' => 'Order Item ID',
             'addon_id' => 'Addon ID',
+            'price' => 'Price',
+            'quantity' => 'Quantity',
         ];
     }
 
