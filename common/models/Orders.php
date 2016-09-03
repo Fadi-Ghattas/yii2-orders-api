@@ -41,6 +41,7 @@ class Orders extends \yii\db\ActiveRecord
     const SCENARIO_ORDER_DETAILS = 'order_details';
 
     private $my_scenario;
+
     /**
      * @inheritdoc
      */
@@ -187,7 +188,7 @@ class Orders extends \yii\db\ActiveRecord
                     'reference_number',
                     'total',
                     'total_with_voucher',
-                    'status' => function() {
+                    'status' => function () {
                         return $this->status;
                     },
                     'vouchers' => function () {
@@ -209,8 +210,8 @@ class Orders extends \yii\db\ActiveRecord
                     'reference_number',
                     'total',
                     'total_with_voucher',
-                    'status' => function() {
-                      return $this->status;
+                    'status' => function () {
+                        return $this->status;
                     },
                     'vouchers' => function () {
                         return $this->voucher;
@@ -240,22 +241,23 @@ class Orders extends \yii\db\ActiveRecord
     public static function getOrders()
     {
         $restaurant = Restaurants::checkRestaurantAccess();
-        $headers = Yii::$app->getRequest()->getHeaders();
+        $request = Yii::$app->request;
+        $get_data = $request->get();
         $page = 1;
         $limit = -1;
 
-        if (isset($headers['limit']) && isset($headers['page'])) {
-            Helpers::validateSetEmpty([$headers['page'], $headers['limit']]);
-            if (is_int(intval(trim($headers['page']))) && is_int(intval(trim($headers['limit'])))) {
-                $page = intval(trim($headers['page']));
-                $limit = intval(trim($headers['limit']));
+        if (isset($get_data['limit']) && isset($get_data['page'])) {
+            Helpers::validateSetEmpty([$get_data['page'], $get_data['limit']]);
+            if (is_int(intval(trim($get_data['page']))) && is_int(intval(trim($get_data['limit'])))) {
+                $page = intval(trim($get_data['page']));
+                $limit = intval(trim($get_data['limit']));
             } else {
                 return Helpers::HttpException(422, 'validation failed', ['error' => 'page and limit are must be integer']);
             }
         }
 
-        if (isset($headers['dates']) && !empty($headers['dates']))
-            Helpers::validateDate(trim($headers['dates']), 'Y-m-d');
+        if (isset($get_data['date']) && !empty($get_data['date']))
+            Helpers::validateDate(trim($get_data['date']), 'Y-m-d');
 
         $orders = new Orders();
         $orders->my_scenario = self::SCENARIO_ALL_ORDERS;
@@ -265,12 +267,11 @@ class Orders extends \yii\db\ActiveRecord
             'pagination' => false,
         ]);
         $query->andFilterWhere(['restaurant_id' => $restaurant->id, 'deleted_at' => null]);
-        if (isset($headers['dates']) && !empty($headers['dates']))
-            $query->andFilterWhere(['like', 'created_at', trim($headers['dates'])]);
+        if (isset($get_data['date']) && !empty($get_data['date']))
+            $query->andFilterWhere(['like', 'created_at', trim($get_data['date'])]);
         if ($limit != -1)
             $query->limit($limit)->offset($page - 1);
-        return $dataProvider;
-
+        return Helpers::formatResponse(true, 'get success', $dataProvider->models);
     }
 
     public static function getRestaurantOrder($orderID)
@@ -290,9 +291,9 @@ class Orders extends \yii\db\ActiveRecord
         if (empty($order))
             return Helpers::HttpException(404, 'get failed', ['error' => "this order dos't exist"]);
 
-        if(!isset($data['status_id']))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'status_id is required']);
-            
+        if (!isset($data['status_id']))
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'status_id is required']);
+
         $order->status_id = $data['status_id'];
         $order->validate();
         $isUpdated = $order->save();
@@ -308,13 +309,13 @@ class Orders extends \yii\db\ActiveRecord
         $request = Yii::$app->request;
         $get_data = $request->get();
 
-        if($request->isGet) {
-            if(empty($get_data))
+        if ($request->isGet) {
+            if (!empty($get_data) && !isset($get_data['id']))
                 return $this->scenarios()[self::SCENARIO_ALL_ORDERS];
-            else if(!empty($get_data) && isset($get_data['id']))
+            else if (!empty($get_data) && isset($get_data['id']))
                 return $this->scenarios()[self::SCENARIO_ORDER_DETAILS];
         }
         return parent::fields();
     }
-
+    
 }

@@ -12,7 +12,7 @@
 namespace api\modules\v1\controllers;
 
 
-use common\models\Orders;
+
 use Yii;
 use common\helpers\Helpers;
 use common\models\User;
@@ -24,6 +24,7 @@ use common\models\ItemChoices;
 use common\models\BlacklistedClients;
 use common\models\Reviews;
 use common\models\MenuItems;
+use common\models\Orders;
 use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
@@ -290,7 +291,7 @@ class VendorController extends ActiveController
         $get_data = $request->get();
 
         if($request->isGet) {
-            if(empty($get_data))
+            if(!empty($get_data) && !isset($get_data['id']))
                 return Orders::getOrders();
             else if(!empty($get_data) && isset($get_data['id']))
                 return Orders::getRestaurantOrder($get_data['id']);
