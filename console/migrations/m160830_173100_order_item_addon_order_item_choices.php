@@ -61,6 +61,10 @@ class m160830_173100_order_item_addon_order_item_choices extends Migration
 //        $this->alterColumn('orders', 'total_with_voucher', $this->decimal(7, 2)->null()->defaultValue(0));
 //
 //
+//        $this->dropColumn('orders', 'status');
+        $this->addColumn('orders', 'status_id');
+        $this->addColumn('orders', 'status_id', $this->integer(11)->unsigned()->notNull());
+
         if (!$this->tableExists('order_status')) {
             $this->createTable('order_status', [
                 'id' => $this->primaryKey()->unsigned()->notNull(),
@@ -69,12 +73,6 @@ class m160830_173100_order_item_addon_order_item_choices extends Migration
         }
         $this->createIndex('IDX_Order_Status_Order_Item_id', 'orders', 'status_id');
         $this->addForeignKey('FK_Order_Status_Order_Item_id', 'orders', 'status_id', 'order_status', 'id');
-
-//        $this->dropColumn('orders', 'status');
-        $this->addColumn('orders', 'status_id');
-        $this->addColumn('orders', 'status_id', $this->integer(11)->unsigned()->notNull());
-
-
 
     }
 
