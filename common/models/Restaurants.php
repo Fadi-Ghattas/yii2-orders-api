@@ -261,7 +261,7 @@ class Restaurants extends \yii\db\ActiveRecord
                 return $this->user->email;
             },
             'phone_number',
-            'contact_number',
+            'owner_number',
             'minimum_order_amount',
             'working_opening_hours',
             'working_closing_hours',
@@ -276,6 +276,7 @@ class Restaurants extends \yii\db\ActiveRecord
             'latitude',
             'image',
             'image_background',
+            'country_id',
             'areas' => function() {
                 return $this->areas;
             },
