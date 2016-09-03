@@ -62,7 +62,6 @@ class m160830_173100_order_item_addon_order_item_choices extends Migration
 //
 //
 //        $this->dropColumn('orders', 'status');
-        $this->addColumn('orders', 'status_id');
         $this->addColumn('orders', 'status_id', $this->integer(11)->unsigned()->notNull());
 
         if (!$this->tableExists('order_status')) {
