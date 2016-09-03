@@ -9,11 +9,13 @@ use Yii;
  *
  * @property string $id
  * @property string $name
+ * @property string $deleted_at
  * @property string $created_at
  * @property string $updated_at
- * @property string $deleted_at
+ * @property string $country_id
  *
  * @property Areas[] $areas
+ * @property Countries $country
  */
 class States extends \yii\db\ActiveRecord
 {
@@ -32,8 +34,11 @@ class States extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
+            [['deleted_at', 'created_at', 'updated_at'], 'safe'],
+            [['country_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['name'], 'unique'],
+            [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],
         ];
     }
 
@@ -45,6 +50,10 @@ class States extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
+            'deleted_at' => 'Deleted At',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'country_id' => 'Country ID',
         ];
     }
 
@@ -55,6 +64,15 @@ class States extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Areas::className(), ['state_id' => 'id'])->select(['id','name'])->asArray()->all();
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCountry()
+    {
+        return $this->hasOne(Countries::className(), ['id' => 'country_id']);
+    }
+
 
     /**
      * @inheritdoc
@@ -91,8 +109,11 @@ class States extends \yii\db\ActiveRecord
         return [
             'id',
             'name',
+            'country' => function(){
+                return $this->country
+            },
             'areas' => function(){
-               return $this->getAreas();
+               return $this->areas;
             }
         ];
 
