@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\helpers\Helpers;
 use Yii;
 
 /**
@@ -62,7 +63,7 @@ class States extends \yii\db\ActiveRecord
      */
     public function getAreas()
     {
-        return $this->hasMany(Areas::className(), ['state_id' => 'id'])->select(['id','name'])->asArray()->all();
+        return $this->hasMany(Areas::className(), ['state_id' => 'id'])->select(['id', 'name'])->asArray()->all();
     }
 
     /**
@@ -83,14 +84,25 @@ class States extends \yii\db\ActiveRecord
         return new StatesQuery(get_called_class());
     }
 
-    public static function getStates(){
-        return self::find()->all();
+    public static function getStates()
+    {
+        $headers = Yii::$app->getRequest()->getHeaders();
+        if (!isset($headers['country_id']))
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'country_id is required']);
+        if (empty($headers['country_id']))
+            return Helpers::HttpException(422, 'validation failed', ['error' => "country_id can't be blank"]);
+        if (!is_int(intval($headers['country_id'])))
+            return Helpers::HttpException(422, 'validation failed', ['error' => "country_id must be integer"]);
+
+        $States = self::find()->where(['country_id' => $headers['country_id']])->all();
+
+        return Helpers::formatResponse(true, 'get success', $States);
     }
 
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
         }
     }
 
@@ -109,11 +121,11 @@ class States extends \yii\db\ActiveRecord
         return [
             'id',
             'name',
-            'country' => function(){
+            'country' => function () {
                 return $this->country;
             },
-            'areas' => function(){
-               return $this->areas;
+            'areas' => function () {
+                return $this->areas;
             }
         ];
 
