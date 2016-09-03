@@ -21,7 +21,7 @@ class m160902_145321_udpate_database extends Migration
                 ], 'ENGINE = InnoDB');
         }
 
-        $this->alterColumn('restaurants', 'country_id', $this->integer(11)->unsigned()->notNull());
+        $this->addColumn('restaurants', 'country_id', $this->integer(11)->unsigned()->notNull());
 
         $this->createIndex('IDX_Restaurants_Countries', 'restaurants', 'country_id');
         $this->addForeignKey('FK_Restaurants_Countries', 'restaurants', 'country_id', 'countries', 'id');
