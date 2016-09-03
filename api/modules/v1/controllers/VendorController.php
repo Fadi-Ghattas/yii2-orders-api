@@ -12,6 +12,7 @@
 namespace api\modules\v1\controllers;
 
 
+use common\models\Orders;
 use Yii;
 use common\helpers\Helpers;
 use common\models\User;
@@ -283,6 +284,25 @@ class VendorController extends ActiveController
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
+    public function actionOrders()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if($request->isGet) {
+            if(empty($get_data))
+                return Orders::getOrders();
+            else if(!empty($get_data) && isset($get_data['id']))
+                return Orders::getRestaurantOrder($get_data['id']);
+        } else if($request->isPut && !empty($get_data)) {
+            if(empty($request->post()))
+                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+            return Orders::updateRestaurantOrderStatus($get_data['id'], $request->post());
+        }
+
+        return Helpers::HttpException(405, "Method Not Allowed", null);
+    }
+
     public function beforeAction($event)
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
@@ -296,6 +316,7 @@ class VendorController extends ActiveController
             'blacklisted-clients' => ['GET','POST','DELETE'],
             'reviews' => ['GET'],
             'menu-items' => ['GET','PUT','POST','DELETE'],
+            'orders' => ['GET','PUT']
         ];
 
         foreach ($actions as $action => $verb) {

@@ -59,6 +59,27 @@ class Helpers
         return $formatted_json;
     }
 
+    public static function validateSetEmpty($values)
+    {
+        foreach ($values as $value) {
+            if (!isset($values))
+                return Helpers::HttpException(422, 'validation failed', ['error' => $value . ' is required']);
+            if(empty($values))
+                return Helpers::HttpException(422, 'validation failed', ['error' => $value. " can't be blank"]);
+        }
+
+        return true;
+    }
+
+    public static function validateDate($date, $format = 'Y-m-d H:i:s')
+    {
+        $d = \DateTime::createFromFormat($format, $date);
+        if(!($d && $d->format($format) == $date))
+            return Helpers::HttpException(422, 'validation failed', ['error' => "date format is invalid"]);
+
+        return true;
+    }
+    
     //db
     public static function linkManyToMany($relationship_model, $related_id ,$new_entities, $old_entities, $entity_id, $relationship_entity_id , $restaurant_id = 0)
     {

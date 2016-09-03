@@ -216,6 +216,5 @@ class Addons extends \yii\db\ActiveRecord
             'price',
             'status',
         ];
-
     }
 }

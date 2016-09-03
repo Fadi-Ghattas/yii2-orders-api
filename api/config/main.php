@@ -81,6 +81,8 @@ return [
                         'GET,POST,PUT,DELETE reviews' => 'reviews',
                         'GET,POST,PUT,DELETE menu-items' => 'menu-items',
                         'GET,POST,PUT,DELETE menu-items/{id}' => 'menu-items',
+                        'GET,POST,PUT,DELETE orders' => 'orders',
+                        'GET,POST,PUT,DELETE orders/{id}' => 'orders',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
