@@ -6,9 +6,9 @@ class m160902_145321_udpate_database extends Migration
 {
     public function up()
     {
-        $this->addColumn('order_item_addon', 'price', $this->decimal(7, 2)->null()->defaultValue(0));
-        $this->addColumn('order_item_addon', 'quantity', $this->integer(11)->null()->defaultValue(0));
-        $this->addColumn('order_item_choices', 'price', $this->decimal(7, 2)->null()->defaultValue(0));
+//        $this->addColumn('order_item_addon', 'price', $this->decimal(7, 2)->null()->defaultValue(0));
+//        $this->addColumn('order_item_addon', 'quantity', $this->integer(11)->null()->defaultValue(0));
+//        $this->addColumn('order_item_choices', 'price', $this->decimal(7, 2)->null()->defaultValue(0));
 
         if (!$this->tableExists('countries')) {
             $this->createTable('countries',
