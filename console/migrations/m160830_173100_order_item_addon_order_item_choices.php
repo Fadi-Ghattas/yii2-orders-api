@@ -70,6 +70,7 @@ class m160830_173100_order_item_addon_order_item_choices extends Migration
                 'name' => $this->string(255)->notNull(),
             ], 'ENGINE = InnoDB');
         }
+        
         $this->createIndex('IDX_Order_Status_Order_Item_id', 'orders', 'status_id');
         $this->addForeignKey('FK_Order_Status_Order_Item_id', 'orders', 'status_id', 'order_status', 'id');
 
