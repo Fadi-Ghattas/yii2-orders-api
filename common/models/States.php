@@ -110,7 +110,7 @@ class States extends \yii\db\ActiveRecord
             'id',
             'name',
             'country' => function(){
-                return $this->country
+                return $this->country;
             },
             'areas' => function(){
                return $this->areas;
