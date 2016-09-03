@@ -54,15 +54,15 @@ class m160830_173100_order_item_addon_order_item_choices extends Migration
 //
 //        $this->dropColumn('order_items', 'addon');
         //$this->truncateTable('item_choices');
-        $this->dropForeignKey('order_items_choice_id_foreign', 'order_items');
-        $this->dropColumn('order_items', 'choice_id');
-
-        $this->alterColumn('orders', 'voucher_id', $this->integer(10)->unsigned()->null());
-        $this->alterColumn('orders', 'total_with_voucher', $this->decimal(7, 2)->null()->defaultValue(0));
-
-
-        $this->dropColumn('orders', 'status');
-        $this->dropColumn('orders', 'status_id');
+//        $this->dropForeignKey('order_items_choice_id_foreign', 'order_items');
+//        $this->dropColumn('order_items', 'choice_id');
+//
+//        $this->alterColumn('orders', 'voucher_id', $this->integer(10)->unsigned()->null());
+//        $this->alterColumn('orders', 'total_with_voucher', $this->decimal(7, 2)->null()->defaultValue(0));
+//
+//
+//        $this->dropColumn('orders', 'status');
+        $this->addColumn('orders', 'status_id');
         $this->addColumn('orders', 'status_id', $this->integer(11)->unsigned()->notNull());
 
         if (!$this->tableExists('order_status')) {
