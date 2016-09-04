@@ -7,19 +7,19 @@ use Yii;
 use yii\web\NotFoundHttpException;
 
 /**
-* This is the model class for table "blacklisted_clients".
-*
-* @property string $id
-* @property string $reason
-* @property string $restaurant_id
-* @property string $client_id
-* @property string $created_at
-* @property string $updated_at
-* @property string $deleted_at
-*
-* @property Clients $client
-* @property Restaurants $restaurant
-*/
+ * This is the model class for table "blacklisted_clients".
+ *
+ * @property string $id
+ * @property string $reason
+ * @property string $restaurant_id
+ * @property string $client_id
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $deleted_at
+ *
+ * @property Clients $client
+ * @property Restaurants $restaurant
+ */
 class BlacklistedClients extends \yii\db\ActiveRecord
 {
     /**
@@ -97,13 +97,13 @@ class BlacklistedClients extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
 
         if (!isset($data['client_id']))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'client_id is required']);
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'client_id is required']);
 
         $Client = Clients::find()->where(['id' => $data['client_id']])->andWhere(['deleted_at' => null])->one();
-        if(empty($Client))
-            return Helpers::HttpException(404,'create failed', ['error' => 'client not found']);
-        if(!empty(BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $Client->id])->one()))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'This client is already blocked']);
+        if (empty($Client))
+            return Helpers::HttpException(404, 'create failed', ['error' => 'client not found']);
+        if (!empty(BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $Client->id])->one()))
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'This client is already blocked']);
 
         $BlacklistedClient = new BlacklistedClients();
         $model['BlacklistedClients'] = $data;
@@ -123,7 +123,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
 
         $BlacklistedClient = BlacklistedClients::find()->where(['restaurant_id' => $restaurant->id])->andWhere(['client_id' => $blacklisted_client_id])->andWhere(['deleted_at' => null])->one();
         if (empty($BlacklistedClient))
-            return Helpers::HttpException(404,'deleted failed', ['error' => "This blacklisted client dos't exist"]);
+            return Helpers::HttpException(404, 'deleted failed', ['error' => "This blacklisted client dos't exist"]);
 
         $isDeleted = $BlacklistedClient->delete();
 
@@ -136,7 +136,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
         }
     }
 
@@ -153,10 +153,21 @@ class BlacklistedClients extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-            'id',
+            'id' => function () {
+                return $this->client->id;
+            },
             'reason',
-            'client' => function(){
-                return $this->client;
+            'name' => function () {
+                return $this->client->user->username;
+            },
+            'email' => function () {
+                return $this->client->user->email;
+            },
+            'address' => function () {
+                $address =  Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['is_default' => 1])->andWhere(['deleted_at' => null])->one()['address'];
+                if(empty($address))
+                    return Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['deleted_at' => null])->orderBy('created_at DESC')->one()['address'];
+                return $address;
             }
         ];
 

@@ -91,8 +91,7 @@ class PaymentMethods extends \yii\db\ActiveRecord
     {
         return [
             'id',
-            'name',
-            'status'
+            'name'
         ];
     }
 }

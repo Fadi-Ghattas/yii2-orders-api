@@ -71,4 +71,11 @@ class CuisineRestaurant extends \yii\db\ActiveRecord
     {
         return new CuisineRestaurantQuery(get_called_class());
     }
+
+    public function afterValidate()
+    {
+        if ($this->hasErrors()) {
+            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+        }
+    }
 }

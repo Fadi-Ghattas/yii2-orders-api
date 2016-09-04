@@ -85,4 +85,11 @@ class Countries extends \yii\db\ActiveRecord
     {
         return ['id', 'name'];
     }
+
+    public function afterValidate()
+    {
+        if ($this->hasErrors()) {
+            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+        }
+    }
 }

@@ -186,22 +186,17 @@ class Orders extends \yii\db\ActiveRecord
                 self::SCENARIO_ALL_ORDERS => [
                     'id',
                     'reference_number',
-                    'total',
-                    'total_with_voucher',
                     'status' => function () {
-                        return $this->status;
+                        return $this->status->name;
                     },
-                    'vouchers' => function () {
-                        return $this->voucher;
+                    'name' => function () {
+                        return $this->client->user->username;
                     },
-                    'client' => function () {
-                        return $this->client;
+                    'date' => function () {
+                        return date('d/m/Y', strtotime($this->created_at));
                     },
-                    'address' => function () {
-                        return $this->address;
-                    },
-                    'payment_method' => function () {
-                        return $this->paymentMethod;
+                    'time' => function () {
+                        return date('h:i A', strtotime($this->created_at));
                     }
                 ],
 
@@ -211,16 +206,23 @@ class Orders extends \yii\db\ActiveRecord
                     'total',
                     'total_with_voucher',
                     'status' => function () {
-                        return $this->status;
+                        return $this->status->name;
                     },
                     'vouchers' => function () {
-                        return $this->voucher;
+//                        return $this->voucher;
+                        return [];
                     },
-                    'client' => function () {
-                        return $this->client;
-                    },
-                    'address' => function () {
-                        return $this->address;
+                    'customer_details' => function(){
+                        $customer_details = array();
+                        $customer_details['id'] = $this->client->id;
+                        $customer_details['name'] = $this->client->user->username;
+                        $customer_details['email'] = $this->client->user->email;
+                        $customer_details['phone_number'] = $this->client->phone_number;
+                        $address = Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['is_default' => 1])->andWhere(['deleted_at' => null])->one()['address'];
+                        if(empty($address))
+                            $address = Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['deleted_at' => null])->orderBy('created_at DESC')->one()['address'];
+                        $customer_details['address'] = $address;
+                        return $customer_details;
                     },
                     'order_items' => function () {
                         return $this->orderItems;
@@ -310,12 +312,12 @@ class Orders extends \yii\db\ActiveRecord
         $get_data = $request->get();
 
         if ($request->isGet) {
-            if (!empty($get_data) && !isset($get_data['id']))
+            if (!isset($get_data['id']))
                 return $this->scenarios()[self::SCENARIO_ALL_ORDERS];
             else if (!empty($get_data) && isset($get_data['id']))
                 return $this->scenarios()[self::SCENARIO_ORDER_DETAILS];
         }
         return parent::fields();
     }
-    
+
 }

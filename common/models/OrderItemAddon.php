@@ -76,4 +76,24 @@ class OrderItemAddon extends \yii\db\ActiveRecord
     {
         return new OrderItemAddonQuery(get_called_class());
     }
+
+    public function fields()
+    {
+        return [
+            'id' => function () {
+                return $this->addon->id;
+            },
+            'name' => function () {
+                return $this->addon->name;
+            },
+            'description' => function () {
+                return $this->addon->description;
+            },
+            'price',
+            'quantity',
+            'status' => function () {
+                return $this->addon->status;
+            }
+        ];
+    }
 }

@@ -292,7 +292,7 @@ class VendorController extends ActiveController
         $get_data = $request->get();
 
         if($request->isGet) {
-            if(!empty($get_data) && !isset($get_data['id']))
+            if(!isset($get_data['id']))
                 return Orders::getOrders();
             else if(!empty($get_data) && isset($get_data['id']))
                 return Orders::getRestaurantOrder($get_data['id']);

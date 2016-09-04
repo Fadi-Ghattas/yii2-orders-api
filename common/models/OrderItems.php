@@ -132,9 +132,27 @@ class OrderItems extends \yii\db\ActiveRecord
             'price',
             'quantity',
             'note',
-            'item' => function(){
-                return $this->item;
+            'menu_item' => function() {
+                $item = array();
+                $item['id'] = $this->item->id;
+                $item['name'] = $this->item->name;
+                $item['description'] = $this->item->description;
+                $item['price'] = $this->item->price;
+                $item['status'] = $this->item->status;
+                $item['discount'] = $this->item->discount;
+                $item['image'] = $this->item->image;
+                $item['is_taxable'] = $this->item->is_taxable;
+                $item['is_verified'] = $this->item->is_verified;
+                $restaurant = Restaurants::checkRestaurantAccess();
+                $item['categories'] = MenuItems::getMenuItemCategories($restaurant->id, $this->item->id);
+                return $item;
             },
+            'addons' => function() {
+                return $this->orderItemAddons;
+            },
+            'item_choices' => function() {
+                return $this->orderItemChoices;
+            }
         ];
     }
 }

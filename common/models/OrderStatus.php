@@ -60,4 +60,12 @@ class OrderStatus extends \yii\db\ActiveRecord
     {
         return new OrderStatusQuery(get_called_class());
     }
+    
+    public function afterValidate()
+    {
+        if ($this->hasErrors()) {
+            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+        }
+    }
+    
 }

@@ -71,4 +71,11 @@ class Owners extends \yii\db\ActiveRecord
         unset($fields['id']);
         return $fields;
     }
+
+    public function afterValidate()
+    {
+        if ($this->hasErrors()) {
+            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+        }
+    }
 }

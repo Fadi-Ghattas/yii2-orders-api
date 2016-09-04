@@ -115,7 +115,11 @@ class Reviews extends \yii\db\ActiveRecord
     {
         return [
             'id',
+            'name' => function() {
+                return $this->client->user->username;
+            },
             'comment',
+            'rank',
             'created_at'
         ];
 

@@ -95,7 +95,13 @@ class Addresses extends \yii\db\ActiveRecord
         return new AddressesQuery(get_called_class());
     }
 
-
+    public function afterValidate()
+    {
+        if ($this->hasErrors()) {
+            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+        }
+    }
+    
     public function beforeSave($insert)
     {
         if (!$this->isNewRecord)
