@@ -255,7 +255,7 @@ class Orders extends \yii\db\ActiveRecord
                 $page = intval(trim($get_data['page']));
                 $limit = intval(trim($get_data['limit']));
             } else {
-                return Helpers::HttpException(422, 'validation failed', ['error' => 'page and limit are must be integer']);
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'page and limit must be integer']);
             }
         }
 
