@@ -205,6 +205,7 @@ class Orders extends \yii\db\ActiveRecord
                     'reference_number',
                     'total',
                     'total_with_voucher',
+                    'commission_amount',
                     'status' => function () {
                         return $this->status->name;
                     },
