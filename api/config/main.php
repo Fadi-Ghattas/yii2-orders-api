@@ -30,7 +30,16 @@ return [
                         'message' => $response->statusText,
                         'data' => null
                     ];
+                } else if ($response->statusCode == 401) {
+                    $response->data = [
+                        'success' => false,
+                        'message' => "Unauthorized",
+                        'data' => [['error' =>"You are requesting with an invalid credential"]]
+                    ];
                 }
+//                else if (){
+//
+//                }
             },
         ],
         'user' => [

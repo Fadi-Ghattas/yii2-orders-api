@@ -25,7 +25,6 @@ use common\models\BlacklistedClients;
 use common\models\Reviews;
 use common\models\MenuItems;
 use common\models\Orders;
-use yii\helpers\Html;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
@@ -69,9 +68,11 @@ class VendorController extends ActiveController
 
         $restaurantManager = User::findByEmail($post_data['email']);
         if (empty($restaurantManager))
-            return Helpers::HttpException(404 ,'failed', ['error' => 'user not found']);
+            return Helpers::HttpException(404 ,'not found', ['error' => 'user not found']);
         if (User::getRoleName($restaurantManager->id) != User::RESTAURANT_MANAGER)
             return Helpers::HttpException(403, "forbidden", ['error'=> "This account is not a restaurant account"]);
+        if($restaurantManager->password_hash != $post_data['password'])
+            return Helpers::HttpException(422, 'validation failed', ['error'=> "Password is in incorrect"]);
         if (!Restaurants::find()->where(['user_id' => $restaurantManager->id])->one()->status)
             return Helpers::HttpException(403, "forbidden" , ['error' =>  "This account is deactivated"]);
         if(!is_null($restaurantManager->last_logged_at))
@@ -109,7 +110,7 @@ class VendorController extends ActiveController
 
         $restaurantManager = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
         if (empty($restaurantManager))
-            return Helpers::HttpException(404, 'user not found', null);
+            return Helpers::HttpException(404 ,'not found', ['error' => 'user not found']);
 
         if($post_data['email'] !=  $restaurantManager->email || $post_data['password'] != $restaurantManager->password_hash)
             return Helpers::HttpException(422,'validation failed', ['error' => 'The email or password incorrect']);
