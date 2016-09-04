@@ -443,7 +443,7 @@ class MenuItems extends \yii\db\ActiveRecord
         if (!$isUpdated)
             return Helpers::HttpException(422, 'deleted failed', null);
 
-        return Helpers::formatResponse($isUpdated, 'deleted success', ['id' => $MenuItem->id]);
+        return Helpers::formatResponse(true, 'deleted success', ['id' => $MenuItem->id]);
     }
 
     public function afterValidate()

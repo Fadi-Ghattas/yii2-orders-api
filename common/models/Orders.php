@@ -303,7 +303,7 @@ class Orders extends \yii\db\ActiveRecord
         if (!$isUpdated)
             return Helpers::HttpException(422, 'update failed', null);
 
-        return Helpers::formatResponse($isUpdated, 'update success', ['id' => $order->id]);
+        return Helpers::formatResponse(true, 'update success', ['id' => $order->id]);
     }
 
     public function fields()

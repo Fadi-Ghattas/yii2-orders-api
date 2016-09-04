@@ -142,7 +142,7 @@ class Addons extends \yii\db\ActiveRecord
         $isCreated = $addOn->save();
         if (!$isCreated)
             return Helpers::HttpException(422, 'create failed', null);
-        return Helpers::formatResponse($isCreated, 'create success', ['id' => $addOn->id]);
+        return Helpers::formatResponse(true, 'create success', ['id' => $addOn->id]);
     }
 
     public static function updateAddOn($add_on_id, $data)
@@ -169,7 +169,7 @@ class Addons extends \yii\db\ActiveRecord
         if (!$isUpdated)
             return Helpers::HttpException(422, 'update failed', null);
 
-        return Helpers::formatResponse($isUpdated, 'update success', ['id' => $addOn->id]);
+        return Helpers::formatResponse(true, 'update success', ['id' => $addOn->id]);
     }
 
     public static function deleteAddOn($add_on_id)
@@ -187,7 +187,7 @@ class Addons extends \yii\db\ActiveRecord
         if (!$isUpdated)
             return Helpers::HttpException(422, 'deleted failed', null);
 
-        return Helpers::formatResponse($isUpdated, 'deleted success', ['id' => $addOn->id]);
+        return Helpers::formatResponse(true, 'deleted success', ['id' => $addOn->id]);
     }
 
     public function afterValidate()

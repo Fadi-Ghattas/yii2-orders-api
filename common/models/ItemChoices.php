@@ -147,7 +147,7 @@ class ItemChoices extends \yii\db\ActiveRecord
         $isCreated = $ItemChoice->save();
         if (!$isCreated)
             return Helpers::HttpException(422, 'create failed', null);
-        return Helpers::formatResponse($isCreated, 'create success', ['id' => $ItemChoice->id]);
+        return Helpers::formatResponse(true, 'create success', ['id' => $ItemChoice->id]);
     }
 
     public static function updateItemChoice($item_choice_id, $data)
@@ -172,7 +172,7 @@ class ItemChoices extends \yii\db\ActiveRecord
         if (!$isUpdated)
             return Helpers::HttpException(422, 'update failed', null);
 
-        return Helpers::formatResponse($isUpdated, 'update success', ['id' => $ItemChoice->id]);
+        return Helpers::formatResponse(true, 'update success', ['id' => $ItemChoice->id]);
     }
 
     public static function deleteItemChoice($item_choice_id)
@@ -189,7 +189,7 @@ class ItemChoices extends \yii\db\ActiveRecord
         if (!$isUpdated)
             return Helpers::HttpException(422, 'deleted failed', null);
 
-        return Helpers::formatResponse($isUpdated, 'deleted success', ['id' => $ItemChoice->id]);
+        return Helpers::formatResponse(true, 'deleted success', ['id' => $ItemChoice->id]);
     }
 
     public function afterValidate()

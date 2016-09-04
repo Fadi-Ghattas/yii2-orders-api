@@ -114,7 +114,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
         $isCreated = $BlacklistedClient->save();
         if (!$isCreated)
             return Helpers::HttpException(422, 'create failed', null);
-        return Helpers::formatResponse($isCreated, 'create success', ['id' => $BlacklistedClient->id]);
+        return Helpers::formatResponse(true, 'create success', ['id' => $BlacklistedClient->id]);
     }
 
     public static function deleteBlacklistedClient($blacklisted_client_id)
@@ -130,7 +130,7 @@ class BlacklistedClients extends \yii\db\ActiveRecord
         if (!$isDeleted)
             return Helpers::HttpException(422, 'deleted failed', null);
 
-        return Helpers::formatResponse($isDeleted, 'deleted success', null);
+        return Helpers::formatResponse(true, 'deleted success', null);
     }
 
     public function afterValidate()

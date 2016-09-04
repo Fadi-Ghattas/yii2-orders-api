@@ -163,7 +163,7 @@ class MenuCategories extends \yii\db\ActiveRecord
         $isCreated = $menCategory->save();
         if(!$isCreated)
             return Helpers::HttpException(422, 'create failed', null);
-        return Helpers::formatResponse($isCreated, 'create success', ['id' => $menCategory->id]);
+        return Helpers::formatResponse(true, 'create success', ['id' => $menCategory->id]);
     }
 
     public static function updateCategory($category_id, $data)
@@ -188,7 +188,7 @@ class MenuCategories extends \yii\db\ActiveRecord
         if(!$isUpdated)
             return Helpers::HttpException(422, 'update failed', null);
 
-        return Helpers::formatResponse($isUpdated, 'update success', ['id' => $menCategory->id]);
+        return Helpers::formatResponse(true, 'update success', ['id' => $menCategory->id]);
     }
 
     public static function deleteCategory($category_id)
@@ -209,7 +209,7 @@ class MenuCategories extends \yii\db\ActiveRecord
         if(!$isUpdated)
             return Helpers::HttpException(422, 'deleted failed', null);
 
-        return Helpers::formatResponse($isUpdated, 'deleted success', ['id' => $menCategory->id]);
+        return Helpers::formatResponse(true, 'deleted success', ['id' => $menCategory->id]);
     }
 
     public function afterValidate() {
