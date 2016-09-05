@@ -168,7 +168,8 @@ class BlacklistedClients extends \yii\db\ActiveRecord
                 if(empty($address))
                     return Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['deleted_at' => null])->orderBy('created_at DESC')->one()['address'];
                 return $address;
-            }
+            },
+            'created_at'
         ];
 
     }
