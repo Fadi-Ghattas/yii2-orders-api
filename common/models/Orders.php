@@ -237,8 +237,8 @@ class Orders extends \yii\db\ActiveRecord
                             $singleOrderItem['name'] = $orderItem->item->name;
                             $singleOrderItem['description'] = $orderItem->item->description;
                             $singleOrderItem['discount'] = $orderItem->item->discount;
-                            $singleOrderItem['addons'] = $orderItem->addons;
-                            $singleOrderItem['item_choices'] = $orderItem->itemChoices;
+                            $singleOrderItem['addons'] = $orderItem->orderItemAddons;
+                            $singleOrderItem['item_choices'] = $orderItem->orderItemChoices;
                             $order_items [] = $singleOrderItem;
                         }
                         return $order_items;
