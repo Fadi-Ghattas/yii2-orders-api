@@ -226,7 +226,22 @@ class Orders extends \yii\db\ActiveRecord
                         return $customer_details;
                     },
                     'order_items' => function () {
-                        return $this->orderItems;
+                        $order_items = array();
+                        foreach ($this->orderItems as $orderItem){
+                            $singleOrderItem = array();
+                            $singleOrderItem['id'] = $orderItem->id;
+                            $singleOrderItem['price'] = $orderItem->price;
+                            $singleOrderItem['quantity'] = $orderItem->quantity;
+                            $singleOrderItem['note'] = $orderItem->note;
+                            $singleOrderItem['menu_item_id'] = $orderItem->item->id;
+                            $singleOrderItem['name'] = $orderItem->item->name;
+                            $singleOrderItem['description'] = $orderItem->item->description;
+                            $singleOrderItem['discount'] = $orderItem->item->discount;
+                            $singleOrderItem['addons'] = $orderItem->addons;
+                            $singleOrderItem['item_choices'] = $orderItem->itemChoices;
+                            $order_items [] = $singleOrderItem;
+                        }
+                        return $order_items;
                     },
                     'payment_method' => function () {
                         return $this->paymentMethod;
