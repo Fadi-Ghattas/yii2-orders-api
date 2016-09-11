@@ -10,9 +10,10 @@ use Yii;
  * @property string $id
  * @property string $name
  * @property string $state_id
+ * @property string $deleted_at
  * @property string $created_at
  * @property string $updated_at
- * @property string $deleted_at
+ * @property integer $active
  *
  * @property Addresses[] $addresses
  * @property AreaRestaurant[] $areaRestaurants
@@ -36,8 +37,8 @@ class Areas extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'state_id'], 'required'],
-            [['state_id'], 'integer'],
-            [['deleted_at'], 'safe'],
+            [['state_id', 'active'], 'integer'],
+            [['deleted_at', 'created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 255],
             [['state_id'], 'exist', 'skipOnError' => true, 'targetClass' => States::className(), 'targetAttribute' => ['state_id' => 'id']],
         ];
@@ -53,6 +54,9 @@ class Areas extends \yii\db\ActiveRecord
             'name' => 'Name',
             'state_id' => 'State ID',
             'deleted_at' => 'Deleted At',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'active' => 'Active',
         ];
     }
 

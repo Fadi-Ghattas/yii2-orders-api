@@ -9,9 +9,10 @@ use Yii;
  *
  * @property string $id
  * @property string $name
+ * @property string $deleted_at
  * @property string $created_at
  * @property string $updated_at
- * @property string $deleted_at
+ * @property string $image
  *
  * @property CuisineRestaurant[] $cuisineRestaurants
  * @property Restaurants[] $restaurants
@@ -33,8 +34,8 @@ class Cuisines extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['deleted_at'], 'safe'],
-            [['name'], 'string', 'max' => 255],
+            [['deleted_at', 'created_at', 'updated_at'], 'safe'],
+            [['name', 'image'], 'string', 'max' => 255],
             [['name'], 'unique'],
         ];
     }
@@ -48,6 +49,9 @@ class Cuisines extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => 'Name',
             'deleted_at' => 'Deleted At',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'image' => 'Image',
         ];
     }
 
