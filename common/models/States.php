@@ -63,7 +63,12 @@ class States extends \yii\db\ActiveRecord
      */
     public function getAreas()
     {
-        return $this->hasMany(Areas::className(), ['state_id' => 'id'])->select(['id', 'name'])->asArray()->all();
+//        return $this->hasMany(Areas::className(), ['state_id' => 'id'])->select(['id', 'name'])->asArray()->all();
+        return $this->hasMany(Areas::className(), ['state_id' => 'id'])
+            ->where(['active' => 1])
+            ->andWhere(['deleted_at' => null])
+            ->select(['id', 'name'])
+            ->asArray()->all();
     }
 
     /**
@@ -95,8 +100,12 @@ class States extends \yii\db\ActiveRecord
             return Helpers::HttpException(422, 'validation failed', ['error' => "country_id must be integer"]);
 
         $States = self::find()->where(['country_id' => $headers['country_id']])->all();
-
-        return Helpers::formatResponse(true, 'get success', $States);
+        $StatesResult = array();
+        foreach ($States as $State) {
+            if(!empty($State->areas))
+                $StatesResult [] = $State;
+        }
+        return Helpers::formatResponse(true, 'get success', $StatesResult);
     }
 
     public function afterValidate()
@@ -118,16 +127,15 @@ class States extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        return [
-            'id',
-            'name',
-            'country' => function () {
-                return $this->country;
-            },
-            'areas' => function () {
-                return $this->areas;
-            }
-        ];
-
+            return [
+                'id',
+                'name',
+                'country' => function () {
+                    return $this->country;
+                },
+                'areas' => function () {
+                    return $this->areas;
+                }
+            ];
     }
 }

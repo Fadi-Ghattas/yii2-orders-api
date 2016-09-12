@@ -23,20 +23,20 @@ return [
             'class' => 'yii\web\Response',
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                if($response->format == 'html'){
-                    $response->format = \yii\web\Response::FORMAT_JSON;
-                    $response->data = [
-                        'success' => false,
-                        'message' => $response->statusText,
-                        'data' => null
-                    ];
-                } else if ($response->statusCode == 401) {
-                    $response->data = [
-                        'success' => false,
-                        'message' => "Unauthorized",
-                        'data' => [['error' =>"You are requesting with an invalid credential"]]
-                    ];
-                }
+//                if($response->format == 'html'){
+//                    $response->format = \yii\web\Response::FORMAT_JSON;
+//                    $response->data = [
+//                        'success' => false,
+//                        'message' => $response->statusText,
+//                        'data' => null
+//                    ];
+//                } else if ($response->statusCode == 401) {
+//                    $response->data = [
+//                        'success' => false,
+//                        'message' => "Unauthorized",
+//                        'data' => [['error' =>"You are requesting with an invalid credential"]]
+//                    ];
+//                }
 //                else if (){
 //
 //                }
@@ -101,7 +101,18 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => ['v1/common'],
                     'extraPatterns' => [
+                        'GET,POST,PUT,DELETE countries' => 'countries',
                         'GET,POST,PUT,DELETE states' => 'states',
+                    ],
+                    'tokens' => [
+                        '{id}' => '<id:\\w+>'
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['v1/client'],
+                    'extraPatterns' => [
+                        'GET,POST,PUT,DELETE sing-up' => 'sing-up',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

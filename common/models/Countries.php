@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\helpers\Helpers;
 use Yii;
 
 /**
@@ -91,5 +92,11 @@ class Countries extends \yii\db\ActiveRecord
         if ($this->hasErrors()) {
             return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
         }
+    }
+
+    public static function getCountries()
+    {
+        $countries = self::find()->where(['deleted_at' => null])->all();
+        return Helpers::formatResponse(true, 'get success', $countries);
     }
 }

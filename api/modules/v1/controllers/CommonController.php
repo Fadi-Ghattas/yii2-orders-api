@@ -8,15 +8,15 @@
 
 namespace api\modules\v1\controllers;
 
-
 use Yii;
+use common\models\Countries;
 use common\models\States;
+use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
-use yii\rest\ActiveController;
 use yii\web\MethodNotAllowedHttpException;
 
-class CommonController  extends ActiveController
+class CommonController extends ActiveController
 {
     public $modelClass = '';
 
@@ -32,7 +32,20 @@ class CommonController  extends ActiveController
 
         return $behaviors;
     }
-    
+
+    public function actionCountries()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if($request->isGet) {
+            if(empty($get_data))
+                return Countries::getCountries();
+        }
+
+        throw new MethodNotAllowedHttpException("Method Not Allowed");
+    }
+
     public function actionStates()
     {
         $request = Yii::$app->request;
@@ -50,7 +63,8 @@ class CommonController  extends ActiveController
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
         $actions = [
-            'states' => ['GET']
+            'countries' => ['GET'],
+            'states' => ['GET'],
         ];
 
         foreach ($actions as $action => $verb) {
