@@ -112,11 +112,13 @@ return [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => ['v1/client'],
                     'extraPatterns' => [
-                        'GET,POST,PUT,DELETE sing-up' => 'sing-up',
+                        'GET,POST,PUT,DELETE sign-up' => 'sign-up',
+                        'GET,POST,PUT,DELETE log-in' => 'log-in',
+                        'GET,POST,PUT,DELETE log-out' => 'log-out',
                     ],
-                    'tokens' => [
-                        '{id}' => '<id:\\w+>'
-                    ]
+//                    'tokens' => [
+//                        '{id}' => '<id:\\w+>'
+//                    ]
                 ],
 //                [
 //                    'class' => 'yii\rest\UrlRule',

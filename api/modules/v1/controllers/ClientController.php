@@ -8,6 +8,7 @@
 
 namespace api\modules\v1\controllers;
 
+use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\SignUpForm;
 use common\helpers\Helpers;
 use Yii;
@@ -28,7 +29,7 @@ class ClientController extends ActiveController
             parent::behaviors(), [
                 'authenticator' => [
                     'class' => CompositeAuth::className(),
-                    'except' => ['sing-up'],
+                    'except' => ['sign-up','log-in'],
                     'authMethods' => [
                         HttpBearerAuth::className(),
                     ],
@@ -49,7 +50,7 @@ class ClientController extends ActiveController
         return $actions;
     }
 
-    public function actionSingUp()
+    public function actionSignUp()
     {
         $post_data = Yii::$app->request->post();
         $sing_up_form = new SignUpForm();
@@ -59,21 +60,52 @@ class ClientController extends ActiveController
         }
         $user = User::findOne(['email' => $sing_up_form->email]);
         if (!$user) {
-            $new_user = User::NewBasicSignUp($sing_up_form->username, $sing_up_form->email, $sing_up_form->password);
+            $new_user = User::NewBasicSignUp($sing_up_form->username, $sing_up_form->email, $sing_up_form->password, User::CLIENT);
             if(!$new_user)
-                return Helpers::HttpException(500,'validation failed', ['error' => 'Something went wrong, try again later.']);
-            return Helpers::formatResponse(true, 'post success', $new_user) ;
+                return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+            return Helpers::formatResponse(true, 'sign up success', ['auth_key' => $new_user['auth_key']]);
         } else {//TODO if we add the email verification check this again.
             return Helpers::HttpException(422, 'validation failed', ['error' => 'this email already taken please try another.']);
         }
-        return Helpers::HttpException(501,'validation failed', ['error' => 'Something went wrong, try again later or contact the admin.']);
+        return Helpers::HttpException(501,'not implemented', ['error' => 'Something went wrong, try again later or contact the admin.']);
+    }
+
+    public function actionLogIn()
+    {
+        $post_data = Yii::$app->request->post();
+        $login_form = new LoginForm();
+        $login_form->setAttributes($post_data);
+        if (!$login_form->validate()) {
+            return Helpers::HttpException(422, 'validation failed', ['error' => $login_form->errors]);
+        }
+        $user = User::Login($login_form->email, $login_form->password);
+        if(!$user)
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+        return Helpers::formatResponse(true, 'log in success', ['auth_key' => $user['auth_key']]);
+    }
+
+    public function actionLogOut()
+    {
+        $headers = Yii::$app->getRequest()->getHeaders();
+
+        $clientUser = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
+        if (empty($clientUser))
+            return Helpers::HttpException(404 ,'not found', ['error' => 'user not found']);
+
+        $clientUser->auth_key = '';
+        if(!$clientUser->save(false))
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+
+        return Helpers::formatResponse(true, 'log out success', null);
     }
 
     public function beforeAction($event)
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
         $actions = [
-            'sing-up' => ['POST'],
+            'sign-up' => ['POST'],
+            'log-in' => ['POST'],
+            'log-out' => ['POST'],
         ];
 
         foreach ($actions as $action => $verb) {
