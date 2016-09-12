@@ -432,4 +432,14 @@ class Restaurants extends \yii\db\ActiveRecord
         }
         return Helpers::HttpException(422, 'update failed', null);
     }
+
+    public static function getRestaurants()
+    {
+        $get_data = Yii::$app->request->get();
+        $page = 1;
+        $limit = -1;
+        $sort = 'status';
+
+        
+    }
 }

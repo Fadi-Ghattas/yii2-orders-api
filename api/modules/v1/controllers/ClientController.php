@@ -11,6 +11,7 @@ namespace api\modules\v1\controllers;
 use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\SignUpForm;
 use common\helpers\Helpers;
+use common\models\Restaurants;
 use Yii;
 use common\models\User;
 use yii\rest\ActiveController;
@@ -97,6 +98,19 @@ class ClientController extends ActiveController
             return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
 
         return Helpers::formatResponse(true, 'log out success', null);
+    }
+
+    public function actionGetRestaurants()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+        
+        if($request->isGet) {
+            if(!isset($get_data['id']))
+                return Restaurants::getRestaurants();
+        }
+
+        return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
     public function beforeAction($event)

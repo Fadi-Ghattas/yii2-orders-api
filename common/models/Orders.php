@@ -286,7 +286,7 @@ class Orders extends \yii\db\ActiveRecord
         ]);
         $query->andFilterWhere(['restaurant_id' => $restaurant->id, 'deleted_at' => null]);
         if (isset($get_data['date']) && !empty($get_data['date']))
-            $query->andFilterWhere(['like', 'created_at', trim($get_data['date'])]);
+            $query->andFilterWhere(['>=', 'created_at', trim($get_data['date'])]);
         if ($limit != -1)
             $query->limit($limit)->offset($page - 1);
         return Helpers::formatResponse(true, 'get success', $dataProvider->models);
