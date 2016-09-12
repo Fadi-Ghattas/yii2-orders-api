@@ -147,7 +147,7 @@ class VendorController extends ActiveController
         $get_data = $request->get();
 
         if($request->isGet && empty($get_data)) {
-            return Helpers::formatResponse(true, 'get success', Restaurants::checkRestaurantAccess()) ;
+            return Helpers::formatResponse(true, 'get success', Restaurants::checkRestaurantAccess());
         }else if($request->isPut && empty($get_data)) {
             if(empty($request->post()))
                 return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);

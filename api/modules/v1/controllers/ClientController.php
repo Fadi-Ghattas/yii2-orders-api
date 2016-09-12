@@ -8,6 +8,8 @@
 
 namespace api\modules\v1\controllers;
 
+use api\modules\v1\models\SignUpForm;
+use common\helpers\Helpers;
 use Yii;
 use common\models\User;
 use yii\rest\ActiveController;
@@ -26,7 +28,7 @@ class ClientController extends ActiveController
             parent::behaviors(), [
                 'authenticator' => [
                     'class' => CompositeAuth::className(),
-                    'except' => ['sign-up'],
+                    'except' => ['sing-up'],
                     'authMethods' => [
                         HttpBearerAuth::className(),
                     ],
@@ -50,20 +52,21 @@ class ClientController extends ActiveController
     public function actionSingUp()
     {
         $post_data = Yii::$app->request->post();
-
-        $user = new User();
-        $model['user'] = $post_data;
-        $user->load($model);
-//        $user->username = $post_data['username'];
-//        $user->email = $post_data['email'];
-        $user->last_logged_at = date('Y-m-d H:i:s');
-//        $user->setPassword($post_data['password']);
-        $user->generateAuthKey();
-        $user->role = User::CLIENT;
-        $user->validate();
-        if(!$user->save())
-            return Helpers::HttpException(400,'sing up failed', ['error' => 'something went wrong try again please..']);
-        return Helpers::formatResponse(true, 'sing up success', $user);
+        $sing_up_form = new SignUpForm();
+        $sing_up_form->setAttributes($post_data);
+        if (!$sing_up_form->validate()) {
+            return Helpers::HttpException(422, 'validation failed', ['error' => $sing_up_form->errors]);
+        }
+        $user = User::findOne(['email' => $sing_up_form->email]);
+        if (!$user) {
+            $new_user = User::NewBasicSignUp($sing_up_form->username, $sing_up_form->email, $sing_up_form->password);
+            if(!$new_user)
+                return Helpers::HttpException(500,'validation failed', ['error' => 'Something went wrong, try again later.']);
+            return Helpers::formatResponse(true, 'post success', $new_user) ;
+        } else {//TODO if we add the email verification check this again.
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'this email already taken please try another.']);
+        }
+        return Helpers::HttpException(501,'validation failed', ['error' => 'Something went wrong, try again later or contact the admin.']);
     }
 
     public function beforeAction($event)

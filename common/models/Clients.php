@@ -9,13 +9,13 @@ use Yii;
  *
  * @property string $id
  * @property integer $active
- * @property integer $status
  * @property string $phone_number
  * @property string $image
- * @property integer $user_id
  * @property string $created_at
  * @property string $updated_at
+ * @property integer $user_id
  * @property string $deleted_at
+ * @property integer $verified
  *
  * @property Addresses[] $addresses
  * @property BlacklistedClients[] $blacklistedClients
@@ -42,10 +42,11 @@ class Clients extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['active', 'status', 'user_id'], 'required'],
-            [['active', 'status', 'user_id'], 'integer'],
+            [['active', 'user_id', 'verified'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['user_id'], 'required'],
             [['phone_number', 'image'], 'string', 'max' => 255],
+            [['phone_number'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -58,13 +59,13 @@ class Clients extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'active' => 'Active',
-            'status' => 'Status',
             'phone_number' => 'Phone Number',
             'image' => 'Image',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'user_id' => 'User ID',
             'deleted_at' => 'Deleted At',
+            'verified' => 'Verified',
         ];
     }
 
@@ -166,7 +167,7 @@ class Clients extends \yii\db\ActiveRecord
         return [
             'id',
             'active',
-            'status',
+            'verified',
             'phone_number',
             'image',
             'email' => function() {
