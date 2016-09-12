@@ -40,8 +40,6 @@ class Orders extends \yii\db\ActiveRecord
     const SCENARIO_ALL_ORDERS = 'all_orders';
     const SCENARIO_ORDER_DETAILS = 'order_details';
 
-    private $my_scenario;
-
     /**
      * @inheritdoc
      */
@@ -278,7 +276,6 @@ class Orders extends \yii\db\ActiveRecord
             Helpers::validateDate(trim($get_data['date']), 'Y-m-d');
 
         $orders = new Orders();
-        $orders->my_scenario = self::SCENARIO_ALL_ORDERS;
         $query = $orders::find();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
