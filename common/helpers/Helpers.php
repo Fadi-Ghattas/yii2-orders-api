@@ -79,6 +79,13 @@ class Helpers
 
         return true;
     }
+
+    public static function split_on($string, $num) {
+        $length = strlen($string);
+        $output[0] = substr($string, 0, $num);
+        $output[1] = substr($string, $num, $length );
+        return $output;
+    }
     
     //db
     public static function linkManyToMany($relationship_model, $related_id ,$new_entities, $old_entities, $entity_id, $relationship_entity_id , $restaurant_id = 0)

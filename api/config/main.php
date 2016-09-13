@@ -115,6 +115,8 @@ return [
                         'GET,POST,PUT,DELETE sign-up' => 'sign-up',
                         'GET,POST,PUT,DELETE log-in' => 'log-in',
                         'GET,POST,PUT,DELETE log-out' => 'log-out',
+                        'GET,POST,PUT,DELETE restaurants' => 'restaurants',
+                        'GET,POST,PUT,DELETE cuisines' => 'cuisines',
                     ],
 //                    'tokens' => [
 //                        '{id}' => '<id:\\w+>'

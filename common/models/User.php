@@ -24,6 +24,9 @@ use common\helpers\Helpers;
  * @property string $deleted_at
  * @property integer $last_logged_at
  * @property string $password write-only password
+ *
+ * @property Clients[] $clients
+ * @property Restaurants[] $restaurants
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -34,6 +37,7 @@ class User extends ActiveRecord implements IdentityInterface
     const CLIENT = 'client';
     const RESTAURANT_MANAGER = 'restaurant_manager';
     const ADMIN = "admin";
+    const PUBLIC_KEY = "N2IRJeUR73WzueZPug6LnBmyOXW8tyF4";
 
     /**
      * @inheritdoc
@@ -65,6 +69,22 @@ class User extends ActiveRecord implements IdentityInterface
             [['email'], 'unique'],
             [['email'], 'email'],
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClients()
+    {
+        return $this->hasMany(Clients::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRestaurants()
+    {
+        return $this->hasMany(Restaurants::className(), ['user_id' => 'id']);
     }
 
     /**

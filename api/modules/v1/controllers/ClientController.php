@@ -11,6 +11,7 @@ namespace api\modules\v1\controllers;
 use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\SignUpForm;
 use common\helpers\Helpers;
+use common\models\Cuisines;
 use common\models\Restaurants;
 use Yii;
 use common\models\User;
@@ -100,7 +101,7 @@ class ClientController extends ActiveController
         return Helpers::formatResponse(true, 'log out success', null);
     }
 
-    public function actionGetRestaurants()
+    public function actionRestaurants()
     {
         $request = Yii::$app->request;
         $get_data = $request->get();
@@ -113,6 +114,19 @@ class ClientController extends ActiveController
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
+    public function actionCuisines()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if($request->isGet) {
+            if(!isset($get_data['id']))
+                return Cuisines::getCuisines();
+        }
+
+        return Helpers::HttpException(405, "Method Not Allowed", null);
+    }
+
     public function beforeAction($event)
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
@@ -120,6 +134,8 @@ class ClientController extends ActiveController
             'sign-up' => ['POST'],
             'log-in' => ['POST'],
             'log-out' => ['POST'],
+            'restaurants' => ['GET'],
+            'cuisines' => ['GET'],
         ];
 
         foreach ($actions as $action => $verb) {

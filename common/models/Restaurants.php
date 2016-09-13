@@ -4,6 +4,7 @@ namespace common\models;
 
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
 use common\helpers\Helpers;
 
@@ -36,6 +37,9 @@ use common\helpers\Helpers;
  * @property integer $is_verified_global
  * @property string $country_id
  * @property string $owner_number
+ * @property string $res_status
+ * @property double $reviews_rank
+ * @property integer $favour_it
  *
  * @property Addons[] $addons
  * @property AreaRestaurant[] $areaRestaurants
@@ -55,6 +59,11 @@ use common\helpers\Helpers;
 class Restaurants extends \yii\db\ActiveRecord
 {
     public $action;
+    public $res_status;
+    public $reviews_rank;
+    public $favour_it;
+    const SCENARIO_GET_BY_RESTAURANTS_MANGER = 'get_by_restaurants_manger';
+    const SCENARIO_GET_BY_CLIENT = 'get_by_client';
 
     /**
      * @inheritdoc
@@ -87,7 +96,7 @@ class Restaurants extends \yii\db\ActiveRecord
         return [
             [['name', 'minimum_order_amount', 'time_order_open', 'time_order_close', 'delivery_fee', 'rank', 'halal', 'featured', 'working_opening_hours', 'working_closing_hours', 'disable_ordering', 'delivery_duration', 'phone_number', 'owner_number', 'country_id', 'longitude', 'latitude', 'image', 'status', 'user_id'], 'required'],
             [['minimum_order_amount', 'delivery_fee', 'rank', 'longitude', 'latitude'], 'number'],
-            [['action', 'time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
+            [['res_status', 'reviews_rank', 'favour_it', 'action', 'time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
             [['halal', 'featured', 'disable_ordering', 'delivery_duration', 'status', 'user_id', 'is_verified_global', 'country_id'], 'integer'],
             [['name', 'phone_number', 'owner_number', 'image', 'image_background'], 'string', 'max' => 255],
             [['working_opening_hours', 'working_closing_hours', 'time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
@@ -254,54 +263,81 @@ class Restaurants extends \yii\db\ActiveRecord
         return new RestaurantsQuery(get_called_class());
     }
 
+    public function scenarios()
+    {
+        return ArrayHelper::merge(
+            parent::scenarios(),
+            [
+                self::SCENARIO_GET_BY_RESTAURANTS_MANGER => [
+                    'id',
+                    'name',
+                    'email' => function () {
+                        return $this->user->email;
+                    },
+                    'phone_number',
+                    'owner_number',
+                    'minimum_order_amount',
+                    'working_opening_hours',
+                    'working_closing_hours',
+                    'time_order_open',
+                    'time_order_close',
+                    'delivery_fee',
+                    'halal',
+                    'featured',
+                    'disable_ordering',
+                    'delivery_duration',
+                    'longitude',
+                    'latitude',
+                    'image',
+                    'image_background',
+                    'country_id',
+                    'areas' => function () {
+                        return $this->areas;
+                    },
+                    'cuisine' => function () {
+                        return $this->cuisines;
+                    },
+                    'payment_method' => function () {
+                        $paymentMethodRestaurants = array();
+                        foreach ($this->paymentMethodRestaurants as $payment_method) {
+                            $single_payment_method = array();
+                            $single_payment_method['id'] = $payment_method->paymentMethod->id;
+                            $single_payment_method['name'] = $payment_method->paymentMethod->name;
+                            $paymentMethodRestaurants [] = $single_payment_method;
+                        }
+                        return $paymentMethodRestaurants;
+                    }
+                ],
+
+                self::SCENARIO_GET_BY_CLIENT => [
+                    'id',
+                    'name',
+                    'image',
+                    'minimum_order_amount',
+                    'delivery_duration',
+                    'res_status',
+                    'reviews_rank',
+                    'favour_it',
+                    'halal',
+                    'cuisine' => function () {
+                        return $this->cuisines;
+                    },
+                ],
+
+            ]);
+    }
     public function fields()
     {
-        return [
-            'id',
-            'name',
-            'email' => function () {
-                return $this->user->email;
-            },
-            'phone_number',
-            'owner_number',
-            'minimum_order_amount',
-            'working_opening_hours',
-            'working_closing_hours',
-            'time_order_open',
-            'time_order_close',
-            'delivery_fee',
-            'halal',
-            'featured',
-            'disable_ordering',
-            'delivery_duration',
-            'longitude',
-            'latitude',
-            'image',
-            'image_background',
-            'country_id',
-            'areas' => function () {
-                return $this->areas;
-            },
-            'cuisine' => function () {
-                return $this->cuisines;
-            },
-            'payment_method' => function () {
-                $paymentMethodRestaurants = array();
-                foreach ($this->paymentMethodRestaurants as $payment_method) {
-                    $single_payment_method = array();
-                    $single_payment_method['id'] = $payment_method->paymentMethod->id;
-                    $single_payment_method['name'] = $payment_method->paymentMethod->name;
-                    $paymentMethodRestaurants [] = $single_payment_method;
-                }
-                return $paymentMethodRestaurants;
-            }
-        ];
+        $request_action = explode('/', Yii::$app->getRequest()->getUrl());
+        if(in_array('clients', $request_action) && Yii::$app->request->isGet)
+            return $this->scenarios()[self::SCENARIO_GET_BY_CLIENT];
+        return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
     }
 
     public function afterFind()
     {
-        if (!$this->status)
-            return Helpers::HttpException(403, "This account is deactivated", null);
+//        if (!$this->status)
+//            return Helpers::HttpException(403, "This account is deactivated", null);
 
         parent::afterFind(); // TODO: Change the autogenerated stub
     }
@@ -435,11 +471,190 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public static function getRestaurants()
     {
+        $re = Yii::$app->request;
         $get_data = Yii::$app->request->get();
         $page = 1;
         $limit = -1;
-        $sort = 'status';
+        if (!isset($get_data['time']) && empty(trim($get_data['time'])))
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'current time is required']);
+        $time = trim($get_data['time']);
 
-        
+        //1 open and delivery open
+        //2 open but no delivery
+        //3 busy
+        //4 open but delivery closed
+        //5 open
+        //6 closed
+        $headers = Yii::$app->getRequest()->getHeaders();
+        $authorization = explode(' ', $headers['authorization'])[1];
+        $client_id = 0;
+        if ($authorization != User::PUBLIC_KEY) {
+            $ClientUser = User::findIdentityByAccessToken($authorization);
+            $client_id = Clients::findOne(['user_id' => $ClientUser->id]);
+            $client_id = (!is_null($client_id) ? $client_id->id : 0);
+        }
+        $sql = "SELECT * 
+               FROM (SELECT *, 
+                       (
+                        CASE 
+                        WHEN ('" . $time . "' >= restaurants.time_order_open AND '" . $time . "' <= restaurants.time_order_close AND restaurants.disable_ordering = 1) THEN 3
+                        WHEN ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' < restaurants.time_order_open) THEN 2
+                        WHEN ('" . $time . "' >= restaurants.time_order_open AND '" . $time . "' <= restaurants.time_order_close) THEN 1  
+                        WHEN ('" . $time . "' >= restaurants.time_order_close AND '" . $time . "' <= restaurants.working_closing_hours) THEN 4
+                        WHEN ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' <= restaurants.working_closing_hours) THEN 5
+                        WHEN ('" . $time . "' > restaurants.working_closing_hours OR '" . $time . "' < restaurants.working_opening_hours) THEN 6
+                        ELSE NULL END
+                       ) AS 'res_status',
+                       (SELECT AVG(reviews.rank) FROM reviews WHERE reviews.restaurant_id = restaurants.id) AS 'reviews_rank',
+                       (
+                        SELECT EXISTS(SELECT favorite_restaurants.id 
+                                      FROM favorite_restaurants 
+                                      WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ") 
+                       ) AS 'favour_it'
+                       FROM `restaurants`) AS r
+               WHERE 1 AND ( ";
+
+        $addOr = 0;
+        if (isset($get_data['minimum_order_amount'])) {
+            $minimum_order_amount = trim($get_data['minimum_order_amount']);
+            if (empty($minimum_order_amount))
+                return Helpers::HttpException(422, 'validation failed', ['error' => "minimum_order_amount can't be blank"]);
+            $MinimumOrderAmountRang = explode(',', $minimum_order_amount);
+            if (count($MinimumOrderAmountRang) != 2)
+                return Helpers::HttpException(422, 'validation failed', ['error' => "minimum_order_amount rang must have two values"]);
+            if (!is_double(doubleval($MinimumOrderAmountRang[0])) && !is_double(doubleval($MinimumOrderAmountRang[1])))
+                return Helpers::HttpException(422, 'validation failed', ['error' => "minimum_order_amount rang values must be numbers"]);
+            $sql .= ' r.minimum_order_amount BETWEEN ' . $MinimumOrderAmountRang[0] . ' AND ' . $MinimumOrderAmountRang[1]. ' ';
+            $addOr = 1;
+        }
+
+        if (isset($get_data['delivery_fee'])) {
+            $delivery_fee = trim($get_data['delivery_fee']);
+            if (empty($delivery_fee))
+                return Helpers::HttpException(422, 'validation failed', ['error' => "delivery_fee can't be blank"]);
+            $DeliveryFeeRang = explode(',', $delivery_fee);
+            if (count($DeliveryFeeRang) != 2)
+                return Helpers::HttpException(422, 'validation failed', ['error' => "delivery_fee rang must have two values"]);
+            if (!is_double(doubleval($DeliveryFeeRang[0])) && !is_double(doubleval($DeliveryFeeRang[1])))
+                return Helpers::HttpException(422, 'validation failed', ['error' => "delivery_fee rang values must be numbers"]);
+            if ($addOr) {
+                $sql .= ' OR r.delivery_fee BETWEEN ' . $DeliveryFeeRang[0] . ' AND ' . $DeliveryFeeRang[1]. ' ';
+            } else {
+                $sql .= ' r.delivery_fee BETWEEN ' . $DeliveryFeeRang[0] . ' AND ' . $DeliveryFeeRang[1]. ' ';
+                $addOr = 1;
+            }
+        }
+
+        if (isset($get_data['delivery_duration'])) {
+            $delivery_duration = trim($get_data['delivery_duration']);
+            if (empty($delivery_duration))
+                return Helpers::HttpException(422, 'validation failed', ['error' => "delivery_duration can't be blank"]);
+            if (!is_int(intval($delivery_duration)))
+                return Helpers::HttpException(422, 'validation failed', ['error' => "delivery_duration must be a number"]);
+            if ($addOr) {
+                $sql .= ' OR r.delivery_duration <= ' . $delivery_duration. ' ';
+            } else {
+                $sql .= ' r.delivery_duration <= ' . $delivery_duration. ' ';
+                $addOr = 1;
+            }
+        }
+
+        if (isset($get_data['quick_filters'])) {
+            if (empty($get_data['quick_filters']))
+                return Helpers::HttpException(422, 'validation failed', ['error' => "quick_filters can't be blank"]);
+            $quick_filters = explode(',', $get_data['quick_filters']);
+
+            if (in_array('open', $quick_filters)) {
+                if ($addOr) {
+                    $sql .= ' OR r.res_status = 1 ';
+                } else {
+                    $sql .= ' r.res_status = 1 ';
+                    $addOr = 1;
+                }
+            }
+
+            if (in_array('free_delivery', $quick_filters)) {
+                if ($addOr) {
+                    $sql .= ' OR r.delivery_fee = 0 ';
+                } else {
+                    $sql .= ' r.delivery_fee = 0 ';
+                    $addOr = 1;
+                }
+            }
+
+            if (in_array('halal', $quick_filters)) {
+                if ($addOr) {
+                    $sql .= ' OR r.halal = 1 ';
+                } else {
+                    $sql .= ' r.halal = 1 ';
+                    $addOr = 1;
+                }
+            }
+
+            if (in_array('accepts_vouchers', $quick_filters)) {
+                if ($addOr) {
+                    $sql .= ' OR r.accepts_vouchers = 1 ';
+                } else {
+                    $sql .= ' r.accepts_vouchers = 1 ';
+                    $addOr = 1;
+                }
+            }
+            if (in_array('new_restaurant', $quick_filters)) {
+                if ($addOr) {
+                    $sql .= ' OR TIMESTAMPDIFF(MONTH, r.created_at ,CURDATE()) <= 1 ';
+                } else {
+                    $sql .= ' TIMESTAMPDIFF(MONTH, r.created_at ,CURDATE()) <= 1 ';
+                    $addOr = 1;
+                }
+            }
+        }
+
+        if ($addOr)
+            $sql .= ' ) ';
+        else
+            $sql .= ' 1 ) ';
+
+        if (isset($get_data['sort'])) {
+            $sort = trim($get_data['sort']);
+            if (empty($sort))
+                return Helpers::HttpException(422, 'validation failed', ['error' => "sort can't be blank"]);
+
+            $sort = Helpers::split_on($sort, 1);
+
+            if ($sort[0] != '*' && $sort[0] != '-')
+                return Helpers::HttpException(422, 'validation failed', ['error' => "sorting operator is required and can't be " . $sort[0]]);
+
+            $sql .= ' ORDER BY r.' . $sort[1] . ($sort[0] == '*' ? ' ASC ' : ' DESC ');
+        } else {
+            $sql .= ' ORDER BY r.res_status ASC,  r.delivery_fee ASC, r.delivery_duration ASC ';
+        }
+
+        if (isset($get_data['limit']) && isset($get_data['page'])) {
+            Helpers::validateSetEmpty([$get_data['page'], $get_data['limit']]);
+            if (is_int(intval(trim($get_data['page']))) && is_int(intval(trim($get_data['limit'])))) {
+                $page = intval(trim($get_data['page']));
+                $limit = intval(trim($get_data['limit']));
+            } else {
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'page and limit must be integer']);
+            }
+        }
+
+        if ($limit != -1)
+            $sql .= ' LIMIT ' . ($page - 1) . ' , ' . $limit . ';';
+
+        $restaurants = Restaurants::findBySql($sql)->all();
+        return  Helpers::formatResponse(true, 'get success', $restaurants) ;
+    }
+
+    public static function getRestaurantsStatus()
+    {
+        return [
+            1 => 'open and delivery open',
+            2 => 'open but no delivery',
+            3 => 'busy',
+            4 => 'open but delivery closed',
+            5 => 'open',
+            6 => 'closed'
+        ];
     }
 }
