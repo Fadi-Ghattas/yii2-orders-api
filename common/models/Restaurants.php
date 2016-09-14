@@ -486,13 +486,16 @@ class Restaurants extends \yii\db\ActiveRecord
         //5 open
         //6 closed
         $headers = Yii::$app->getRequest()->getHeaders();
-        $authorization = explode(' ', $headers['authorization'])[1];
         $client_id = 0;
-        if ($authorization != User::PUBLIC_KEY) {
+        if(isset($headers['authorization']) && !empty($headers['authorization'])) {
+            $authorization = explode(' ', $headers['authorization'])[1];
+//        $client_id = 0;
+//        if ($authorization != User::PUBLIC_KEY) {
             $ClientUser = User::findIdentityByAccessToken($authorization);
             $client_id = Clients::findOne(['user_id' => $ClientUser->id]);
             $client_id = (!is_null($client_id) ? $client_id->id : 0);
         }
+//        }
         $sql = "SELECT * 
                FROM (SELECT *, 
                        (
