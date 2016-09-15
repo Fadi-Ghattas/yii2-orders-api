@@ -315,7 +315,9 @@ class Restaurants extends \yii\db\ActiveRecord
                     'image',
                     'minimum_order_amount',
                     'delivery_duration',
-                    'res_status',
+                    'res_status' => function(){
+                        return $this->getRestaurantsStatus($this->res_status);
+                    },
                     'reviews_rank',
                     'favour_it',
                     'halal',
@@ -476,8 +478,11 @@ class Restaurants extends \yii\db\ActiveRecord
         $page = 1;
         $limit = -1;
 
-        if (!isset($get_data['area']) && empty(trim($get_data['area'])))
-            return Helpers::HttpException(422, 'validation failed', ['error' => "area is required and can't be blank"]);
+        if (!isset($get_data['area']))
+            return Helpers::HttpException(422, 'validation failed', ['error' => "area is required"]);
+        if(empty(trim($get_data['area'])))
+            return Helpers::HttpException(422, 'validation failed', ['error' => "area can't be blank"]);
+
         $area_id = trim($get_data['area']);
         $AreaCountry = Areas::find()->where(['areas.id' => $area_id])->joinWith(['state', 'state.country'], true, 'INNER JOIN')->select('countries.name')->one();
         $time = (new Formatter(['timeZone' => Helpers::getCountryTimeZone($AreaCountry->name)]))->asTime(time(), 'php:H:i:s');
@@ -505,28 +510,29 @@ class Restaurants extends \yii\db\ActiveRecord
         //5 open
         //6 closed
         $sql = "SELECT r.* 
-               FROM (SELECT *, 
-                       (
-                        CASE 
-                        WHEN ('" . $time . "' >= restaurants.time_order_open AND '" . $time . "' <= restaurants.time_order_close AND restaurants.disable_ordering = 1) THEN 3
-                        WHEN ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' < restaurants.time_order_open) THEN 2
-                        WHEN ('" . $time . "' >= restaurants.time_order_open AND '" . $time . "' <= restaurants.time_order_close) THEN 1  
-                        WHEN ('" . $time . "' >= restaurants.time_order_close AND '" . $time . "' <= restaurants.working_closing_hours) THEN 4
-                        WHEN ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' <= restaurants.working_closing_hours) THEN 5
-                        WHEN ('" . $time . "' > restaurants.working_closing_hours OR '" . $time . "' < restaurants.working_opening_hours) THEN 6
-                        ELSE NULL END
-                       ) AS 'res_status',
-                       (SELECT ROUND(AVG(reviews.rank), 1) FROM reviews WHERE reviews.restaurant_id = restaurants.id) AS 'reviews_rank',
-                       (
-                        SELECT EXISTS(SELECT favorite_restaurants.id 
-                                      FROM favorite_restaurants 
-                                      WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ") 
-                       ) AS 'favour_it'
-                       FROM `restaurants`) AS r
-                       JOIN countries ON r.country_id = countries.id
-                       JOIN states ON countries.id = states.country_id
-                       JOIN areas ON states.id = areas.state_id
-               WHERE areas.id IN (" . $area_id . ") AND ( ";
+                   FROM (SELECT *, 
+                           (
+                            CASE 
+                            WHEN ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' <= restaurants.working_closing_hours AND restaurants.disable_ordering = 1) THEN 3
+                            WHEN ('" . $time . "' > restaurants.time_order_open AND '" . $time . "' < restaurants.time_order_close) THEN 1
+                            WHEN (
+                            ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' <= restaurants.time_order_open)
+                             OR
+                             ('" . $time . "' >= restaurants.time_order_close AND '" . $time . "' <= restaurants.working_closing_hours)
+                            ) THEN 2
+                            WHEN ('" . $time . "' >= restaurants.working_closing_hours OR '" . $time . "' <= restaurants.working_opening_hours) THEN 4
+                            ELSE NULL END
+                           ) AS 'res_status',
+                           (SELECT ROUND(AVG(reviews.rank), 1) FROM reviews WHERE reviews.restaurant_id = restaurants.id) AS 'reviews_rank',
+                           (
+                            SELECT EXISTS(SELECT favorite_restaurants.id 
+                                          FROM favorite_restaurants 
+                                          WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ") 
+                           ) AS 'favour_it'
+                           FROM `restaurants`) AS r
+                           JOIN area_restaurant ON r.id = area_restaurant.restaurant_id
+                           JOIN areas ON areas.id =  area_restaurant.area_id
+                   WHERE areas.id IN (" . $area_id . ") AND ( ";
 
         $addOr = 0;
         if (isset($get_data['minimum_order_amount'])) {
@@ -660,23 +666,19 @@ class Restaurants extends \yii\db\ActiveRecord
         return Helpers::formatResponse(true, 'get success', $restaurants);
     }
 
-    public static function getRestaurantsStatus($statusId)
+    public function getRestaurantsStatus($statusId)
     {
         switch ($statusId) {
             case 1:
-                return 'open and delivery open';
+                return 'Open';
             case 2:
-                return 'open but no delivery';
+                return 'Not Available';
             case 3:
-                return 'busy';
+                return 'Busy';
             case 4:
-                return 'open but delivery closed';
-            case 5:
-                return 'open';
-            case 6:
-                return 'closed';
+                return 'Closed';
             default:
-                return false;
+                return null;
         }
     }
 }

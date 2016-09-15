@@ -83,7 +83,7 @@ class Cuisines extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        return ['id','name'];
+        return ['id','name', 'image'];
     }
 
     public function afterValidate()
