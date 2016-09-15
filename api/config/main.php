@@ -42,6 +42,14 @@ return [
 //                }
             },
         ],
+        'formatter' => [
+            'datetimeFormat' => 'php:d/m/Y H:i:s',
+            'dateFormat' => 'php:d-m-Y',
+            'timeFormat' => 'php:H:i:s',
+            'decimalSeparator' => '.',
+            'thousandSeparator' => ' ',
+            'timeZone' => 'UTC'
+        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => false,

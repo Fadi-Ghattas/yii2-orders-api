@@ -25,6 +25,7 @@ class CommonController extends ActiveController
         $behaviors = parent::behaviors();
         $behaviors['authenticator'] = [
             'class' => CompositeAuth::className(),
+            'except' => ['states','countries'],
             'authMethods' => [
                 HttpBearerAuth::className(),
             ],

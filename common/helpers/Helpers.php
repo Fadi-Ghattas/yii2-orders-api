@@ -126,5 +126,16 @@ class Helpers
             foreach ($old_entities as $old_entity)
                 $old_entity->delete();
     }
-    
+
+    public static function getCountryTimeZone($country)
+    {
+        switch ($country) {
+            case 'Malaysia':
+                return 'Asia/Kuala_Lumpur';
+            case 'Egypt':
+                return 'Africa/Cairo';
+            default:
+                return 'UTC';
+        }
+    }
 }

@@ -5,8 +5,8 @@ namespace common\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\web\ForbiddenHttpException;
 use common\helpers\Helpers;
+use yii\i18n\Formatter;
 
 /**
  * This is the model class for table "restaurants".
@@ -471,13 +471,31 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public static function getRestaurants()
     {
-        $re = Yii::$app->request;
         $get_data = Yii::$app->request->get();
         $page = 1;
         $limit = -1;
-        if (!isset($get_data['time']) && empty(trim($get_data['time'])))
-            return Helpers::HttpException(422, 'validation failed', ['error' => 'current time is required']);
-        $time = trim($get_data['time']);
+
+        if (!isset($get_data['area']) && empty(trim($get_data['area'])))
+            return Helpers::HttpException(422, 'validation failed', ['error' => "area is required and can't be blank"]);
+        $area_id = trim($get_data['area']);
+        $AreaCountry = Areas::find()->where(['areas.id' => $area_id])->joinWith(['state','state.country'], true, 'INNER JOIN')->select('countries.name')->one();
+        $time = (new Formatter(['timeZone' => Helpers::getCountryTimeZone($AreaCountry->name)]))->asTime(time(), 'php:H:i:s');
+
+
+        $headers = Yii::$app->getRequest()->getHeaders();
+        $client_id = 0;
+        if(isset($headers['authorization']) && !empty($headers['authorization'])) {
+            $authorization = explode(' ', $headers['authorization'])[1];
+            $ClientUser = User::findIdentityByAccessToken($authorization);
+            if(empty($ClientUser))
+                return Helpers::HttpException(404 ,'not found', ['error' => 'client not found']);
+            $client_id = Clients::findOne(['user_id' => $ClientUser->id])->id;
+            if(empty($client_id))
+                return Helpers::HttpException(404 ,'not found', ['error' => 'client not found']);
+//            $client_id = $client_id->id;
+        } else if(empty($headers['authorization'])) {
+            return Helpers::HttpException(422, 'validation failed', ['error' => "authorization can't be blank"]);
+        }
 
         //1 open and delivery open
         //2 open but no delivery
@@ -485,18 +503,7 @@ class Restaurants extends \yii\db\ActiveRecord
         //4 open but delivery closed
         //5 open
         //6 closed
-        $headers = Yii::$app->getRequest()->getHeaders();
-        $client_id = 0;
-        if(isset($headers['authorization']) && !empty($headers['authorization'])) {
-            $authorization = explode(' ', $headers['authorization'])[1];
-//        $client_id = 0;
-//        if ($authorization != User::PUBLIC_KEY) {
-            $ClientUser = User::findIdentityByAccessToken($authorization);
-            $client_id = Clients::findOne(['user_id' => $ClientUser->id]);
-            $client_id = (!is_null($client_id) ? $client_id->id : 0);
-        }
-//        }
-        $sql = "SELECT * 
+        $sql = "SELECT r.* 
                FROM (SELECT *, 
                        (
                         CASE 
@@ -508,14 +515,17 @@ class Restaurants extends \yii\db\ActiveRecord
                         WHEN ('" . $time . "' > restaurants.working_closing_hours OR '" . $time . "' < restaurants.working_opening_hours) THEN 6
                         ELSE NULL END
                        ) AS 'res_status',
-                       (SELECT AVG(reviews.rank) FROM reviews WHERE reviews.restaurant_id = restaurants.id) AS 'reviews_rank',
+                       (SELECT ROUND(AVG(reviews.rank), 1) FROM reviews WHERE reviews.restaurant_id = restaurants.id) AS 'reviews_rank',
                        (
                         SELECT EXISTS(SELECT favorite_restaurants.id 
                                       FROM favorite_restaurants 
                                       WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ") 
                        ) AS 'favour_it'
                        FROM `restaurants`) AS r
-               WHERE 1 AND ( ";
+                       JOIN countries ON r.country_id = countries.id
+                       JOIN states ON countries.id = states.country_id
+                       JOIN areas ON states.id = areas.state_id
+               WHERE areas.id IN (".$area_id.") AND ( ";
 
         $addOr = 0;
         if (isset($get_data['minimum_order_amount'])) {
@@ -649,15 +659,23 @@ class Restaurants extends \yii\db\ActiveRecord
         return  Helpers::formatResponse(true, 'get success', $restaurants) ;
     }
 
-    public static function getRestaurantsStatus()
+    public static function getRestaurantsStatus($statusId)
     {
-        return [
-            1 => 'open and delivery open',
-            2 => 'open but no delivery',
-            3 => 'busy',
-            4 => 'open but delivery closed',
-            5 => 'open',
-            6 => 'closed'
-        ];
+        switch ($statusId) {
+            case 1:
+                return 'open and delivery open';
+            case 2:
+                return 'open but no delivery';
+            case 3:
+                return 'busy';
+            case 4:
+                return 'open but delivery closed';
+            case 5:
+                return 'open';
+            case 6:
+                return 'closed';
+            default:
+                return false;
+        }
     }
 }
