@@ -76,7 +76,7 @@
 		{
 			"id": "04cb4f74-1f5a-f6df-9a9a-d230cb891cf6",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/add-on/1",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/add-on/1",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "PUT",
@@ -97,7 +97,7 @@
 		{
 			"id": "0d43c26f-6a76-9d71-3061-af3bcfdca6ab",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -175,7 +175,7 @@
 					"id": "8cc1db9f-3d84-a114-5c9b-3771867634d3",
 					"name": "1-Success Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -263,7 +263,7 @@
 					"id": "0dca206b-1367-4e9b-4fec-35d4229c62a9",
 					"name": "Forbidden  Using Different Restaurant Auth_Key Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menus",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menus",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -354,7 +354,7 @@
 					"id": "27ceba6f-7353-33fd-80d4-6288ee95c230",
 					"name": "Not Authorized Restaurant Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -445,7 +445,7 @@
 					"id": "e50ff299-f03b-467b-968c-68270dcc218c",
 					"name": "Empty Restaurant Categories Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -530,7 +530,7 @@
 					"id": "1f407dca-17e0-e5c1-35bf-f781a64760b2",
 					"name": "Not Restaurant Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -615,7 +615,7 @@
 					"id": "89598ef4-26ee-f375-bb7c-d8a3fd2e7912",
 					"name": "Routes Not Found Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menus",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menus",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -698,7 +698,7 @@
 					"id": "5a0174e8-4e47-285b-8a79-3c183b69b93f",
 					"name": "Method Not Allowed Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -781,7 +781,7 @@
 					"id": "1f74a55c-b3c3-00ef-3348-7ed6136cb447",
 					"name": "Invalid Credential Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -872,7 +872,7 @@
 					"id": "c57d8a75-53b2-461d-1a17-9387ae131ca8",
 					"name": "Missing Authorization Header Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -951,7 +951,7 @@
 					"id": "609e9d1d-2bd7-fb37-e4d4-4619e22330ff",
 					"name": "Deactivated Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -978,7 +978,7 @@
 		{
 			"id": "11a3fcf7-d66f-ee10-7527-a17945fd1904",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "PUT",
@@ -1056,7 +1056,7 @@
 					"id": "bbd3c7c1-9d36-fbbb-2521-e76dae631afb",
 					"name": "1-Success Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1139,7 +1139,7 @@
 					"id": "36b718f9-51b8-252d-89e6-7b98112419cb",
 					"name": "Routes Not Found Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menus/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menus/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1222,7 +1222,7 @@
 					"id": "be5eca4f-8279-26d5-6bd5-9e410d485cdc",
 					"name": "Method Not Allowed Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1305,7 +1305,7 @@
 					"id": "d0f6976d-8699-bf6f-cb17-0d973a82f978",
 					"name": "Invalid Credential Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1396,7 +1396,7 @@
 					"id": "33dde85e-f620-dd01-b460-dc1f6621d727",
 					"name": "Missing Authorization Header Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1475,7 +1475,7 @@
 					"id": "8fe81c30-fa6e-caac-9572-07069f729367",
 					"name": "Data Validation Failed Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1558,7 +1558,7 @@
 					"id": "0954e717-e58a-7400-9ee2-10151092e1f7",
 					"name": "Existing Category With The Same Name Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/55",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/55",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1647,7 +1647,7 @@
 					"id": "2a8b3e5c-cb23-682f-072f-272f8be09f70",
 					"name": "Category Don't Exist Validation Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/6666",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/6666",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1735,7 +1735,7 @@
 					"id": "e0ba68e6-d5da-f7f1-03d2-3cc068935768",
 					"name": "Updating Other Restaurants Categories Validation Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/55",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/55",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1823,7 +1823,7 @@
 					"id": "0c5db940-2915-ba69-22b3-b5ec39375ddf",
 					"name": "Forbidden Using Different Restaurant Auth_Key Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1914,7 +1914,7 @@
 					"id": "7b8d2fe3-17d0-3cd3-72cb-35badbc48a7c",
 					"name": "Not Authorized Restaurant Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -1999,7 +1999,7 @@
 					"id": "f4d8f527-8506-03e6-0119-8292d46439bf",
 					"name": "Not Restaurant Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -2084,7 +2084,7 @@
 					"id": "59efa5bf-2389-b11e-be25-f680062f3911",
 					"name": "No Data Provided Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -2167,7 +2167,7 @@
 					"id": "81749181-e06f-f536-5dc2-9bc5a148b0bb",
 					"name": "Deactivated Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -2194,7 +2194,7 @@
 		{
 			"id": "151facac-2649-e82f-e13d-c1b624fd7c3f",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu-items/1",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items/1",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "DELETE",
@@ -2215,7 +2215,7 @@
 		{
 			"id": "18981cd5-7b9d-1ae0-a321-c1d0912b91ff",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/commons/countries",
+			"url": "https://api.jommakan.asia/api/web/v1/commons/countries",
 			"pathVariables": {},
 			"preRequestScript": null,
 			"method": "GET",
@@ -2237,7 +2237,7 @@
 		{
 			"id": "19f3d915-5809-fd83-1120-5332322faadc",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu-items/27",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items/27",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -2258,7 +2258,7 @@
 		{
 			"id": "20910625-85fe-b6cd-f84f-a7b2007c5230",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu-items/27",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items/27",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "PUT",
@@ -2279,7 +2279,7 @@
 		{
 			"id": "24bf097f-b370-e8a2-186f-ea36daa246d3",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "DELETE",
@@ -2357,7 +2357,7 @@
 					"id": "beff329b-3a10-6ef4-04d0-f8a79459848b",
 					"name": "1-Success Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -2440,7 +2440,7 @@
 					"id": "8d83d704-dd08-1ffa-503a-52df2dcbd4f4",
 					"name": "Routes Not Found Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menus/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menus/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -2523,7 +2523,7 @@
 					"id": "cdef4374-9906-e066-38c1-8e8feaaaadbd",
 					"name": "Method Not Allowed Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -2606,7 +2606,7 @@
 					"id": "de3b785f-9085-b24d-ba96-338e89526fed",
 					"name": "Invalid Credential Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -2697,7 +2697,7 @@
 					"id": "0bdd4751-3e77-a105-1b63-85584c2cf0cf",
 					"name": "Missing Authorization Header Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -2784,7 +2784,7 @@
 					"id": "1e9f5e21-0599-0c4f-085a-995fd803e8d1",
 					"name": "Already Deleted Category Or Doesn't Exist validation Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -2872,7 +2872,7 @@
 					"id": "917f8741-6a5e-0b95-c441-b58e47604c07",
 					"name": "Deleting Other Restaurants Categories Validation Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -2960,7 +2960,7 @@
 					"id": "bf42be24-f571-dbde-4ff0-a30a1d8d43ad",
 					"name": "Forbidden Using Different Restaurant Auth_Key Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3051,7 +3051,7 @@
 					"id": "b6886d04-751d-8016-1187-c8dca9bc2daa",
 					"name": "Not Authorized Restaurant Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3141,7 +3141,7 @@
 					"id": "d2425747-f03b-b9e5-1f93-ea7919c05a6a",
 					"name": "Not Authorized Restaurant Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3226,7 +3226,7 @@
 					"id": "5aeaddb6-0307-1c86-1a8b-5217086ad6d7",
 					"name": "Not Restaurant Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3317,7 +3317,7 @@
 					"id": "8f96791e-2175-c2fe-59fa-9419d9fe8b4f",
 					"name": "Can't Delete Category Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/6",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/6",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3400,7 +3400,7 @@
 					"id": "3dbcf2ae-774b-f615-a6d7-12227d7abcdc",
 					"name": "Deactivated Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/206",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/206",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3427,7 +3427,7 @@
 		{
 			"id": "2b121633-ff9f-1ef8-0f54-d6b15704c1a0",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/profile",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -3505,7 +3505,7 @@
 					"id": "c6088efb-e260-c7fc-12ff-5afff036938c",
 					"name": "1-Success Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3588,7 +3588,7 @@
 					"id": "07e64b1e-6eda-219d-6e91-f5aee00a8782",
 					"name": "Method Not Allowed Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3671,7 +3671,7 @@
 					"id": "5cf0af17-6f3a-5cde-4535-6cc039f6a693",
 					"name": "Routes Not Found Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3754,7 +3754,7 @@
 					"id": "6b14ab70-918a-4eed-9cb6-f9b1baefd9a9",
 					"name": "Invalid Credential Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3845,7 +3845,7 @@
 					"id": "ca0eba2f-af59-b1b2-8262-793f1161703e",
 					"name": "Missing Authorization Header Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -3924,7 +3924,7 @@
 					"id": "8755054b-006f-1481-6e27-f91e879effd8",
 					"name": "Not Restaurant Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -4015,7 +4015,7 @@
 					"id": "742e54bb-77b0-112e-d5e1-33fa00385c84",
 					"name": "Not Authorized Restaurant Response ",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -4105,7 +4105,7 @@
 					"id": "b0c5ee45-8f80-0433-b6e7-5a3334fdbf8c",
 					"name": "Deactivated Account Response ",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -4132,7 +4132,7 @@
 		{
 			"id": "314a575f-f89d-f459-0fac-be6d89cce0c5",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/item-choices",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/item-choices",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -4153,7 +4153,7 @@
 		{
 			"id": "343b1aeb-2bd6-78c2-0369-b1027ccb3580",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/item-choices",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/item-choices",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -4173,7 +4173,7 @@
 		{
 			"id": "3dad62a7-9e20-5443-1283-843ccaceb1ea",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/add-on/1",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/add-on/1",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "DELETE",
@@ -4193,7 +4193,7 @@
 		{
 			"id": "4066d3ba-f953-07a0-dda9-c0bfe11ace65",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/item-choices/1",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/item-choices/1",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "DELETE",
@@ -4213,7 +4213,7 @@
 		{
 			"id": "42f09fd9-a06e-c00d-b09b-a00292f4790a",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/orders?date=2016-09-04&limit=1&page=1",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/orders?date=2016-09-04&limit=1&page=1",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -4234,7 +4234,7 @@
 		{
 			"id": "4692043b-021f-5e35-0f19-7b78aebe17bc",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu-items",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -4255,7 +4255,7 @@
 		{
 			"id": "4c2bc004-7a80-8734-f801-ca0e85f998f6",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer N2IRJeUR73WzueZPug6LnBmyOXW8tyF4\n",
-			"url": "localhost/jommakan/api/web/v1/clients/cuisines",
+			"url": "https://api.jommakan.asia/api/web/v1/clients/cuisines",
 			"pathVariables": {},
 			"preRequestScript": null,
 			"method": "GET",
@@ -4277,7 +4277,7 @@
 		{
 			"id": "5430b8b6-16ca-ce74-4fc0-b47e0a018c43",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/blacklisted-clients",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/blacklisted-clients",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -4298,7 +4298,7 @@
 		{
 			"id": "60f65fa3-a560-cefe-e86d-ce843d4987fb",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/blacklisted-clients",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/blacklisted-clients",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -4319,7 +4319,7 @@
 		{
 			"id": "7cc1131f-2946-5f18-9113-3ffb598e18ec",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -4397,7 +4397,7 @@
 					"id": "9595ea57-ee83-6ded-c4ac-5110b3665fc3",
 					"name": "1-Success Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -4480,7 +4480,7 @@
 					"id": "fe10f601-29ef-c67d-5a7f-775850e1e608",
 					"name": "Method Not Allowed Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -4563,7 +4563,7 @@
 					"id": "75b374d7-b130-dd26-a36c-98a38ce52d86",
 					"name": "Routes Not Found Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -4646,7 +4646,7 @@
 					"id": "d2af814d-1126-447d-2835-7dec13e3a585",
 					"name": "Invalid Credential Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -4737,7 +4737,7 @@
 					"id": "c343701b-354a-3188-7c82-9dec157afe68",
 					"name": "Missing Authorization Header Response ",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -4822,7 +4822,7 @@
 					"id": "6f52ad35-2fac-edf2-35ee-ee9a3a03c2cb",
 					"name": "Not Authorized Restaurant Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -4905,7 +4905,7 @@
 					"id": "01173b14-6cd1-21ff-b453-8bfe9821ef54",
 					"name": "Not Restaurant Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -4990,7 +4990,7 @@
 					"id": "d318c8c1-1a28-0d54-8cb6-9c2a36e0f89b",
 					"name": "Deactivated Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/2",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -5073,7 +5073,7 @@
 					"id": "427841e9-8433-07ee-e2ff-a76a5741257d",
 					"name": "Category Not Found Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/316546",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/316546",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -5155,7 +5155,7 @@
 					"id": "0769efed-3ed2-a40c-06ff-231d2954a9c6",
 					"name": "Empty Category Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu/1",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/1",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -5182,7 +5182,7 @@
 		{
 			"id": "7f199442-208a-d347-253b-5d93f03663b3",
 			"headers": "Content-Type: application/json\n",
-			"url": " localhost/jommakan/api/web/v1/clients/sign-up",
+			"url": " https://api.jommakan.asia/api/web/v1/clients/sign-up",
 			"pathVariables": {},
 			"preRequestScript": null,
 			"method": "POST",
@@ -5204,7 +5204,7 @@
 		{
 			"id": "86b34bf2-e67e-1913-1924-64153289a305",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/add-on/1",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/add-on/1",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -5224,7 +5224,7 @@
 		{
 			"id": "8ab730a8-1254-5d37-9ada-6e0f652f838d",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer 2FhFRhbtmAS1Ot7i4zv6gKzFmvCOy_0c\n",
-			"url": " localhost/jommakan/api/web/v1/clients/log-out",
+			"url": " https://api.jommakan.asia/api/web/v1/clients/log-out",
 			"pathVariables": {},
 			"preRequestScript": null,
 			"method": "POST",
@@ -5246,7 +5246,7 @@
 		{
 			"id": "8b804ef5-42e5-f27a-3b90-78a497488e42",
 			"headers": "Content-Type: application/json\n",
-			"url": " localhost/jommakan/api/web/v1/clients/log-in",
+			"url": " https://api.jommakan.asia/api/web/v1/clients/log-in",
 			"pathVariables": {},
 			"preRequestScript": null,
 			"method": "POST",
@@ -5268,7 +5268,7 @@
 		{
 			"id": "8bdd2469-4ddd-9d9d-fd78-ffb88a3400d6",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/orders/2",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/orders/2",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -5289,7 +5289,7 @@
 		{
 			"id": "936c7136-d50d-76ce-365d-b0c901a8941b",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\ncountry_id: 1\n",
-			"url": "localhost/jommakan/api/web/v1/commons/states",
+			"url": "https://api.jommakan.asia/api/web/v1/commons/states",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -5372,7 +5372,7 @@
 					"id": "7ded8cdc-6ceb-46d6-5aeb-3f13c2a6ff99",
 					"name": "200",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/commons/states",
+						"url": "https://api.jommakan.asia/api/web/v1/commons/states",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -5471,7 +5471,7 @@
 					"id": "abf291ca-dcfc-8f51-a487-0b43c5a68009",
 					"name": "200",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/commons/states",
+						"url": "https://api.jommakan.asia/api/web/v1/commons/states",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -5567,7 +5567,7 @@
 					"id": "0b199573-f3b1-263e-b38e-191519cd361c",
 					"name": "405",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/commons/states",
+						"url": "https://api.jommakan.asia/api/web/v1/commons/states",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -5660,7 +5660,7 @@
 					"id": "eb2c84fc-36c8-b730-80e6-1f3f1b31682d",
 					"name": "422",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/commons/states",
+						"url": "https://api.jommakan.asia/api/web/v1/commons/states",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -5755,7 +5755,7 @@
 					"id": "1eaa5d04-4087-0208-1756-dd077f76d890",
 					"name": "401",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/commons/states",
+						"url": "https://api.jommakan.asia/api/web/v1/commons/states",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -5778,7 +5778,7 @@
 		{
 			"id": "9aaae45c-31b8-c529-97da-b09ebf40f066",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/orders/2",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/orders/2",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "PUT",
@@ -5799,7 +5799,7 @@
 		{
 			"id": "a84e69e6-bde9-7d80-85b8-c935f35fc7cf",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer N2IRJeUR73WzueZPug6LnBmyOXW8tyF4\n",
-			"url": "localhost/jommakan/api/web/v1/clients/restaurants?time=11:00:00&sort=-reviews_rank&quick_filters=open,free_delivery,halal&delivery_duration=60&minimum_order_amount=1,20",
+			"url": "https://api.jommakan.asia/api/web/v1/clients/restaurants?time=11:00:00&sort=-reviews_rank&quick_filters=open,free_delivery,halal&delivery_duration=60&minimum_order_amount=1,20",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -5819,7 +5819,7 @@
 		{
 			"id": "a8e365b9-0c7b-cb9f-a5da-4e3c44ec9c15",
 			"headers": "Content-Type: application/json\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/login",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/login",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -5902,7 +5902,7 @@
 					"id": "54d9ffa3-44ce-0312-c566-e4511c7b334d",
 					"name": "200",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/login",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/login",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -5985,7 +5985,7 @@
 					"id": "4044b211-3a83-7da9-e08a-72a12155a31e",
 					"name": "422",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/login",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/login",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6069,7 +6069,7 @@
 					"id": "fa4bfbff-35e1-5ca9-d0d7-666c0e0004bc",
 					"name": "422",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/login",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/login",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6153,7 +6153,7 @@
 					"id": "02dcd7f6-0164-04b2-fa94-8d8396aaebdc",
 					"name": "422",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/login",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/login",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6236,7 +6236,7 @@
 					"id": "44d0009b-7b9b-e7f2-7d62-3375a9819fe3",
 					"name": "403",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/login",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/login",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6313,7 +6313,7 @@
 					"id": "e6961ab6-7b5e-6cb7-cf6b-04b2061f73d8",
 					"name": "405",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/login",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/login",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6397,7 +6397,7 @@
 					"id": "a35346af-df26-733d-ef4f-eea2e458d706",
 					"name": "403",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/login",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/login",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6481,7 +6481,7 @@
 					"id": "0825239d-8f70-c317-e172-3332a92e7476",
 					"name": "422",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/login",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/login",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6564,7 +6564,7 @@
 					"id": "8d25653d-c24c-8f7c-9288-d07f46aff9d6",
 					"name": "404",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/login",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/login",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6586,7 +6586,7 @@
 		{
 			"id": "ad8f7788-e4d3-9df7-f32f-6fc214ee6492",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/profile",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "PUT",
@@ -6664,7 +6664,7 @@
 					"id": "3aaa8e35-b204-d7f3-cb09-58f236c331d4",
 					"name": "1-Success Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6747,7 +6747,7 @@
 					"id": "0c16adaa-279f-543f-4461-a2fb60eed5a4",
 					"name": "Uneatable Fildes Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6830,7 +6830,7 @@
 					"id": "087ddb41-b54d-f9ad-ff67-7b63f2f1d017",
 					"name": "Data Validation Failed Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6912,7 +6912,7 @@
 					"id": "882743dc-f750-d78d-c3a5-7d02fac7a24a",
 					"name": "Method Not Allowed Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -6995,7 +6995,7 @@
 					"id": "81a17ec1-2ef5-0ccd-958d-5dfd0efeffdb",
 					"name": "Invalid Credential Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7086,7 +7086,7 @@
 					"id": "8ddce725-a9b7-079c-0a5f-9db8ad2e146a",
 					"name": "Missing Authorization Header Response ",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7165,7 +7165,7 @@
 					"id": "fab1aa6e-d158-3b6c-9f67-afe88063f278",
 					"name": "Routes Not Found Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7253,7 +7253,7 @@
 					"id": "632f2742-8912-c2b6-a4e3-47e442b628d2",
 					"name": "Forbidden Using Different Restaurant Auth_Key Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7342,7 +7342,7 @@
 					"id": "98aa2ae2-e0da-f392-1aa2-99a9dc6407f3",
 					"name": "Not Authorized Restaurant Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7427,7 +7427,7 @@
 					"id": "e6f4419d-9575-3edb-e9bb-a055ec5d2c52",
 					"name": "Not Restaurant Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7512,7 +7512,7 @@
 					"id": "1b8e76a7-d458-c0d4-5e25-f3eda2ee5876",
 					"name": "No Data Provided Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7595,7 +7595,7 @@
 					"id": "77f425bf-e613-c5c7-d8d9-aa8dacfcd2e6",
 					"name": "Deactivated Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/profile",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/profile",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7622,7 +7622,7 @@
 		{
 			"id": "af69890e-5f87-c9f5-ad11-27635ce1c825",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/blacklisted-clients/1",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/blacklisted-clients/1",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "DELETE",
@@ -7643,7 +7643,7 @@
 		{
 			"id": "c02676ee-3e21-3dfc-5ee5-6bab70a78be0",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": " localhost/jommakan/api/web/v1/vendors/logout",
+			"url": " https://api.jommakan.asia/api/web/v1/vendors/logout",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -7726,7 +7726,7 @@
 					"id": "efa6ec25-f067-6034-7d13-86905a553a62",
 					"name": "200",
 					"request": {
-						"url": " localhost/jommakan/api/web/v1/vendors/logout",
+						"url": " https://api.jommakan.asia/api/web/v1/vendors/logout",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7815,7 +7815,7 @@
 					"id": "a22fdf60-e492-2490-8f37-39b4c32eb1c4",
 					"name": "422",
 					"request": {
-						"url": " localhost/jommakan/api/web/v1/vendors/logout",
+						"url": " https://api.jommakan.asia/api/web/v1/vendors/logout",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7910,7 +7910,7 @@
 					"id": "ea0431aa-e01f-6f0d-8349-b2d70a0d52c6",
 					"name": "401",
 					"request": {
-						"url": " localhost/jommakan/api/web/v1/vendors/logout",
+						"url": " https://api.jommakan.asia/api/web/v1/vendors/logout",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -7994,7 +7994,7 @@
 					"id": "5edcbbdf-6cf9-354c-56fc-00b6b4bdac2c",
 					"name": "405",
 					"request": {
-						"url": " localhost/jommakan/api/web/v1/vendors/logout",
+						"url": " https://api.jommakan.asia/api/web/v1/vendors/logout",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8082,7 +8082,7 @@
 					"id": "a7b4d2ef-b976-e6e9-d2ab-8ebe64b857ad",
 					"name": "404",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/logouts",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/logouts",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8109,7 +8109,7 @@
 		{
 			"id": "c754a3d6-9a38-7385-9dda-ff15c2d9c193",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/item-choices/1",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/item-choices/1",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "PUT",
@@ -8130,7 +8130,7 @@
 		{
 			"id": "cc8a119d-e489-d618-52ac-6781b1192273",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/menu",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -8208,7 +8208,7 @@
 					"id": "b5853a13-884d-aa4a-ec3c-24d76d927d68",
 					"name": "1-Success Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8291,7 +8291,7 @@
 					"id": "aa4d7932-96d1-3538-5e8f-b4c3ab3d3b87",
 					"name": "Routes Not Found Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menus",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menus",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8374,7 +8374,7 @@
 					"id": "f2dcad8e-4312-632e-f9e5-e06539433590",
 					"name": "Method Not Allowed Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8457,7 +8457,7 @@
 					"id": "8413a481-f286-9ab1-543d-73d98e5f6d1c",
 					"name": "Invalid Credential Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8548,7 +8548,7 @@
 					"id": "6a2fe60f-f350-121e-cf4a-79fa149b8bcd",
 					"name": "Missing Authorization Header Response ",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8627,7 +8627,7 @@
 					"id": "b0f58bbf-34df-0c44-c3a1-059f02ee3e6b",
 					"name": "No Data Provided Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8716,7 +8716,7 @@
 					"id": "52810117-1ae6-254e-c429-62a8e5a70abd",
 					"name": "Forbidden Using Different Restaurant Auth_Key Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8804,7 +8804,7 @@
 					"id": "30d25fe0-133c-902d-c124-eb2625ff384f",
 					"name": "Not Authorized Restaurant Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8889,7 +8889,7 @@
 					"id": "565849bc-d0af-9098-bd06-54e8e6b8b20f",
 					"name": "Not Restaurant Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -8974,7 +8974,7 @@
 					"id": "04b1f610-f7a4-48ed-0b95-4f890946155e",
 					"name": "Data Validation Failed Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -9057,7 +9057,7 @@
 					"id": "d583b20c-d244-f962-0b33-fdc1a83e4502",
 					"name": "Deactivated Account Response",
 					"request": {
-						"url": "localhost/jommakan/api/web/v1/vendors/menu",
+						"url": "https://api.jommakan.asia/api/web/v1/vendors/menu",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -9084,7 +9084,7 @@
 		{
 			"id": "d64a4496-48b3-8c40-1fa2-a3b7a58d1046",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/add-on",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/add-on",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "POST",
@@ -9105,7 +9105,7 @@
 		{
 			"id": "d6759af5-1ebe-a8bd-327d-3587b09c5d02",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/add-on",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/add-on",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -9125,7 +9125,7 @@
 		{
 			"id": "f3eb327a-af23-b242-5988-e79020482f59",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/item-choices/1",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/item-choices/1",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -9145,7 +9145,7 @@
 		{
 			"id": "f880ebcd-525a-2c5f-1763-0210713ae23b",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "localhost/jommakan/api/web/v1/vendors/reviews",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/reviews",
 			"pathVariables": {},
 			"preRequestScript": null,
 			"method": "GET",

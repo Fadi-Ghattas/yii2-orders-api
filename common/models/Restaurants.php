@@ -326,10 +326,11 @@ class Restaurants extends \yii\db\ActiveRecord
 
             ]);
     }
+
     public function fields()
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
-        if(in_array('clients', $request_action) && Yii::$app->request->isGet)
+        if (in_array('clients', $request_action) && Yii::$app->request->isGet)
             return $this->scenarios()[self::SCENARIO_GET_BY_CLIENT];
         return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
     }
@@ -478,23 +479,23 @@ class Restaurants extends \yii\db\ActiveRecord
         if (!isset($get_data['area']) && empty(trim($get_data['area'])))
             return Helpers::HttpException(422, 'validation failed', ['error' => "area is required and can't be blank"]);
         $area_id = trim($get_data['area']);
-        $AreaCountry = Areas::find()->where(['areas.id' => $area_id])->joinWith(['state','state.country'], true, 'INNER JOIN')->select('countries.name')->one();
+        $AreaCountry = Areas::find()->where(['areas.id' => $area_id])->joinWith(['state', 'state.country'], true, 'INNER JOIN')->select('countries.name')->one();
         $time = (new Formatter(['timeZone' => Helpers::getCountryTimeZone($AreaCountry->name)]))->asTime(time(), 'php:H:i:s');
 
 
         $headers = Yii::$app->getRequest()->getHeaders();
         $client_id = 0;
-        if(isset($headers['authorization']) && !empty($headers['authorization'])) {
+        if (isset($headers['authorization'])) {
+            if (empty($headers['authorization']))
+                return Helpers::HttpException(422, 'validation failed', ['error' => "authorization can't be blank"]);
             $authorization = explode(' ', $headers['authorization'])[1];
             $ClientUser = User::findIdentityByAccessToken($authorization);
-            if(empty($ClientUser))
-                return Helpers::HttpException(404 ,'not found', ['error' => 'client not found']);
+            if (empty($ClientUser))
+                return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
             $client_id = Clients::findOne(['user_id' => $ClientUser->id])->id;
-            if(empty($client_id))
-                return Helpers::HttpException(404 ,'not found', ['error' => 'client not found']);
+            if (empty($client_id))
+                return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
 //            $client_id = $client_id->id;
-        } else if(empty($headers['authorization'])) {
-            return Helpers::HttpException(422, 'validation failed', ['error' => "authorization can't be blank"]);
         }
 
         //1 open and delivery open
@@ -525,7 +526,7 @@ class Restaurants extends \yii\db\ActiveRecord
                        JOIN countries ON r.country_id = countries.id
                        JOIN states ON countries.id = states.country_id
                        JOIN areas ON states.id = areas.state_id
-               WHERE areas.id IN (".$area_id.") AND ( ";
+               WHERE areas.id IN (" . $area_id . ") AND ( ";
 
         $addOr = 0;
         if (isset($get_data['minimum_order_amount'])) {
@@ -537,7 +538,7 @@ class Restaurants extends \yii\db\ActiveRecord
                 return Helpers::HttpException(422, 'validation failed', ['error' => "minimum_order_amount rang must have two values"]);
             if (!is_double(doubleval($MinimumOrderAmountRang[0])) && !is_double(doubleval($MinimumOrderAmountRang[1])))
                 return Helpers::HttpException(422, 'validation failed', ['error' => "minimum_order_amount rang values must be numbers"]);
-            $sql .= ' r.minimum_order_amount BETWEEN ' . $MinimumOrderAmountRang[0] . ' AND ' . $MinimumOrderAmountRang[1]. ' ';
+            $sql .= ' r.minimum_order_amount BETWEEN ' . $MinimumOrderAmountRang[0] . ' AND ' . $MinimumOrderAmountRang[1] . ' ';
             $addOr = 1;
         }
 
@@ -551,9 +552,9 @@ class Restaurants extends \yii\db\ActiveRecord
             if (!is_double(doubleval($DeliveryFeeRang[0])) && !is_double(doubleval($DeliveryFeeRang[1])))
                 return Helpers::HttpException(422, 'validation failed', ['error' => "delivery_fee rang values must be numbers"]);
             if ($addOr) {
-                $sql .= ' OR r.delivery_fee BETWEEN ' . $DeliveryFeeRang[0] . ' AND ' . $DeliveryFeeRang[1]. ' ';
+                $sql .= ' OR r.delivery_fee BETWEEN ' . $DeliveryFeeRang[0] . ' AND ' . $DeliveryFeeRang[1] . ' ';
             } else {
-                $sql .= ' r.delivery_fee BETWEEN ' . $DeliveryFeeRang[0] . ' AND ' . $DeliveryFeeRang[1]. ' ';
+                $sql .= ' r.delivery_fee BETWEEN ' . $DeliveryFeeRang[0] . ' AND ' . $DeliveryFeeRang[1] . ' ';
                 $addOr = 1;
             }
         }
@@ -565,9 +566,9 @@ class Restaurants extends \yii\db\ActiveRecord
             if (!is_int(intval($delivery_duration)))
                 return Helpers::HttpException(422, 'validation failed', ['error' => "delivery_duration must be a number"]);
             if ($addOr) {
-                $sql .= ' OR r.delivery_duration <= ' . $delivery_duration. ' ';
+                $sql .= ' OR r.delivery_duration <= ' . $delivery_duration . ' ';
             } else {
-                $sql .= ' r.delivery_duration <= ' . $delivery_duration. ' ';
+                $sql .= ' r.delivery_duration <= ' . $delivery_duration . ' ';
                 $addOr = 1;
             }
         }
@@ -656,7 +657,7 @@ class Restaurants extends \yii\db\ActiveRecord
             $sql .= ' LIMIT ' . ($page - 1) . ' , ' . $limit . ';';
 
         $restaurants = Restaurants::findBySql($sql)->all();
-        return  Helpers::formatResponse(true, 'get success', $restaurants) ;
+        return Helpers::formatResponse(true, 'get success', $restaurants);
     }
 
     public static function getRestaurantsStatus($statusId)
