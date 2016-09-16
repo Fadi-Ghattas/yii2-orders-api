@@ -474,13 +474,10 @@ class MenuItems extends \yii\db\ActiveRecord
                 self::SCENARIO_GET_DETAILS_BY_CLIENT => [
                     'id',
                     'name',
-                    'description',
-                    'price',
-                    'status',
-                    'discount',
                     'image',
-                    'is_taxable',
-                    'is_verified',
+                    'price',
+                    'description',
+                    'discount',
                     'addOns' => function () {
                         return $this->addons;
                     },
