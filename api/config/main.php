@@ -37,9 +37,6 @@ return [
                         'data' => [['error' =>"You are requesting with an invalid credential"]]
                     ];
                 }
-//                else if (){
-//
-//                }
             },
         ],
         'formatter' => [
@@ -124,11 +121,12 @@ return [
                         'GET,POST,PUT,DELETE log-in' => 'log-in',
                         'GET,POST,PUT,DELETE log-out' => 'log-out',
                         'GET,POST,PUT,DELETE restaurants' => 'restaurants',
+                        'GET,POST,PUT,DELETE restaurants/{id}' => 'restaurants',
                         'GET,POST,PUT,DELETE cuisines' => 'cuisines',
                     ],
-//                    'tokens' => [
-//                        '{id}' => '<id:\\w+>'
-//                    ]
+                    'tokens' => [
+                        '{id}' => '<id:\\w+>'
+                    ]
                 ],
 //                [
 //                    'class' => 'yii\rest\UrlRule',

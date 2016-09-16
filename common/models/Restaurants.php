@@ -64,6 +64,7 @@ class Restaurants extends \yii\db\ActiveRecord
     public $favour_it;
     const SCENARIO_GET_BY_RESTAURANTS_MANGER = 'get_by_restaurants_manger';
     const SCENARIO_GET_BY_CLIENT = 'get_by_client';
+    const SCENARIO_GET_DETAILS_BY_CLIENT = 'get_details_by_client';
 
     /**
      * @inheritdoc
@@ -263,80 +264,6 @@ class Restaurants extends \yii\db\ActiveRecord
         return new RestaurantsQuery(get_called_class());
     }
 
-    public function scenarios()
-    {
-        return ArrayHelper::merge(
-            parent::scenarios(),
-            [
-                self::SCENARIO_GET_BY_RESTAURANTS_MANGER => [
-                    'id',
-                    'name',
-                    'email' => function () {
-                        return $this->user->email;
-                    },
-                    'phone_number',
-                    'owner_number',
-                    'minimum_order_amount',
-                    'working_opening_hours',
-                    'working_closing_hours',
-                    'time_order_open',
-                    'time_order_close',
-                    'delivery_fee',
-                    'halal',
-                    'featured',
-                    'disable_ordering',
-                    'delivery_duration',
-                    'longitude',
-                    'latitude',
-                    'image',
-                    'image_background',
-                    'country_id',
-                    'areas' => function () {
-                        return $this->areas;
-                    },
-                    'cuisine' => function () {
-                        return $this->cuisines;
-                    },
-                    'payment_method' => function () {
-                        $paymentMethodRestaurants = array();
-                        foreach ($this->paymentMethodRestaurants as $payment_method) {
-                            $single_payment_method = array();
-                            $single_payment_method['id'] = $payment_method->paymentMethod->id;
-                            $single_payment_method['name'] = $payment_method->paymentMethod->name;
-                            $paymentMethodRestaurants [] = $single_payment_method;
-                        }
-                        return $paymentMethodRestaurants;
-                    }
-                ],
-
-                self::SCENARIO_GET_BY_CLIENT => [
-                    'id',
-                    'name',
-                    'image',
-                    'minimum_order_amount',
-                    'delivery_duration',
-                    'res_status' => function(){
-                        return $this->getRestaurantsStatus($this->res_status);
-                    },
-                    'reviews_rank',
-                    'favour_it',
-                    'halal',
-                    'cuisine' => function () {
-                        return $this->cuisines;
-                    },
-                ],
-
-            ]);
-    }
-
-    public function fields()
-    {
-        $request_action = explode('/', Yii::$app->getRequest()->getUrl());
-        if (in_array('clients', $request_action) && Yii::$app->request->isGet)
-            return $this->scenarios()[self::SCENARIO_GET_BY_CLIENT];
-        return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
-    }
-
     public function afterFind()
     {
 //        if (!$this->status)
@@ -472,6 +399,113 @@ class Restaurants extends \yii\db\ActiveRecord
         return Helpers::HttpException(422, 'update failed', null);
     }
 
+    public function scenarios()
+    {
+        return ArrayHelper::merge(
+            parent::scenarios(),
+            [
+                self::SCENARIO_GET_BY_RESTAURANTS_MANGER => [
+                    'id',
+                    'name',
+                    'email' => function () {
+                        return $this->user->email;
+                    },
+                    'phone_number',
+                    'owner_number',
+                    'minimum_order_amount',
+                    'working_opening_hours',
+                    'working_closing_hours',
+                    'time_order_open',
+                    'time_order_close',
+                    'delivery_fee',
+                    'halal',
+                    'featured',
+                    'disable_ordering',
+                    'delivery_duration',
+                    'longitude',
+                    'latitude',
+                    'image',
+                    'image_background',
+                    'country_id',
+                    'areas' => function () {
+                        return $this->areas;
+                    },
+                    'cuisine' => function () {
+                        return $this->cuisines;
+                    },
+                    'payment_method' => function () {
+                        $paymentMethodRestaurants = array();
+                        foreach ($this->paymentMethodRestaurants as $payment_method) {
+                            $single_payment_method = array();
+                            $single_payment_method['id'] = $payment_method->paymentMethod->id;
+                            $single_payment_method['name'] = $payment_method->paymentMethod->name;
+                            $paymentMethodRestaurants [] = $single_payment_method;
+                        }
+                        return $paymentMethodRestaurants;
+                    }
+                ],
+
+                self::SCENARIO_GET_BY_CLIENT => [
+                    'id',
+                    'name',
+                    'image',
+                    'minimum_order_amount',
+                    'delivery_duration',
+                    'res_status' => function () {
+                        return $this->getRestaurantsStatus($this->res_status);
+                    },
+                    'reviews_rank',
+                    'favour_it',
+                    'halal',
+                    'cuisine' => function () {
+                        return $this->cuisines;
+                    },
+                ],
+
+                self::SCENARIO_GET_DETAILS_BY_CLIENT => [
+                    'id',
+                    'name',
+                    'res_status' => function () {
+                        return $this->getRestaurantsStatus($this->res_status);
+                    },
+                    'image',
+                    'image_background',
+                    'minimum_order_amount',
+                    'delivery_duration',
+                    'delivery_fee',
+                    'halal',
+                    'time_order_open',
+                    'time_order_close',
+                    'working_opening_hours',
+                    'working_closing_hours',
+                    'reviews_rank',
+                    'favour_it',
+                    'longitude',
+                    'latitude',
+                    'cuisine' => function () {
+                        return $this->cuisines;
+                    },
+                    'menu' => function () {
+                        return $this->menuCategories;
+                    },
+                    'reviews' => function (){
+                        return $this->reviews;
+                    },
+                ],
+            ]);
+    }
+
+    public function fields()
+    {
+        $request_action = explode('/', Yii::$app->getRequest()->getUrl());
+        if (in_array('clients', $request_action) && Yii::$app->request->isGet && !isset(Yii::$app->request->get()['id']))
+            return $this->scenarios()[self::SCENARIO_GET_BY_CLIENT];
+        else if (in_array('clients', $request_action) && Yii::$app->request->isGet && isset(Yii::$app->request->get()['id']))
+            return $this->scenarios()[self::SCENARIO_GET_DETAILS_BY_CLIENT];
+        return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
+    }
+
+
     public static function getRestaurants()
     {
         $get_data = Yii::$app->request->get();
@@ -480,7 +514,7 @@ class Restaurants extends \yii\db\ActiveRecord
 
         if (!isset($get_data['area']))
             return Helpers::HttpException(422, 'validation failed', ['error' => "area is required"]);
-        if(empty(trim($get_data['area'])))
+        if (empty(trim($get_data['area'])))
             return Helpers::HttpException(422, 'validation failed', ['error' => "area can't be blank"]);
 
         $area_id = trim($get_data['area']);
@@ -500,15 +534,8 @@ class Restaurants extends \yii\db\ActiveRecord
             $client_id = Clients::findOne(['user_id' => $ClientUser->id])->id;
             if (empty($client_id))
                 return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
-//            $client_id = $client_id->id;
         }
 
-        //1 open and delivery open
-        //2 open but no delivery
-        //3 busy
-        //4 open but delivery closed
-        //5 open
-        //6 closed
         $sql = "SELECT r.* 
                    FROM (SELECT *, 
                            (
@@ -666,6 +693,52 @@ class Restaurants extends \yii\db\ActiveRecord
         return Helpers::formatResponse(true, 'get success', $restaurants);
     }
 
+    public static function getRestaurantDetails($restaurantId)
+    {
+        $countryName = Restaurants::find()->where(['id'=>$restaurantId])->one()->country->name;
+        $time = (new Formatter(['timeZone' => Helpers::getCountryTimeZone($countryName)]))->asTime(time(), 'php:H:i:s');
+
+        $headers = Yii::$app->getRequest()->getHeaders();
+        $client_id = 0;
+        if (isset($headers['authorization'])) {
+            if (empty($headers['authorization']))
+                return Helpers::HttpException(422, 'validation failed', ['error' => "authorization can't be blank"]);
+            $authorization = explode(' ', $headers['authorization'])[1];
+            $ClientUser = User::findIdentityByAccessToken($authorization);
+            if (empty($ClientUser))
+                return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
+            $client_id = Clients::findOne(['user_id' => $ClientUser->id])->id;
+            if (empty($client_id))
+                return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
+        }
+
+        $sql = "SELECT r.* 
+                   FROM (SELECT *, 
+                           (
+                            CASE 
+                            WHEN ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' <= restaurants.working_closing_hours AND restaurants.disable_ordering = 1) THEN 3
+                            WHEN ('" . $time . "' > restaurants.time_order_open AND '" . $time . "' < restaurants.time_order_close) THEN 1
+                            WHEN (
+                                ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' <= restaurants.time_order_open)
+                                OR
+                                ('" . $time . "' >= restaurants.time_order_close AND '" . $time . "' <= restaurants.working_closing_hours)
+                            ) THEN 2
+                            WHEN ('" . $time . "' >= restaurants.working_closing_hours OR '" . $time . "' <= restaurants.working_opening_hours) THEN 4
+                            ELSE NULL END
+                           ) AS 'res_status',
+                           (SELECT ROUND(AVG(reviews.rank), 1) FROM reviews WHERE reviews.restaurant_id = restaurants.id) AS 'reviews_rank',
+                           (
+                           SELECT EXISTS(SELECT favorite_restaurants.id 
+                                          FROM favorite_restaurants 
+                                          WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ") 
+                           ) AS 'favour_it'
+                           FROM `restaurants`) AS r
+                           WHERE r.id = ". $restaurantId;
+
+        $restaurants = Restaurants::findBySql($sql)->one();
+        return Helpers::formatResponse(true, 'get success', $restaurants);
+    }
+
     public function getRestaurantsStatus($statusId)
     {
         switch ($statusId) {
@@ -681,4 +754,6 @@ class Restaurants extends \yii\db\ActiveRecord
                 return null;
         }
     }
+
+
 }

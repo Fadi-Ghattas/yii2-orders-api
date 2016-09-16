@@ -4,6 +4,7 @@ namespace common\models;
 
 use common\helpers\Helpers;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
 
 /**
@@ -21,6 +22,9 @@ use yii\web\ForbiddenHttpException;
  */
 class MenuCategories extends \yii\db\ActiveRecord
 {
+
+    const SCENARIO_GET_DETAILS_BY_CLIENT = 'get_details_by_client';
+
     /**
      * @inheritdoc
      */
@@ -95,12 +99,13 @@ class MenuCategories extends \yii\db\ActiveRecord
             ->asArray()->all();
     }
 
-    public static function getCategory($restaurant_id ,$category_id)
+    public static function getCategory($restaurant_id, $category_id)
     {
         return MenuCategories::find()->where(['restaurant_id' => $restaurant_id])->andWhere(['id' => $category_id])->andWhere(['deleted_at' => null])->one();
     }
 
-    public static function getMenuCategoryByName($restaurant_id, $category_name){
+    public static function getMenuCategoryByName($restaurant_id, $category_name)
+    {
         return self::find()->where(['restaurant_id' => $restaurant_id])->andWhere(['name' => $category_name])->andWhere(['deleted_at' => null])->one();
     }
 
@@ -119,21 +124,20 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
-        if(self::isCategoryDeleted($restaurant->id, $category_id))
+        if (self::isCategoryDeleted($restaurant->id, $category_id))
             return Helpers::HttpException(404, 'get failed', ['error' => "This category dos't exist"]);
 
         $menuCategoryItems = self::getMenuCategoryItemsAsArray($restaurant->id, $category_id);
-        if(empty($menuCategoryItems))
+        if (empty($menuCategoryItems))
             return Helpers::formatResponse(true, 'get success', $menuCategoryItems);
-        if(!is_null($menuCategoryItems[0]['deleted_at']))
-            return Helpers::HttpException(422,'validation failed', ['error' => "This menu category was deleted and we can't get the menu items"]);
-        if($restaurant->id != intval($menuCategoryItems[0]['restaurant_id']))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'This menu category is not belong to this restaurant']);
+        if (!is_null($menuCategoryItems[0]['deleted_at']))
+            return Helpers::HttpException(422, 'validation failed', ['error' => "This menu category was deleted and we can't get the menu items"]);
+        if ($restaurant->id != intval($menuCategoryItems[0]['restaurant_id']))
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'This menu category is not belong to this restaurant']);
 
         $menuItems = array();
-        foreach ($menuCategoryItems[0]['menuCategoryItems'] as $menuItem)
-        {
-            if(!empty($menuItem['menuItem'])) {
+        foreach ($menuCategoryItems[0]['menuCategoryItems'] as $menuItem) {
+            if (!empty($menuItem['menuItem'])) {
                 $singleMenuItem = array();
                 $singleMenuItem['id'] = $menuItem['menuItem']['id'];
                 $singleMenuItem['name'] = $menuItem['menuItem']['name'];
@@ -157,11 +161,11 @@ class MenuCategories extends \yii\db\ActiveRecord
         $menCategory->restaurant_id = $restaurant->id;
         $menCategory->validate();
 
-        if(self::getMenuCategoryByName($restaurant->id, $data['name']))
-            return Helpers::HttpException(409,'name conflict', ['error' => 'There is already category with the same name']);
+        if (self::getMenuCategoryByName($restaurant->id, $data['name']))
+            return Helpers::HttpException(409, 'name conflict', ['error' => 'There is already category with the same name']);
 
         $isCreated = $menCategory->save();
-        if(!$isCreated)
+        if (!$isCreated)
             return Helpers::HttpException(422, 'create failed', null);
         return Helpers::formatResponse(true, 'create success', ['id' => $menCategory->id]);
     }
@@ -171,8 +175,8 @@ class MenuCategories extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         $menCategory = self::getCategory($restaurant->id, $category_id);
 
-        if(empty($menCategory))
-            return Helpers::HttpException(404,'update failed', ['error' => "This category dos't exist"]);
+        if (empty($menCategory))
+            return Helpers::HttpException(404, 'update failed', ['error' => "This category dos't exist"]);
 
         $model['MenuCategories'] = $data;
         $menCategory->load($model);
@@ -185,7 +189,7 @@ class MenuCategories extends \yii\db\ActiveRecord
         }
 
         $isUpdated = $menCategory->save();
-        if(!$isUpdated)
+        if (!$isUpdated)
             return Helpers::HttpException(422, 'update failed', null);
 
         return Helpers::formatResponse(true, 'update success', ['id' => $menCategory->id]);
@@ -195,32 +199,33 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         $restaurant = Restaurants::checkRestaurantAccess();
 
-        if(!empty(self::getMenuCategoryItemsAsArray($restaurant->id, $category_id)))
-            return Helpers::HttpException(422,'validation failed', ['error' => 'There is already menu category items with this category']);
+        if (!empty(self::getMenuCategoryItemsAsArray($restaurant->id, $category_id)))
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'There is already menu category items with this category']);
 
         $menCategory = self::getCategory($restaurant->id, $category_id);
 
-        if(empty($menCategory))
-            return Helpers::HttpException(404,'deleted failed', ['error' => "This category dos't exist"]);
+        if (empty($menCategory))
+            return Helpers::HttpException(404, 'deleted failed', ['error' => "This category dos't exist"]);
 
         $menCategory->deleted_at = date('Y-m-d H:i:s');
         $isUpdated = $menCategory->save();
 
-        if(!$isUpdated)
+        if (!$isUpdated)
             return Helpers::HttpException(422, 'deleted failed', null);
 
         return Helpers::formatResponse(true, 'deleted success', ['id' => $menCategory->id]);
     }
 
-    public function afterValidate() {
+    public function afterValidate()
+    {
         if ($this->hasErrors()) {
-            return Helpers::HttpException(422,'validation failed' ,  ['error' => $this->errors]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
         }
     }
 
     public function beforeSave($insert)
     {
-        if(!$this->isNewRecord)
+        if (!$this->isNewRecord)
             $this->updated_at = date('Y-m-d H:i:s');
         else
             $this->created_at = date('Y-m-d H:i:s');
@@ -228,8 +233,79 @@ class MenuCategories extends \yii\db\ActiveRecord
         return parent::beforeSave($insert); // TODO: Change the autogenerated stub
     }
 
+    public function scenarios()
+    {
+        return ArrayHelper::merge(
+            parent::scenarios(),
+            [
+                self::SCENARIO_GET_DETAILS_BY_CLIENT => [
+                    'id',
+                    'name',
+                    'menuCategories' => function () {
+                        $restaurantId = Yii::$app->request->get()['id'];
+                        $menuCategories = self::getMenuCategoryItemsAsArray($restaurantId, $this->id);
+                        $restaurant = Restaurants::find()->where(['id' => $restaurantId])->one();
+                        $menuCategoriesResult = array();
+                        if (!empty($menuCategories)) {
+                            foreach ($menuCategories as $menuCategory) {
+                                $singleMenuCategory = array();
+                                $singleMenuCategory['id'] = $menuCategory['id'];
+                                $singleMenuCategory['name'] = $menuCategory['name'];
+                                $singleMenuCategory['menuCategoryItems'] = self::formatMenuCategoryItems($menuCategory['menuCategoryItems'], $restaurant->is_verified_global);
+                                $menuCategoriesResult [] = $singleMenuCategory;
+                            }
+                        }
+                        return $menuCategoriesResult;
+                    }
+                ],
+            ]);
+    }
+
     public function fields()
     {
-        return ['id','name'];
+        $request_action = explode('/', Yii::$app->getRequest()->getUrl());
+        if (in_array('clients', $request_action) && Yii::$app->request->isGet && isset(Yii::$app->request->get()['id'])) {
+            return $this->scenarios()[self::SCENARIO_GET_DETAILS_BY_CLIENT];
+        }
+        return ['id', 'name'];
     }
+
+    public static function formatMenuCategoryItems($menuCategoryItems, $isVerifiedGlobal)
+    {
+        $menuCategoryItemsResult = array();
+        if (!empty($menuCategoryItems)) {
+            foreach ($menuCategoryItems as $menuItem) {
+                $singleMenuItem = array();
+                if ($isVerifiedGlobal) {
+                    $singleMenuItem['id'] = $menuItem['menuItem']['id'];
+                    $singleMenuItem['image'] = $menuItem['menuItem']['image'];
+                    $singleMenuItem['name'] = $menuItem['menuItem']['name'];
+                    $singleMenuItem['description'] = $menuItem['menuItem']['description'];
+                    $singleMenuItem['price'] = $menuItem['menuItem']['price'];
+                    $singleMenuItem['status'] = $menuItem['menuItem']['status'];
+                    $singleMenuItem['discount'] = $menuItem['menuItem']['discount'];
+                    $singleMenuItem['is_taxable'] = $menuItem['menuItem']['is_taxable'];
+                    $singleMenuItem['is_verified'] = $menuItem['menuItem']['is_verified'];
+                    $singleMenuItem['item-choices'] = MenuItemChoice::find()->where(['menu_item_id' => $menuItem['menuItem']['id'] ])->all();
+                    $singleMenuItem['add-ons'] = MenuItemAddon::find()->where(['menu_item_id' => $menuItem['menuItem']['id'] ])->all();
+                    $menuCategoryItemsResult [] = $singleMenuItem;
+                } else if ($menuItem['menuItem']['is_verified']) {
+                    $singleMenuItem['id'] = $menuItem['menuItem']['id'];
+                    $singleMenuItem['image'] = $menuItem['menuItem']['image'];
+                    $singleMenuItem['name'] = $menuItem['menuItem']['name'];
+                    $singleMenuItem['description'] = $menuItem['menuItem']['description'];
+                    $singleMenuItem['price'] = $menuItem['menuItem']['price'];
+                    $singleMenuItem['status'] = $menuItem['menuItem']['status'];
+                    $singleMenuItem['discount'] = $menuItem['menuItem']['discount'];
+                    $singleMenuItem['is_taxable'] = $menuItem['menuItem']['is_taxable'];
+                    $singleMenuItem['is_verified'] = $menuItem['menuItem']['is_verified'];
+                    $singleMenuItem['item-choices'] = MenuItemChoice::find()->where(['menu_item_id' => $menuItem['menuItem']['id'] ])->all();
+                    $singleMenuItem['add-ons'] = MenuItemAddon::find()->where(['menu_item_id' => $menuItem['menuItem']['id'] ])->all();
+                    $menuCategoryItemsResult [] = $singleMenuItem;
+                }
+            }
+        }
+        return $menuCategoryItemsResult;
+    }
+
 }
