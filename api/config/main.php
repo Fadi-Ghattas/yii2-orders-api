@@ -122,6 +122,7 @@ return [
                         'GET,POST,PUT,DELETE log-out' => 'log-out',
                         'GET,POST,PUT,DELETE restaurants' => 'restaurants',
                         'GET,POST,PUT,DELETE restaurants/{id}' => 'restaurants',
+                        'GET,POST,PUT,DELETE menu-items/{id}' => 'menu-items',
                         'GET,POST,PUT,DELETE cuisines' => 'cuisines',
                     ],
                     'tokens' => [

@@ -241,21 +241,11 @@ class MenuCategories extends \yii\db\ActiveRecord
                 self::SCENARIO_GET_DETAILS_BY_CLIENT => [
                     'id',
                     'name',
-                    'menuCategories' => function () {
-                        $restaurantId = Yii::$app->request->get()['id'];
-                        $menuCategories = self::getMenuCategoryItemsAsArray($restaurantId, $this->id);
-                        $restaurant = Restaurants::find()->where(['id' => $restaurantId])->one();
-                        $menuCategoriesResult = array();
-                        if (!empty($menuCategories)) {
-                            foreach ($menuCategories as $menuCategory) {
-                                $singleMenuCategory = array();
-                                $singleMenuCategory['id'] = $menuCategory['id'];
-                                $singleMenuCategory['name'] = $menuCategory['name'];
-                                $singleMenuCategory['menuCategoryItems'] = self::formatMenuCategoryItems($menuCategory['menuCategoryItems'], $restaurant->is_verified_global);
-                                $menuCategoriesResult [] = $singleMenuCategory;
-                            }
-                        }
-                        return $menuCategoriesResult;
+                    'menuCategoriesItems' => function () {
+                        $menuCategories = self::getMenuCategoryItemsAsArray($this->restaurant_id, $this->id);
+                        if (!empty($menuCategories[0]['menuCategoryItems']))
+                            return MenuItems::formatMenuCategoryItems($menuCategories[0]['menuCategoryItems'], $this->restaurant->is_verified_global);
+                        else return array();
                     }
                 ],
             ]);
@@ -270,42 +260,6 @@ class MenuCategories extends \yii\db\ActiveRecord
         return ['id', 'name'];
     }
 
-    public static function formatMenuCategoryItems($menuCategoryItems, $isVerifiedGlobal)
-    {
-        $menuCategoryItemsResult = array();
-        if (!empty($menuCategoryItems)) {
-            foreach ($menuCategoryItems as $menuItem) {
-                $singleMenuItem = array();
-                if ($isVerifiedGlobal) {
-                    $singleMenuItem['id'] = $menuItem['menuItem']['id'];
-                    $singleMenuItem['image'] = $menuItem['menuItem']['image'];
-                    $singleMenuItem['name'] = $menuItem['menuItem']['name'];
-                    $singleMenuItem['description'] = $menuItem['menuItem']['description'];
-                    $singleMenuItem['price'] = $menuItem['menuItem']['price'];
-                    $singleMenuItem['status'] = $menuItem['menuItem']['status'];
-                    $singleMenuItem['discount'] = $menuItem['menuItem']['discount'];
-                    $singleMenuItem['is_taxable'] = $menuItem['menuItem']['is_taxable'];
-                    $singleMenuItem['is_verified'] = $menuItem['menuItem']['is_verified'];
-                    $singleMenuItem['item-choices'] = MenuItemChoice::find()->where(['menu_item_id' => $menuItem['menuItem']['id'] ])->all();
-                    $singleMenuItem['add-ons'] = MenuItemAddon::find()->where(['menu_item_id' => $menuItem['menuItem']['id'] ])->all();
-                    $menuCategoryItemsResult [] = $singleMenuItem;
-                } else if ($menuItem['menuItem']['is_verified']) {
-                    $singleMenuItem['id'] = $menuItem['menuItem']['id'];
-                    $singleMenuItem['image'] = $menuItem['menuItem']['image'];
-                    $singleMenuItem['name'] = $menuItem['menuItem']['name'];
-                    $singleMenuItem['description'] = $menuItem['menuItem']['description'];
-                    $singleMenuItem['price'] = $menuItem['menuItem']['price'];
-                    $singleMenuItem['status'] = $menuItem['menuItem']['status'];
-                    $singleMenuItem['discount'] = $menuItem['menuItem']['discount'];
-                    $singleMenuItem['is_taxable'] = $menuItem['menuItem']['is_taxable'];
-                    $singleMenuItem['is_verified'] = $menuItem['menuItem']['is_verified'];
-                    $singleMenuItem['item-choices'] = MenuItemChoice::find()->where(['menu_item_id' => $menuItem['menuItem']['id'] ])->all();
-                    $singleMenuItem['add-ons'] = MenuItemAddon::find()->where(['menu_item_id' => $menuItem['menuItem']['id'] ])->all();
-                    $menuCategoryItemsResult [] = $singleMenuItem;
-                }
-            }
-        }
-        return $menuCategoryItemsResult;
-    }
+   
 
 }

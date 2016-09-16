@@ -12,6 +12,7 @@ use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\SignUpForm;
 use common\helpers\Helpers;
 use common\models\Cuisines;
+use common\models\MenuItems;
 use common\models\Restaurants;
 use Yii;
 use common\models\User;
@@ -129,6 +130,19 @@ class ClientController extends ActiveController
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
+    public function actionMenuItems()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if($request->isGet) {
+            if(!empty($get_data) && isset($get_data['id']))
+                return MenuItems::find()->where(['id' => $get_data['id']])->one();
+        }
+
+        return Helpers::HttpException(405, "Method Not Allowed", null);
+    }
+
     public function beforeAction($event)
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
@@ -137,6 +151,7 @@ class ClientController extends ActiveController
             'log-in' => ['POST'],
             'log-out' => ['POST'],
             'restaurants' => ['GET'],
+            'menu-items' => ['GET'],
             'cuisines' => ['GET'],
         ];
 

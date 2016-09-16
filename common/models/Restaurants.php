@@ -485,7 +485,7 @@ class Restaurants extends \yii\db\ActiveRecord
                     'cuisine' => function () {
                         return $this->cuisines;
                     },
-                    'menu' => function () {
+                    'menuCategories' => function () {
                         return $this->menuCategories;
                     },
                     'reviews' => function (){
