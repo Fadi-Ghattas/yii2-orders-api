@@ -8,14 +8,15 @@
 
 namespace api\modules\v1\controllers;
 
+
+use Yii;
 use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\SignUpForm;
+use common\models\User;
 use common\helpers\Helpers;
 use common\models\Cuisines;
 use common\models\MenuItems;
 use common\models\Restaurants;
-use Yii;
-use common\models\User;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;

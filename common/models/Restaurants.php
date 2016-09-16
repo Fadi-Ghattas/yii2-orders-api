@@ -5,8 +5,8 @@ namespace common\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
-use common\helpers\Helpers;
 use yii\i18n\Formatter;
+use common\helpers\Helpers;
 
 /**
  * This is the model class for table "restaurants".

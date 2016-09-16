@@ -2,8 +2,8 @@
 
 namespace common\models;
 
-use common\helpers\Helpers;
 use Yii;
+use common\helpers\Helpers;
 
 /**
  * This is the model class for table "menu_category_item".

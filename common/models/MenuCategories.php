@@ -2,11 +2,10 @@
 
 namespace common\models;
 
-use common\helpers\Helpers;
+
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\web\ForbiddenHttpException;
-
+use common\helpers\Helpers;
 /**
  * This is the model class for table "menu_categories".
  *
@@ -259,7 +258,5 @@ class MenuCategories extends \yii\db\ActiveRecord
         }
         return ['id', 'name'];
     }
-
-   
-
+    
 }
