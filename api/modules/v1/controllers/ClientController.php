@@ -33,7 +33,7 @@ class ClientController extends ActiveController
             parent::behaviors(), [
                 'authenticator' => [
                     'class' => CompositeAuth::className(),
-                    'except' => ['sign-up','log-in','restaurants','cuisines'],
+                    'except' => ['sign-up','log-in','restaurants','menu-items', 'cuisines'],
                     'authMethods' => [
                         HttpBearerAuth::className(),
                     ],
