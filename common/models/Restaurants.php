@@ -74,21 +74,6 @@ class Restaurants extends \yii\db\ActiveRecord
         return 'restaurants';
     }
 
-//    public function behaviors()
-//    {
-//        return [
-//            'verbs' => [
-//                'class' => \yii\filters\VerbFilter::className(),
-//                'actions' => [
-//                    'view'   => ['get'],
-//                    'create' => ['post'],
-//                    'update' => ['put'],
-//                    //'delete' => ['post', 'delete'],
-//                    'delete' => [''],
-//                ],
-//            ],
-//        ];
-//    }
     /**
      * @inheritdoc
      */
@@ -488,7 +473,7 @@ class Restaurants extends \yii\db\ActiveRecord
                     'menuCategories' => function () {
                         return $this->menuCategories;
                     },
-                    'reviews' => function (){
+                    'reviews' => function () {
                         return $this->reviews;
                     },
                 ],
@@ -502,9 +487,10 @@ class Restaurants extends \yii\db\ActiveRecord
             return $this->scenarios()[self::SCENARIO_GET_BY_CLIENT];
         else if (in_array('clients', $request_action) && Yii::$app->request->isGet && isset(Yii::$app->request->get()['id']))
             return $this->scenarios()[self::SCENARIO_GET_DETAILS_BY_CLIENT];
-        return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
+        else
+            return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
+        return parent::fields();
     }
-
 
     public static function getRestaurants()
     {
@@ -695,7 +681,7 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public static function getRestaurantDetails($restaurantId)
     {
-        $countryName = Restaurants::find()->where(['id'=>$restaurantId])->one()->country->name;
+        $countryName = Restaurants::find()->where(['id' => $restaurantId])->one()->country->name;
         $time = (new Formatter(['timeZone' => Helpers::getCountryTimeZone($countryName)]))->asTime(time(), 'php:H:i:s');
 
         $headers = Yii::$app->getRequest()->getHeaders();
@@ -733,7 +719,7 @@ class Restaurants extends \yii\db\ActiveRecord
                                           WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ") 
                            ) AS 'favour_it'
                            FROM `restaurants`) AS r
-                           WHERE r.id = ". $restaurantId;
+                           WHERE r.id = " . $restaurantId;
 
         $restaurants = Restaurants::findBySql($sql)->one();
         return Helpers::formatResponse(true, 'get success', $restaurants);
@@ -754,6 +740,5 @@ class Restaurants extends \yii\db\ActiveRecord
                 return null;
         }
     }
-
 
 }

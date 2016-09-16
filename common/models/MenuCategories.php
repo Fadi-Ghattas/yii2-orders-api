@@ -6,6 +6,7 @@ namespace common\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 use common\helpers\Helpers;
+
 /**
  * This is the model class for table "menu_categories".
  *
@@ -21,7 +22,7 @@ use common\helpers\Helpers;
  */
 class MenuCategories extends \yii\db\ActiveRecord
 {
-
+    const SCENARIO_GET_BY_RESTAURANTS_MANGER = 'get_by_restaurants_manger';
     const SCENARIO_GET_DETAILS_BY_CLIENT = 'get_details_by_client';
 
     /**
@@ -237,6 +238,10 @@ class MenuCategories extends \yii\db\ActiveRecord
         return ArrayHelper::merge(
             parent::scenarios(),
             [
+                self::SCENARIO_GET_BY_RESTAURANTS_MANGER => [
+                    'id',
+                    'name'
+                ],
                 self::SCENARIO_GET_DETAILS_BY_CLIENT => [
                     'id',
                     'name',
@@ -256,7 +261,7 @@ class MenuCategories extends \yii\db\ActiveRecord
         if (in_array('clients', $request_action) && Yii::$app->request->isGet && isset(Yii::$app->request->get()['id'])) {
             return $this->scenarios()[self::SCENARIO_GET_DETAILS_BY_CLIENT];
         }
-        return ['id', 'name'];
+        return parent::fields();
     }
-    
+
 }

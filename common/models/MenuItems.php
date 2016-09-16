@@ -515,8 +515,10 @@ class MenuItems extends \yii\db\ActiveRecord
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
         if (in_array('clients', $request_action) && Yii::$app->request->isGet && isset(Yii::$app->request->get()['id'])) {
             return $this->scenarios()[self::SCENARIO_GET_DETAILS_BY_CLIENT];
+        } else {
+            return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
         }
-        return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
+        return parent::fields();
     }
 
     public static function formatMenuCategoryItems($menuCategoryItems, $isVerifiedGlobal)
