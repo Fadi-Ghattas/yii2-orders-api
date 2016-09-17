@@ -74,6 +74,21 @@ class Restaurants extends \yii\db\ActiveRecord
         return 'restaurants';
     }
 
+//    public function behaviors()
+//    {
+//        return [
+//            'verbs' => [
+//                'class' => \yii\filters\VerbFilter::className(),
+//                'actions' => [
+//                    'view'   => ['get'],
+//                    'create' => ['post'],
+//                    'update' => ['put'],
+//                    //'delete' => ['post', 'delete'],
+//                    'delete' => [''],
+//                ],
+//            ],
+//        ];
+//    }
     /**
      * @inheritdoc
      */
@@ -473,7 +488,7 @@ class Restaurants extends \yii\db\ActiveRecord
                     'menuCategories' => function () {
                         return $this->menuCategories;
                     },
-                    'reviews' => function () {
+                    'reviews' => function (){
                         return $this->reviews;
                     },
                 ],
@@ -487,9 +502,7 @@ class Restaurants extends \yii\db\ActiveRecord
             return $this->scenarios()[self::SCENARIO_GET_BY_CLIENT];
         else if (in_array('clients', $request_action) && Yii::$app->request->isGet && isset(Yii::$app->request->get()['id']))
             return $this->scenarios()[self::SCENARIO_GET_DETAILS_BY_CLIENT];
-        else
-            return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
-        return parent::fields();
+        return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
     }
 
     public static function getRestaurants()
@@ -526,14 +539,18 @@ class Restaurants extends \yii\db\ActiveRecord
                    FROM (SELECT *, 
                            (
                             CASE 
-                            WHEN ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' <= restaurants.working_closing_hours AND restaurants.disable_ordering = 1) THEN 3
-                            WHEN ('" . $time . "' > restaurants.time_order_open AND '" . $time . "' < restaurants.time_order_close) THEN 1
-                            WHEN (
-                            ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' <= restaurants.time_order_open)
+                            WHEN ('" . $time . "' > restaurants.time_order_open AND '" . $time . "' < IF( ( (restaurants.time_order_close >= '00:00:00') AND (restaurants.time_order_close <= '09:00:00') ), ADDTIME(restaurants.time_order_close, '24:00:00'), restaurants.time_order_close) AND restaurants.disable_ordering = 1) THEN 3
+                            WHEN (('" . $time . "' > restaurants.time_order_open AND '" . $time . "' < IF( ( (restaurants.time_order_close>= '00:00:00') AND (restaurants.time_order_close <= '09:00:00') ), ADDTIME(restaurants.time_order_close, '24:00:00'), restaurants.time_order_close))) THEN 1
+                            WHEN ('" . $time . "' >= IF( ( (restaurants.working_closing_hours >= '00:00:00') AND (restaurants.working_closing_hours <= '09:00:00') ), ADDTIME(restaurants.working_closing_hours, '24:00:00'), restaurants.working_closing_hours) OR '" . $time . "' <= restaurants.working_opening_hours) THEN 4
+                             WHEN (
+                            ('" . $time . "'  >= restaurants.working_opening_hours AND '" . $time . "'  <= restaurants.time_order_open)
                              OR
-                             ('" . $time . "' >= restaurants.time_order_close AND '" . $time . "' <= restaurants.working_closing_hours)
+                             (
+                             '" . $time . "' >= IF( ( (restaurants.time_order_close>= '00:00:00') AND (restaurants.time_order_close <= '09:00:00') ), ADDTIME(restaurants.time_order_close, '24:00:00'), restaurants.time_order_close)  AND '" . $time . "'  <= IF( ( (restaurants.working_closing_hours >= '00:00:00') AND (restaurants.working_closing_hours <= '09:00:00') ), ADDTIME(restaurants.working_closing_hours, '24:00:00'), restaurants.working_closing_hours) 
+                             OR
+                             '" . $time . "'  >=  restaurants.time_order_close AND '" . $time . "'  <= IF( ( (restaurants.working_closing_hours >= '00:00:00') AND (restaurants.working_closing_hours <= '09:00:00') ), ADDTIME(restaurants.working_closing_hours, '24:00:00'), restaurants.working_closing_hours) 
+                             )
                             ) THEN 2
-                            WHEN ('" . $time . "' >= restaurants.working_closing_hours OR '" . $time . "' <= restaurants.working_opening_hours) THEN 4
                             ELSE NULL END
                            ) AS 'res_status',
                            (SELECT ROUND(AVG(reviews.rank), 1) FROM reviews WHERE reviews.restaurant_id = restaurants.id) AS 'reviews_rank',
@@ -681,7 +698,7 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public static function getRestaurantDetails($restaurantId)
     {
-        $countryName = Restaurants::find()->where(['id' => $restaurantId])->one()->country->name;
+        $countryName = Restaurants::find()->where(['id'=>$restaurantId])->one()->country->name;
         $time = (new Formatter(['timeZone' => Helpers::getCountryTimeZone($countryName)]))->asTime(time(), 'php:H:i:s');
 
         $headers = Yii::$app->getRequest()->getHeaders();
@@ -719,7 +736,7 @@ class Restaurants extends \yii\db\ActiveRecord
                                           WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ") 
                            ) AS 'favour_it'
                            FROM `restaurants`) AS r
-                           WHERE r.id = " . $restaurantId;
+                           WHERE r.id = ". $restaurantId;
 
         $restaurants = Restaurants::findBySql($sql)->one();
         return Helpers::formatResponse(true, 'get success', $restaurants);

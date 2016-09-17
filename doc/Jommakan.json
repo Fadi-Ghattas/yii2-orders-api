@@ -13,7 +13,9 @@
 				"06fe6d89-615b-62b0-f382-234bb212ca22",
 				"c34661d2-eadf-c8a1-3cf6-715eed40a669",
 				"579e7c02-a9c1-1745-e14a-5cb7bf2f776e",
-				"2925c587-67c0-cf47-2a36-ba45b150a11b"
+				"2925c587-67c0-cf47-2a36-ba45b150a11b",
+				"e4dfd9b3-2a9d-ad62-3650-d7cc0e9664d2",
+				"b30b462c-1d47-bf8c-ea3b-b7940a6a06a0"
 			],
 			"owner": "262964"
 		},
@@ -1631,7 +1633,7 @@
 		},
 		{
 			"id": "2925c587-67c0-cf47-2a36-ba45b150a11b",
-			"headers": "Content-Type: application/json\n",
+			"headers": "Content-Type: application/json\nAuthorization: Bearer _Oct2-0I_zc8dQPskO95E5VONxQIEb05\n",
 			"url": "https://api.jommakan.asia/api/web/v1/clients/restaurants?area=92&sort=-reviews_rank&quick_filters=open,free_delivery,halal&delivery_duration=60&minimum_order_amount=1,20",
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -1642,7 +1644,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1473981628084,
+			"time": 1474053944456,
 			"name": "Search Restaurants",
 			"description": "",
 			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5",
@@ -6920,9 +6922,28 @@
 			"folder": "44b5c4dc-236e-724f-62e1-778fec2e0aa0"
 		},
 		{
+			"id": "b30b462c-1d47-bf8c-ea3b-b7940a6a06a0",
+			"headers": "Accept-Language: application/json\n",
+			"url": "https://api.jommakan.asia/api/web/v1/clients/menu-items/40",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1474053455051,
+			"name": "Gte Menu Item",
+			"description": "",
+			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5",
+			"responses": []
+		},
+		{
 			"id": "b93b199c-0712-a69c-7a88-5c30f98e6dd9",
-			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/2",
+			"headers": "Content-Type: application/json\nAuthorization: Bearer jdhfjhjkfsjkdfhsdjfh\n",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu/8",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -6932,7 +6953,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1473022031781,
+			"time": 1474053915016,
 			"name": "Get Restaurant Menu Category Items",
 			"description": "#####Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key) (required)| Obtained from login\r\n\r\n#####GET Parameters:\r\n   \r\n- category_id (int) (required) | GET {HOST}/api/web/v1/menu/{category_id}",
 			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5",
@@ -7779,8 +7800,7 @@
 					"owner": "262964"
 				}
 			],
-			"rawModeData": "",
-			"folder": "44b5c4dc-236e-724f-62e1-778fec2e0aa0"
+			"rawModeData": ""
 		},
 		{
 			"id": "bbf01298-2b3f-67c2-40e4-2074da9b6303",
@@ -7887,6 +7907,24 @@
 			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5",
 			"responses": [],
 			"folder": "44b5c4dc-236e-724f-62e1-778fec2e0aa0"
+		},
+		{
+			"id": "e4dfd9b3-2a9d-ad62-3650-d7cc0e9664d2",
+			"headers": "Accept-Language: application/json\nAuthorization: Bearer _Oct2-0I_zc8dQPskO95E5VONxQIEb05\n",
+			"url": "https://api.jommakan.asia/api/web/v1/clients/restaurants/4",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1474044446024,
+			"name": "Gte Restaurant Details",
+			"description": "",
+			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5",
+			"responses": []
 		},
 		{
 			"id": "e5f715fa-11f3-e4d9-cff2-fbe74d833cbd",
@@ -9142,8 +9180,8 @@
 		},
 		{
 			"id": "fb85da3a-e4ea-03a8-a8be-169c1dacfde8",
-			"headers": "Content-Type: application/json\nAuthorization: Bearer uVasck2CxYOKQnl8Ol5iCGN9qCV1i-zZ\n",
-			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items/27",
+			"headers": "Content-Type: application/json\nAuthorization: Bearer jdhfjhjkfsjkdfhsdjfh\n",
+			"url": "https://api.jommakan.asia/api/web/v1/vendors/menu-items/40",
 			"preRequestScript": null,
 			"pathVariables": {},
 			"method": "GET",
@@ -9153,13 +9191,12 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1472455338327,
+			"time": 1474053917343,
 			"name": "Get Restaurant Menu Item",
 			"description": "",
 			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5",
 			"responses": [],
-			"rawModeData": "",
-			"folder": "44b5c4dc-236e-724f-62e1-778fec2e0aa0"
+			"rawModeData": ""
 		}
 	]
 }
