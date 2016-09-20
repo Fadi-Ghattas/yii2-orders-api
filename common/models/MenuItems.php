@@ -161,6 +161,7 @@ class MenuItems extends \yii\db\ActiveRecord
             ->where(['menu_categories.restaurant_id' => $restaurant_id])
             ->andWhere(['menu_items.id' => $menu_item_id])
             ->andWhere(['menu_items.deleted_at' => null])
+            ->andWhere(['menu_items.deleted_at' => null])
             ->andWhere(['menu_categories.deleted_at' => null])
             ->joinWith(['menuCategoryItems'], true, 'INNER JOIN')
             ->joinWith(['menuCategoryItems', 'menuCategoryItems.menuItem'], true, 'INNER JOIN')
@@ -521,6 +522,7 @@ class MenuItems extends \yii\db\ActiveRecord
         return parent::fields();
     }
 
+    //Not use for client only because the menu item states is being checked here if 0 or 1
     public static function formatMenuCategoryItems($menuCategoryItems, $isVerifiedGlobal)
     {
         $menuCategoryItemsResult = array();
@@ -528,17 +530,21 @@ class MenuItems extends \yii\db\ActiveRecord
             foreach ($menuCategoryItems as $menuItem) {
                 $singleMenuItem = array();
                 if ($isVerifiedGlobal) {
-                    $singleMenuItem['id'] = $menuItem['menuItem']['id'];
-                    $singleMenuItem['image'] = $menuItem['menuItem']['image'];
-                    $singleMenuItem['name'] = $menuItem['menuItem']['name'];
-                    $singleMenuItem['price'] = $menuItem['menuItem']['price'];
-                    $menuCategoryItemsResult [] = $singleMenuItem;
+                    if($menuItem['menuItem']['status']) {
+                        $singleMenuItem['id'] = $menuItem['menuItem']['id'];
+                        $singleMenuItem['image'] = $menuItem['menuItem']['image'];
+                        $singleMenuItem['name'] = $menuItem['menuItem']['name'];
+                        $singleMenuItem['price'] = $menuItem['menuItem']['price'];
+                        $menuCategoryItemsResult [] = $singleMenuItem;
+                    }
                 } else if ($menuItem['menuItem']['is_verified']) {
-                    $singleMenuItem['id'] = $menuItem['menuItem']['id'];
-                    $singleMenuItem['image'] = $menuItem['menuItem']['image'];
-                    $singleMenuItem['name'] = $menuItem['menuItem']['name'];
-                    $singleMenuItem['price'] = $menuItem['menuItem']['price'];
-                    $menuCategoryItemsResult [] = $singleMenuItem;
+                    if($menuItem['menuItem']['status']) {
+                        $singleMenuItem['id'] = $menuItem['menuItem']['id'];
+                        $singleMenuItem['image'] = $menuItem['menuItem']['image'];
+                        $singleMenuItem['name'] = $menuItem['menuItem']['name'];
+                        $singleMenuItem['price'] = $menuItem['menuItem']['price'];
+                        $menuCategoryItemsResult [] = $singleMenuItem;
+                    }
                 }
             }
         }

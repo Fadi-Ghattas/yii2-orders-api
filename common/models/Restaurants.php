@@ -460,6 +460,9 @@ class Restaurants extends \yii\db\ActiveRecord
                     'cuisine' => function () {
                         return $this->cuisines;
                     },
+                    'paymentMethods' => function (){
+                        return $this->paymentMethodRestaurants;
+                    }
                 ],
 
                 self::SCENARIO_GET_DETAILS_BY_CLIENT => [
@@ -488,9 +491,12 @@ class Restaurants extends \yii\db\ActiveRecord
                     'menuCategories' => function () {
                         return $this->menuCategories;
                     },
-                    'reviews' => function (){
+                    'reviews' => function () {
                         return $this->reviews;
                     },
+                    'paymentMethods' => function () {
+                        return $this->paymentMethodRestaurants;
+                    }
                 ],
             ]);
     }
@@ -539,19 +545,91 @@ class Restaurants extends \yii\db\ActiveRecord
                    FROM (SELECT *, 
                            (
                             CASE 
-                            WHEN ('" . $time . "' > restaurants.time_order_open AND '" . $time . "' < IF( ( (restaurants.time_order_close >= '00:00:00') AND (restaurants.time_order_close <= TIMEDIFF(restaurants.working_opening_hours, restaurants.working_closing_hours)) ), ADDTIME(restaurants.time_order_close, '24:00:00'), restaurants.time_order_close) AND restaurants.disable_ordering = 1) THEN 3
-                            WHEN (('" . $time . "' > restaurants.time_order_open AND '" . $time . "' < IF( ( (restaurants.time_order_close>= '00:00:00') AND (restaurants.time_order_close <= TIMEDIFF(restaurants.working_opening_hours, restaurants.working_closing_hours)) ), ADDTIME(restaurants.time_order_close, '24:00:00'), restaurants.time_order_close))) THEN 1
-                            WHEN ('" . $time . "' >= IF( ( (restaurants.working_closing_hours >= '00:00:00') AND (restaurants.working_closing_hours <= TIMEDIFF(restaurants.working_opening_hours, restaurants.working_closing_hours) ) ), ADDTIME(restaurants.working_closing_hours, '24:00:00'), restaurants.working_closing_hours) OR '" . $time . "' <= restaurants.working_opening_hours) THEN 4
-                             WHEN (
-                            ('" . $time . "'  >= restaurants.working_opening_hours AND '" . $time . "'  <= restaurants.time_order_open)
-                             OR
-                             (
-                             '" . $time . "' >= IF( ( (restaurants.time_order_close>= '00:00:00') AND (restaurants.time_order_close <= TIMEDIFF(restaurants.working_opening_hours, restaurants.working_closing_hours)) ), ADDTIME(restaurants.time_order_close, '24:00:00'), restaurants.time_order_close)  AND '" . $time . "'  <= IF( ( (restaurants.working_closing_hours >= '00:00:00') AND (restaurants.working_closing_hours <= TIMEDIFF(restaurants.working_opening_hours, restaurants.working_closing_hours)) ), ADDTIME(restaurants.working_closing_hours, '24:00:00'), restaurants.working_closing_hours) 
-                             OR
-                             '" . $time . "'  >=  restaurants.time_order_close AND '" . $time . "'  <= IF( ( (restaurants.working_closing_hours >= '00:00:00') AND (restaurants.working_closing_hours <= TIMEDIFF(restaurants.working_opening_hours, restaurants.working_closing_hours)) ), ADDTIME(restaurants.working_closing_hours, '24:00:00'), restaurants.working_closing_hours) 
-                             )
+                            WHEN (
+                            '".$time."' < restaurants.working_opening_hours 
+							 AND
+                            '".$time."' > restaurants.working_closing_hours 
+                            ) THEN 4 
+                            
+                            WHEN (
+                            
+                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' ) 
+							> 
+                            CONVERT(restaurants.time_order_open USING utf8)
+                            
+                            AND 
+                            
+                            '".$time."' 
+                            < 
+                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '".$time."' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
+                            
+							AND restaurants.disable_ordering = 1
+                            
                             ) THEN 2
-                            ELSE NULL END
+                            
+                            WHEN (
+                            
+                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' ) 
+							> 
+                            CONVERT(restaurants.time_order_open USING utf8)
+                            
+                            AND 
+                            
+                            '".$time."' 
+                            < 
+                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '".$time."' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
+                            
+                            ) THEN 1
+                            
+                            WHEN (
+                                  
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  >= 
+                                  CONVERT(restaurants.working_opening_hours USING utf8)
+                                  
+                                  AND 
+                                  
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  <= 
+                                  CONVERT(restaurants.time_order_open USING utf8)
+                                 
+                                 OR
+                                 
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  >= 
+                                  CONVERT(restaurants.time_order_close USING utf8)
+                                  AND 
+                                  
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('".$time."','24:00:00'), '".$time."' )   
+                                  <= 
+                                  CONVERT(restaurants.working_closing_hours USING utf8)
+                                  ) THEN 3
+                                  
+                                  WHEN (
+                                  '".$time."'  
+                                  >= 
+                                  CONVERT(restaurants.working_opening_hours USING utf8)
+                                  
+                                  AND 
+                                  
+                                  '".$time."'   
+                                  <= 
+                                  CONVERT(restaurants.time_order_open USING utf8)
+                                 
+                                 OR
+                                 
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  >= 
+                                  CONVERT(restaurants.time_order_close USING utf8)
+                                  
+                                  AND 
+                                  
+                                  '".$time."'
+                                  <= 
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME(restaurants.working_closing_hours,'24:00:00'), restaurants.working_closing_hours )
+                                  ) THEN 3
+                                  
+							ELSE 4 END
                            ) AS 'res_status',
                            (SELECT ROUND(AVG(reviews.rank), 1) FROM reviews WHERE reviews.restaurant_id = restaurants.id) AS 'reviews_rank',
                            (
@@ -719,15 +797,91 @@ class Restaurants extends \yii\db\ActiveRecord
                    FROM (SELECT *, 
                            (
                             CASE 
-                            WHEN ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' <= restaurants.working_closing_hours AND restaurants.disable_ordering = 1) THEN 3
-                            WHEN ('" . $time . "' > restaurants.time_order_open AND '" . $time . "' < restaurants.time_order_close) THEN 1
                             WHEN (
-                                ('" . $time . "' >= restaurants.working_opening_hours AND '" . $time . "' <= restaurants.time_order_open)
-                                OR
-                                ('" . $time . "' >= restaurants.time_order_close AND '" . $time . "' <= restaurants.working_closing_hours)
+                            '".$time."' < restaurants.working_opening_hours 
+							 AND
+                            '".$time."' > restaurants.working_closing_hours 
+                            ) THEN 4 
+                            
+                            WHEN (
+                            
+                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' ) 
+							> 
+                            CONVERT(restaurants.time_order_open USING utf8)
+                            
+                            AND 
+                            
+                            '".$time."' 
+                            < 
+                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '".$time."' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
+                            
+							AND restaurants.disable_ordering = 1
+                            
                             ) THEN 2
-                            WHEN ('" . $time . "' >= restaurants.working_closing_hours OR '" . $time . "' <= restaurants.working_opening_hours) THEN 4
-                            ELSE NULL END
+                            
+                            WHEN (
+                            
+                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' ) 
+							> 
+                            CONVERT(restaurants.time_order_open USING utf8)
+                            
+                            AND 
+                            
+                            '".$time."' 
+                            < 
+                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '".$time."' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
+                            
+                            ) THEN 1
+                            
+                            WHEN (
+                                  
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  >= 
+                                  CONVERT(restaurants.working_opening_hours USING utf8)
+                                  
+                                  AND 
+                                  
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  <= 
+                                  CONVERT(restaurants.time_order_open USING utf8)
+                                 
+                                 OR
+                                 
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  >= 
+                                  CONVERT(restaurants.time_order_close USING utf8)
+                                  AND 
+                                  
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('".$time."','24:00:00'), '".$time."' )   
+                                  <= 
+                                  CONVERT(restaurants.working_closing_hours USING utf8)
+                                  ) THEN 3
+                                  
+                                  WHEN (
+                                  '".$time."'  
+                                  >= 
+                                  CONVERT(restaurants.working_opening_hours USING utf8)
+                                  
+                                  AND 
+                                  
+                                  '".$time."'   
+                                  <= 
+                                  CONVERT(restaurants.time_order_open USING utf8)
+                                 
+                                 OR
+                                 
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  >= 
+                                  CONVERT(restaurants.time_order_close USING utf8)
+                                  
+                                  AND 
+                                  
+                                  '".$time."'
+                                  <= 
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME(restaurants.working_closing_hours,'24:00:00'), restaurants.working_closing_hours )
+                                  ) THEN 3
+                                  
+							ELSE 4 END
                            ) AS 'res_status',
                            (SELECT ROUND(AVG(reviews.rank), 1) FROM reviews WHERE reviews.restaurant_id = restaurants.id) AS 'reviews_rank',
                            (
@@ -748,9 +902,9 @@ class Restaurants extends \yii\db\ActiveRecord
             case 1:
                 return 'Open';
             case 2:
-                return 'Not Available';
-            case 3:
                 return 'Busy';
+            case 3:
+                return 'Not Available';
             case 4:
                 return 'Closed';
             default:
