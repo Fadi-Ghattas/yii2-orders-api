@@ -138,7 +138,7 @@ class ClientController extends ActiveController
 
         if($request->isGet) {
             if(!empty($get_data) && isset($get_data['id']))
-                return MenuItems::find()->where(['id' => $get_data['id']])->one();
+                return MenuItems::getMenuItemForClient($get_data['id']);
         }
 
         return Helpers::HttpException(405, "Method Not Allowed", null);

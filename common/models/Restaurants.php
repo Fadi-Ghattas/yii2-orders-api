@@ -460,8 +460,13 @@ class Restaurants extends \yii\db\ActiveRecord
                     'cuisine' => function () {
                         return $this->cuisines;
                     },
-                    'paymentMethods' => function (){
-                        return $this->paymentMethodRestaurants;
+                    'paymentMethods' => function () {
+                        $paymentMethods = array();
+                        foreach ($this->paymentMethodRestaurants as $paymentMethod)
+                        {
+                            $paymentMethods [] = $paymentMethod->paymentMethod;
+                        }
+                        return $paymentMethods;
                     }
                 ],
 
@@ -495,7 +500,12 @@ class Restaurants extends \yii\db\ActiveRecord
                         return $this->reviews;
                     },
                     'paymentMethods' => function () {
-                        return $this->paymentMethodRestaurants;
+                        $paymentMethods = array();
+                        foreach ($this->paymentMethodRestaurants as $paymentMethod)
+                        {
+                            $paymentMethods [] = $paymentMethod->paymentMethod;
+                        }
+                        return $paymentMethods;
                     }
                 ],
             ]);
@@ -777,6 +787,10 @@ class Restaurants extends \yii\db\ActiveRecord
     public static function getRestaurantDetails($restaurantId)
     {
         $countryName = Restaurants::find()->where(['id'=>$restaurantId])->one()->country->name;
+
+        if(empty($countryName))
+            return Helpers::HttpException(404 ,'not found', ['error' => 'restaurants not found']);
+
         $time = (new Formatter(['timeZone' => Helpers::getCountryTimeZone($countryName)]))->asTime(time(), 'php:H:i:s');
 
         $headers = Yii::$app->getRequest()->getHeaders();

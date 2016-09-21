@@ -450,6 +450,48 @@ class MenuItems extends \yii\db\ActiveRecord
         return Helpers::formatResponse(true, 'deleted success', ['id' => $MenuItem->id]);
     }
 
+    public static function getMenuItemForClient($menu_item_id) 
+    {
+        $menuItem = self::find()->where(['id' => $menu_item_id])->one();
+        if(empty($menuItem))
+            return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
+        
+        $restaurant = MenuCategoryItem::find()->where(['menu_item_id' => $menu_item_id])->one();
+        if( (!$menuItem->status && !$menuItem->is_verified) || (!$menuItem->status && !$restaurant->menuCategory->restaurant->is_verified_global) )
+            return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
+        
+        return Helpers::formatResponse(true, 'get success', $menuItem);
+    }
+
+    //Note use for client only because the menu item states is being checked here if 0 or 1 and if is verified
+    public static function formatMenuCategoryItems($menuCategoryItems, $isVerifiedGlobal)
+    {
+        $menuCategoryItemsResult = array();
+        if (!empty($menuCategoryItems)) {
+            foreach ($menuCategoryItems as $menuItem) {
+                $singleMenuItem = array();
+                if ($isVerifiedGlobal) {
+                    if($menuItem['menuItem']['status']) {
+                        $singleMenuItem['id'] = $menuItem['menuItem']['id'];
+                        $singleMenuItem['image'] = $menuItem['menuItem']['image'];
+                        $singleMenuItem['name'] = $menuItem['menuItem']['name'];
+                        $singleMenuItem['price'] = $menuItem['menuItem']['price'];
+                        $menuCategoryItemsResult [] = $singleMenuItem;
+                    }
+                } else if ($menuItem['menuItem']['is_verified']) {
+                    if($menuItem['menuItem']['status']) {
+                        $singleMenuItem['id'] = $menuItem['menuItem']['id'];
+                        $singleMenuItem['image'] = $menuItem['menuItem']['image'];
+                        $singleMenuItem['name'] = $menuItem['menuItem']['name'];
+                        $singleMenuItem['price'] = $menuItem['menuItem']['price'];
+                        $menuCategoryItemsResult [] = $singleMenuItem;
+                    }
+                }
+            }
+        }
+        return $menuCategoryItemsResult;
+    }
+    
     public function afterValidate()
     {
         if ($this->hasErrors()) {
@@ -480,10 +522,22 @@ class MenuItems extends \yii\db\ActiveRecord
                     'description',
                     'discount',
                     'addOns' => function () {
-                        return $this->addons;
+                        $addOns = array();
+                        foreach ($this->addons as $addOn){
+                            if($addOn->status){
+                                $addOns [] =  $addOn;
+                            }
+                        }
+                        return $addOns;
                     },
                     'ItemChoices' => function () {
-                        return $this->choices;
+                        $choices = array();
+                        foreach ($this->choices as $choice){
+                            if($choice->status){
+                                $choices [] = $choice;
+                            }
+                        }
+                        return $choices;
                     }
                 ],
 
@@ -520,34 +574,5 @@ class MenuItems extends \yii\db\ActiveRecord
             return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
         }
         return parent::fields();
-    }
-
-    //Not use for client only because the menu item states is being checked here if 0 or 1
-    public static function formatMenuCategoryItems($menuCategoryItems, $isVerifiedGlobal)
-    {
-        $menuCategoryItemsResult = array();
-        if (!empty($menuCategoryItems)) {
-            foreach ($menuCategoryItems as $menuItem) {
-                $singleMenuItem = array();
-                if ($isVerifiedGlobal) {
-                    if($menuItem['menuItem']['status']) {
-                        $singleMenuItem['id'] = $menuItem['menuItem']['id'];
-                        $singleMenuItem['image'] = $menuItem['menuItem']['image'];
-                        $singleMenuItem['name'] = $menuItem['menuItem']['name'];
-                        $singleMenuItem['price'] = $menuItem['menuItem']['price'];
-                        $menuCategoryItemsResult [] = $singleMenuItem;
-                    }
-                } else if ($menuItem['menuItem']['is_verified']) {
-                    if($menuItem['menuItem']['status']) {
-                        $singleMenuItem['id'] = $menuItem['menuItem']['id'];
-                        $singleMenuItem['image'] = $menuItem['menuItem']['image'];
-                        $singleMenuItem['name'] = $menuItem['menuItem']['name'];
-                        $singleMenuItem['price'] = $menuItem['menuItem']['price'];
-                        $menuCategoryItemsResult [] = $singleMenuItem;
-                    }
-                }
-            }
-        }
-        return $menuCategoryItemsResult;
     }
 }
