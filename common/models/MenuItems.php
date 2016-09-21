@@ -452,12 +452,12 @@ class MenuItems extends \yii\db\ActiveRecord
 
     public static function getMenuItemForClient($menu_item_id) 
     {
-        $menuItem = self::find()->where(['id' => $menu_item_id])->one();
+        $menuItem = self::find()->where(['id' => $menu_item_id])->andWhere(['deleted_at' => null])->andWhere(['status' => 1])->one();
         if(empty($menuItem))
             return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
         
         $restaurant = MenuCategoryItem::find()->where(['menu_item_id' => $menu_item_id])->one();
-        if( (!$menuItem->status && !$menuItem->is_verified) || (!$menuItem->status && !$restaurant->menuCategory->restaurant->is_verified_global) )
+        if( !$menuItem->is_verified &&  !$restaurant->menuCategory->restaurant->is_verified_global)
             return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
         
         return Helpers::formatResponse(true, 'get success', $menuItem);
