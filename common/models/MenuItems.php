@@ -457,6 +457,8 @@ class MenuItems extends \yii\db\ActiveRecord
             return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
         
         $restaurant = MenuCategoryItem::find()->where(['menu_item_id' => $menu_item_id])->one();
+        if(empty($restaurant))
+            return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
         if( !$menuItem->is_verified &&  !$restaurant->menuCategory->restaurant->is_verified_global)
             return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
         
