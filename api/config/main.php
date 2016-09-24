@@ -124,6 +124,8 @@ return [
                         'GET,POST,PUT,DELETE restaurants/{id}' => 'restaurants',
                         'GET,POST,PUT,DELETE menu-items/{id}' => 'menu-items',
                         'GET,POST,PUT,DELETE cuisines' => 'cuisines',
+                        'GET,POST,PUT,DELETE address' => 'address',
+                        'GET,POST,PUT,DELETE address/{id}' => 'address',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

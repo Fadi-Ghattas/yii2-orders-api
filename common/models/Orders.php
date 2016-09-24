@@ -115,7 +115,7 @@ class Orders extends \yii\db\ActiveRecord
      */
     public function getAddress()
     {
-        return $this->hasOne(Addresses::className(), ['id' => 'address_id']);
+        return $this->hasOne(Addresses::className(), ['id' => 'address_id'])->where(['deleted_at' => null]);
     }
 
     /**
@@ -217,9 +217,9 @@ class Orders extends \yii\db\ActiveRecord
                         $customer_details['name'] = $this->client->user->username;
                         $customer_details['email'] = $this->client->user->email;
                         $customer_details['phone_number'] = $this->client->phone_number;
-                        $address = Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['is_default' => 1])->andWhere(['deleted_at' => null])->one()['address'];
+                        $address = Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['is_default' => 1])->andWhere(['deleted_at' => null])->one();
                         if(empty($address))
-                            $address = Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['deleted_at' => null])->orderBy('created_at DESC')->one()['address'];
+                            $address = Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['deleted_at' => null])->orderBy('created_at DESC')->one();
                         $customer_details['address'] = $address;
                         return $customer_details;
                     },

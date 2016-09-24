@@ -10,17 +10,18 @@ use common\models\User;
 
 class SignUpForm extends Model
 {
-    public $username;
+    public $full_name;
     public $email;
     public $password;
     public $status;
+    public $phone_number;
 
     public function rules()
     {
         return ArrayHelper::merge(
             parent::rules(),
             [
-                [['username', 'email', 'password'], 'required'],
+                [['full_name', 'email', 'password', 'phone_number'], 'required'],
                 ['status', 'default', 'value' => User::STATUS_ACTIVE],
                 ['status', 'in', 'range' => [User::STATUS_ACTIVE, User::STATUS_DELETED]],
                 ['email', 'email'],

@@ -2,8 +2,9 @@
 
 namespace common\models;
 
-use Yii;
 
+use Yii;
+use common\helpers\Helpers;
 /**
  * This is the model class for table "clients".
  *
@@ -28,6 +29,7 @@ use Yii;
  */
 class Clients extends \yii\db\ActiveRecord
 {
+    const SCENARIO_SIGN_UP_FACEBOOK = 'sign_up_facebook';
     /**
      * @inheritdoc
      */
@@ -44,7 +46,8 @@ class Clients extends \yii\db\ActiveRecord
         return [
             [['active', 'user_id', 'verified'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['user_id'], 'required'],
+            [['user_id', 'phone_number'], 'required' , 'on' => self::SCENARIO_DEFAULT],
+            [['user_id', 'image'], 'required' , 'on' => self::SCENARIO_SIGN_UP_FACEBOOK],
             [['phone_number', 'image'], 'string', 'max' => 255],
             [['phone_number'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],

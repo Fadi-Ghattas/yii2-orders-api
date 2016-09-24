@@ -25,7 +25,8 @@
             "kartik-v/yii2-builder": "*",
             "amass/yii2-bootstrap-panel-widget": "dev-master",
             "kartik-v/yii2-datecontrol": "@dev",
-            "udokmeci/yii2-phone-validator" : "*"
+            "udokmeci/yii2-phone-validator" : "*",
+            "facebook/graph-sdk": "^5.3"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
