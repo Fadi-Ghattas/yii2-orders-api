@@ -204,6 +204,10 @@ class Orders extends \yii\db\ActiveRecord
                     'total',
                     'total_with_voucher',
                     'commission_amount',
+                    'note',
+                    'delivery_fee' => function() {
+                      return $this->restaurant->delivery_fee;
+                    },
                     'status' => function () {
                         return $this->status->name;
                     },
@@ -243,7 +247,8 @@ class Orders extends \yii\db\ActiveRecord
                     },
                     'payment_method' => function () {
                         return $this->paymentMethod;
-                    }
+                    },
+                    'created_at',
                 ],
             ]
         );

@@ -139,7 +139,7 @@ class Addresses extends \yii\db\ActiveRecord
         if (empty($client_id))
             return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
 
-        $addresses = self::find()->where(['client_id' => $client_id])->andWhere(['deleted_at' => null])->all();
+        $addresses = self::find()->where(['client_id' => $client_id])->andWhere(['deleted_at' => null])->orderBy('is_default DESC')->all();
         if(empty($addresses))
             return Helpers::HttpException(404 ,'not found', ['error' => 'no address was found']);
 

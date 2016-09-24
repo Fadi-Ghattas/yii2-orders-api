@@ -71,7 +71,7 @@ class CommonController extends ActiveController
         foreach ($actions as $action => $verb) {
             if (in_array($action, $request_action)) {
                 if (!in_array(Yii::$app->getRequest()->getMethod(), $actions[$action]))
-                    throw new MethodNotAllowedHttpException("Method Not Allowed");
+                    return Helpers::HttpException(405, "Method Not Allowed", null);
             }
         }
         return parent::beforeAction($event);

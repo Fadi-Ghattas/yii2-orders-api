@@ -455,7 +455,7 @@ class MenuItems extends \yii\db\ActiveRecord
         $menuItem = self::find()->where(['id' => $menu_item_id])->andWhere(['deleted_at' => null])->andWhere(['status' => 1])->one();
         if(empty($menuItem))
             return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
-        
+
         $restaurant = MenuCategoryItem::find()->where(['menu_item_id' => $menu_item_id])->one();
         if(empty($restaurant))
             return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
