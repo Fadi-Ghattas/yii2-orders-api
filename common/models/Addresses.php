@@ -208,7 +208,7 @@ class Addresses extends \yii\db\ActiveRecord
             return Helpers::HttpException(404, 'deleted failed', ['error' => "This address dos't exist"]);
 
         $address->deleted_at = date('Y-m-d H:i:s');
-        $isUpdated = $address->save();
+        $isUpdated = $address->save(false);
 
         if (!$isUpdated)
             return Helpers::HttpException(422, 'deleted failed', null);
