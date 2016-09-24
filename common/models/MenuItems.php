@@ -404,7 +404,7 @@ class MenuItems extends \yii\db\ActiveRecord
 
                     if (!array_key_exists($ItemChoice['id'], $menuItemChoices)) {
 
-                        if (empty(MenuItems::getMenuItem($restaurant->id, $ItemChoice['id'])))
+                        if (empty(ItemChoices::getItemChoice($restaurant->id, $ItemChoice['id'])))
                             return Helpers::HttpException(404, 'update failed', ['error' => "There item choice dos't exist"]);
 
                         $menuItemChoice = new MenuItemChoice();
