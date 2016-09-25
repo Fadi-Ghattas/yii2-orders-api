@@ -11,6 +11,7 @@ namespace api\modules\v1\controllers;
 
 
 
+
 use Yii;
 use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\SignUpForm;
@@ -21,10 +22,10 @@ use common\models\Cuisines;
 use common\models\MenuItems;
 use common\models\Restaurants;
 use common\models\Addresses;
+use common\models\Clients;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
-use yii\web\MethodNotAllowedHttpException;
 use yii\helpers\ArrayHelper;
 
 class ClientController extends ActiveController
@@ -45,18 +46,6 @@ class ClientController extends ActiveController
             ]
         );
     }
-
-//    public function actions()
-//    {
-//        $actions = parent::actions();
-//        unset($actions['create']);
-//        unset($actions['update']);
-//        unset($actions['delete']);
-//        unset($actions['view']);
-//        unset($actions['index']);
-//        unset($actions['options']);
-//        return $actions;
-//    }
 
     public function actionSignUp()
     {
@@ -79,7 +68,7 @@ class ClientController extends ActiveController
             $new_user = User::NewBasicSignUp($sing_up_form->full_name, $sing_up_form->email, $sing_up_form->phone_number, $sing_up_form->password, User::CLIENT);
             if(!$new_user)
                 return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
-            return Helpers::formatResponse(true, 'sign up success', ['auth_key' => $new_user['auth_key']]);
+            return Helpers::formatResponse(true, 'sign up success',  $new_user->getUserClientFields());
         }
         return Helpers::HttpException(501,'not implemented', ['error' => 'Something went wrong, try again later or contact the admin.']);
     }
@@ -101,7 +90,7 @@ class ClientController extends ActiveController
             $user = User::Login($login_form->email, $login_form->password);
             if (!$user)
                 return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
-            return Helpers::formatResponse(true, 'log in success', ['auth_key' => $user['auth_key']]);
+            return Helpers::formatResponse(true, 'log in success', $user->getUserClientFields());
         }
         else if ($post_data['source'] == User::SOURCE_FACEBOOK)
         {
@@ -122,13 +111,24 @@ class ClientController extends ActiveController
                 $new_user = User::NewFacebookSignUp($fb_login_form->full_name, $fb_login_form->email, $fb_login_form->picture, $fb_login_form->facebook_id, User::CLIENT);
                 if(!$new_user)
                     return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
-                return Helpers::formatResponse(true, 'sign up success', ['auth_key' => $new_user['auth_key']]);
+                return Helpers::formatResponse(true, 'sign up success',  $new_user->getUserClientFields());
             }
 
             if(!$user->regGenerateAuthKey()){
                 return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
             }
-            return Helpers::formatResponse(true, 'log in success', ['auth_key' => $user['auth_key']]);
+
+            $client = Clients::findOne(['user_id' => $user]);
+            $client->setScenario(User::SCENARIO_SIGN_UP_FACEBOOK);
+            $client->image = $post_data['picture'];
+            $user->username = $post_data['full_name'];
+            $user->email = $post_data['email'];
+            if(!$user->save())
+                return Helpers::HttpException(422, 'validation failed', ['error' => $user->errors]);
+            if(!$client->save())
+                return Helpers::HttpException(422, 'validation failed', ['error' => $client->errors]);
+
+            return Helpers::formatResponse(true, 'log in success', $user->getUserClientFields());
         }
     }
     

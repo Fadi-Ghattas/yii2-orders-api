@@ -114,10 +114,10 @@ class Addresses extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
         }
     }
-    
+
     public function beforeSave($insert)
     {
         if (!$this->isNewRecord)
@@ -130,41 +130,37 @@ class Addresses extends \yii\db\ActiveRecord
 
     public static function getAddresses()
     {
-        $headers = Yii::$app->request->headers;
-        $authorization = explode(' ', $headers['authorization'])[1];
-        $ClientUser = User::findIdentityByAccessToken($authorization);
-        if (empty($ClientUser))
-            return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
-        $client_id = Clients::findOne(['user_id' => $ClientUser->id])->id;
-        if (empty($client_id))
-            return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
-
+        $client_id = Clients::checkClientAuthorization();
         $addresses = self::find()->where(['client_id' => $client_id])->andWhere(['deleted_at' => null])->orderBy('is_default DESC')->all();
-        if(empty($addresses))
-            return Helpers::HttpException(404 ,'not found', ['error' => 'no address was found']);
-
         return Helpers::formatResponse(true, 'get success', $addresses);
     }
 
     public static function getAddress($address_id)
     {
+        $client_id = Clients::checkClientAuthorization();
         $address = self::find()->where(['id' => $address_id])->andWhere(['deleted_at' => null])->one();
-        if(empty($address))
-            return Helpers::HttpException(404 ,'not found', ['error' => 'address was not found']);
+        if (!empty($address)) {
+            if ($address->client_id != $client_id)
+                return Helpers::HttpException(403, "forbidden", ['error' => "you don't have permission to do this action"]);
+        }
+        if (empty($address))
+            return Helpers::HttpException(404, 'deleted failed', ['error' => "This address dos't exist"]);
 
         return Helpers::formatResponse(true, 'get success', $address);
     }
 
     public static function createAddress($data)
     {
+        $client_id = Clients::checkClientAuthorization();
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
         try {
             $Address = new Addresses();
             $model['Addresses'] = $data;
             $Address->load($model);
+            $Address->client_id = $client_id;
             $Address->validate();
-            if($Address->is_default)
+            if ($Address->is_default)
                 $connection->createCommand()->update('addresses', ['is_default' => 0], 'client_id = ' . $Address->client_id)->execute();
             $Address->save();
             $transaction->commit();
@@ -177,6 +173,7 @@ class Addresses extends \yii\db\ActiveRecord
 
     public static function updateAddress($address_id, $data)
     {
+        $client_id = Clients::checkClientAuthorization();
         $address = self::find()->where(['id' => $address_id])->andWhere(['deleted_at' => null])->one();
 
         if (empty($address))
@@ -188,8 +185,9 @@ class Addresses extends \yii\db\ActiveRecord
         try {
             $model['Addresses'] = $data;
             $address->load($model);
+            $address->client_id = $client_id;
             $address->validate();
-            if($address->is_default)
+            if ($address->is_default)
                 $connection->createCommand()->update('addresses', ['is_default' => 0], 'client_id = ' . $address->client_id)->execute();
             $address->save();
             $transaction->commit();
@@ -202,8 +200,13 @@ class Addresses extends \yii\db\ActiveRecord
 
     public static function deleteAddress($address_id)
     {
+        $client_id = Clients::checkClientAuthorization();
         $address = self::find()->where(['id' => $address_id])->andWhere(['deleted_at' => null])->one();
 
+        if (!empty($address)) {
+            if ($address->client_id != $client_id)
+                return Helpers::HttpException(403, "forbidden", ['error' => "you don't have permission to do this action"]);
+        }
         if (empty($address))
             return Helpers::HttpException(404, 'deleted failed', ['error' => "This address dos't exist"]);
 
@@ -227,7 +230,7 @@ class Addresses extends \yii\db\ActiveRecord
             'postcode',
             'company',
             'label',
-            'area' => function(){
+            'area' => function () {
                 return $this->area;
             }
         ];

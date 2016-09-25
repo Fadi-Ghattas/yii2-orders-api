@@ -77,7 +77,7 @@ class Clients extends \yii\db\ActiveRecord
      */
     public function getAddresses()
     {
-        return $this->hasMany(Addresses::className(), ['client_id' => 'id']);
+        return $this->hasMany(Addresses::className(), ['client_id' => 'id'])->where(['deleted_at' => null])->orderBy('is_default DESC');
     }
 
     /**
@@ -153,6 +153,19 @@ class Clients extends \yii\db\ActiveRecord
         if ($this->hasErrors()) {
             return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
         }
+    }
+
+    public static function checkClientAuthorization()
+    {
+        $headers = Yii::$app->request->headers;
+        $authorization = explode(' ', $headers['authorization'])[1];
+        $ClientUser = User::findIdentityByAccessToken($authorization);
+        if (empty($ClientUser))
+            return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
+        $client_id = Clients::findOne(['user_id' => $ClientUser->id])->id;
+        if (empty($client_id))
+            return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
+        return $client_id;
     }
 
     public function beforeSave($insert)
