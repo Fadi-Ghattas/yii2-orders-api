@@ -8,10 +8,6 @@
 
 namespace api\modules\v1\controllers;
 
-
-
-
-
 use Yii;
 use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\SignUpForm;
@@ -234,4 +230,5 @@ class ClientController extends ActiveController
         }
         return parent::beforeAction($event);
     }
+
 }

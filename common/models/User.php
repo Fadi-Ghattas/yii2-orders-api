@@ -2,10 +2,12 @@
 namespace common\models;
 
 
+
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\helpers\ArrayHelper;
+use backend\models\Setting;
+use backend\models\SettingsForm;
 use yii\web\IdentityInterface;
 use common\helpers\Helpers;
 use Facebook\Facebook;
@@ -344,6 +346,11 @@ class User extends ActiveRecord implements IdentityInterface
          */
         $user = User::findOne(['email' => $email]);
 
+        $user_role = User::getRoleName($user->id);
+
+        if($user_role != self::CLIENT)
+            return Helpers::HttpException(403, "forbidden", ['error' => "You must sing up for client account first."]);
+
         if (!$user) {
             return Helpers::HttpException(422, 'validation failed', ['error' => 'Invalid email or password.']);
         }
@@ -368,8 +375,8 @@ class User extends ActiveRecord implements IdentityInterface
         while ($try <= 3) {
             try {
                 $facebook = new Facebook([
-                    'app_id' => '1103564746358121',
-                    'app_secret' => 'f08b8be34c3fa16c55453e7ab91f3718',
+                    'app_id' => Setting::getSettingValueByName(SettingsForm::FACEBOOK_APP_ID_KEY),
+                    'app_secret' => Setting::getSettingValueByName(SettingsForm::FACEBOOK_APP_SECRET),
                     'default_graph_version' => 'v2.7'
                 ]);
                 //LET ANDROID AND IOS MAKE SURE THAT THEY SEND access_token with email permissions
@@ -418,5 +425,6 @@ class User extends ActiveRecord implements IdentityInterface
             'addresses' => $client->addresses
         ];
     }
+
 }
 
