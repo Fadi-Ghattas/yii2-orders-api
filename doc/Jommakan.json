@@ -20,7 +20,10 @@
 				"fe616ab4-7570-9391-5ae6-be95023337ac",
 				"9c563379-6be6-12d5-d710-4b5a6772b854",
 				"d73050a6-6997-2290-4c26-502a60c72f31",
-				"854edb91-2a69-53fa-4b55-53f4c44b3f68"
+				"854edb91-2a69-53fa-4b55-53f4c44b3f68",
+				"d42acc61-db1f-031f-4c34-3b4e52fcf1c3",
+				"f3b42779-f1d3-6433-5276-a51107a39710",
+				"4464d4f1-d04b-0afe-36b7-b64b78cb42d8"
 			],
 			"owner": "262964",
 			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5"
@@ -96,7 +99,7 @@
 			"helperAttributes": {},
 			"time": 1474838405776,
 			"name": "Log In",
-			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n\r\n##### JSON Parameters:\r\n\r\n- ##### Basic Login:\r\n- source (string) (required) (\"basic\")\r\n- email (string) (required)\r\n- password (string) (required)\r\n\r\n\r\n- ##### FaceBook Login:\r\n- source (string) (required) (\"facebook\")\r\n- email (string) (required)\r\n- picture (string) (required)\r\n- facebook_id (string) (required)\r\n- access_token (string) (required)\r\n- ##### FaceBook Note:\r\n- You can get the picture from GET http://graph.facebook.com/[user_id]/picture?width=500&height=500\r\n- EX: GET http://graph.facebook.com/10208821137100233/picture?width=500&height=500\r\n\r\n##### Return:\r\n\r\n- 200 UserClient Object\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error",
+			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n\r\n##### JSON Parameters:\r\n\r\n- ##### Basic Login:\r\n- source (string) (required) (\"basic\")\r\n- email (string) (required)\r\n- password (string) (required)\r\n\r\n\r\n- ##### FaceBook Login:\r\n- source (string) (required) (\"facebook\")\r\n- email (string) (required)\r\n- picture (string) (required)\r\n- facebook_id (string) (required)\r\n- access_token (string) (required)\r\n- ##### FaceBook Note:\r\n- You can get the picture from GET http://graph.facebook.com/[user_id]/picture?width=500&height=500\r\n- EX: GET http://graph.facebook.com/10208821137100233/picture?width=500&height=500\r\n\r\n##### Return:\r\n\r\n- 200 UserClient Object\r\n- 403 Forbidden\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error",
 			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5",
 			"responses": [
 				{
@@ -670,6 +673,89 @@
 							}
 						],
 						"data": "{\n    \"source\":\"basic\",\n    \"email\":\"fadighattas10000@gmail.com\",\n    \"password\":\"123456\"\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 403,
+						"name": "Forbidden",
+						"detail": "The request was a legal request, but the server is refusing to respond to it. Unlike a 401 Unauthorized response, authenticating will make no difference."
+					},
+					"time": 907,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "103",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Mon, 26 Sep 2016 18:12:13 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"forbidden\",\"data\":[{\"error\":\"You must sing up for client account first.\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "393ca642-388f-b800-e900-b9b92d0e3a5c",
+					"name": "403",
+					"request": {
+						"url": " https://api.jommakan.asia/api/web/v1/clients/log-in",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							}
+						],
+						"data": "{\n    \"source\":\"basic\",\n    \"email\":\"fadi@gmail.com\",\n    \"password\":\"123456\"\n}",
 						"method": "POST",
 						"dataMode": "raw"
 					}
@@ -3789,6 +3875,373 @@
 			"responses": [],
 			"rawModeData": "",
 			"folder": "44b5c4dc-236e-724f-62e1-778fec2e0aa0"
+		},
+		{
+			"id": "4464d4f1-d04b-0afe-36b7-b64b78cb42d8",
+			"headers": "Content-Type: application/json\nAuthorization: Bearer dsYVrGO6wtsLIUA6NCWbJ4QCJuL_h7Bv\n",
+			"url": " https://api.jommakan.asia/api/web/v1/clients/sms-code",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1475244284490,
+			"name": "Send Verification Code By SMS To Client",
+			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key) (required) | Obtained from login\r\n\r\n##### Return:\r\n\r\n- 200 Code string\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error",
+			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5",
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 2764,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "89",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Fri, 30 Sep 2016 14:18:11 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"Verification code sent successfully\",\"data\":[{\"code\":\"9422\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "884666ac-dda5-975d-cab0-9ce9d3710991",
+					"name": "200",
+					"request": {
+						"url": " https://api.jommakan.asia/api/web/v1/clients/sms-code",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer dsYVrGO6wtsLIUA6NCWbJ4QCJuL_h7Bv",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"full_name\": \"Fadi Ghattasd\",\n      \"phone_number\": \"00000000\"\n}",
+						"method": "GET",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 405,
+						"name": "Method Not Allowed",
+						"detail": "A request was made of a resource using a request method not supported by that resource; for example, using GET on a form which requires data to be presented via POST, or using PUT on a read-only resource."
+					},
+					"time": 517,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "60",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Fri, 30 Sep 2016 14:18:34 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"Method Not Allowed\",\"data\":null}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "87cf379a-1e67-95d6-80f9-af2249f50200",
+					"name": "405",
+					"request": {
+						"url": " https://api.jommakan.asia/api/web/v1/clients/sms-code",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer dsYVrGO6wtsLIUA6NCWbJ4QCJuL_h7Bv",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"full_name\": \"Fadi Ghattasd\",\n      \"phone_number\": \"00000000\"\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 422,
+						"name": "Unprocessable entity",
+						"detail": "The request was well-formed but was unable to be followed due to semantic errors."
+					},
+					"time": 454,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "110",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Fri, 30 Sep 2016 14:18:54 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"validation failed\",\"data\":[{\"error\":\"please provide valid phone number first!!\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "9fb114aa-9b87-7fef-030d-537c73de1b4f",
+					"name": "422",
+					"request": {
+						"url": " https://api.jommakan.asia/api/web/v1/clients/sms-code",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer dsYVrGO6wtsLIUA6NCWbJ4QCJuL_h7Bv",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"full_name\": \"Fadi Ghattasd\",\n      \"phone_number\": \"00000000\"\n}",
+						"method": "GET",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 500,
+						"name": "Internal Server Error",
+						"detail": "A generic error message, given when no more specific message is suitable."
+					},
+					"time": 1588,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "close",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "122",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Fri, 30 Sep 2016 14:19:34 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"server error\",\"data\":[{\"error\":\"Something went wrong, try again later or contact the admin\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "edc3e18a-eab7-5f61-36c0-cc3dd20619cc",
+					"name": "500",
+					"request": {
+						"url": " https://api.jommakan.asia/api/web/v1/clients/sms-code",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer dsYVrGO6wtsLIUA6NCWbJ4QCJuL_h7Bv",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"full_name\": \"Fadi Ghattasd\",\n      \"phone_number\": \"00000000\"\n}",
+						"method": "GET",
+						"dataMode": "raw"
+					}
+				}
+			],
+			"rawModeData": "{\n\t\"full_name\": \"Fadi Ghattasd\",\n      \"phone_number\": \"00000000\"\n}"
 		},
 		{
 			"id": "4cf9f9cd-f9ff-5b67-7b03-20b370ff553c",
@@ -11340,6 +11793,115 @@
 			"folder": "a787500a-77b4-ab9c-c305-545180664ea0"
 		},
 		{
+			"id": "d42acc61-db1f-031f-4c34-3b4e52fcf1c3",
+			"headers": "Content-Type: application/json\nAuthorization: Bearer Sc6wyCju_wFyuZgAjYWsE6W_qthANmBW\n",
+			"url": " https://api.jommakan.asia/api/web/v1/clients",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1475029767090,
+			"name": "Get Client",
+			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key) (required) | Obtained from login\r\n\r\n##### Return:\r\n\r\n- 200 UserClient Object\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error\r\n- 501 Not Implemented",
+			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5",
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 9188,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "606",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Wed, 28 Sep 2016 01:53:55 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"get success\",\"data\":[{\"full_name\":\"Fadi Ghattasd\",\"email\":\"fadighattas100@gmail.com\",\"auth_key\":\"Sc6wyCju_wFyuZgAjYWsE6W_qthANmBW\",\"phone_number\":null,\"image\":\"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/923241_10200353897824543_637910534_n.jpg?oh=e33b5db9e55ed3f0dab6433d15efd0ba&oe=5885BCE7&__gda__=1484621695_a54122313d66e127e2366def0f15be90\",\"is_verified\":0,\"addresses\":[{\"id\":\"25\",\"is_default\":1,\"building_name\":\"building_name\",\"floor_unit\":\"4\",\"street_no\":\"5412\",\"postcode\":null,\"company\":null,\"label\":\"My Hous\",\"area\":{\"id\":\"92\",\"name\":\"Cyberjaya\"}}]}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "bcc150eb-1c8b-a333-f9ed-9e53ec2353b0",
+					"name": "200",
+					"request": {
+						"url": " https://api.jommakan.asia/api/web/v1/clients",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer Sc6wyCju_wFyuZgAjYWsE6W_qthANmBW",
+								"enabled": true
+							}
+						],
+						"data": "{\n    \"full_name\":\"Fadi Ghattas\",\n    \"email\":\"fadighattas100@gmail.com\",\n    \"password\":\"123456\",\n    \"phone_number\":\"099999998\"\n}",
+						"method": "GET",
+						"dataMode": "raw"
+					}
+				}
+			],
+			"rawModeData": "{\n\t\"full_name\": \"Fadi Ghattasd\",\n      \"phone_number\": \"00000000\"\n}"
+		},
+		{
 			"id": "d73050a6-6997-2290-4c26-502a60c72f31",
 			"headers": "Content-Type: application/json\nAuthorization: Bearer 8UVSFEcBSBxy1QBqRLFGvV20dF48RbWN\n",
 			"url": "https://api.jommakan.asia/api/web/v1/clients/address/24",
@@ -12668,6 +13230,205 @@
 			"responses": [],
 			"rawModeData": "{\n   \"delivery_fee\": \"2.00\",\n   \"areas\": [\n        {\n          \"id\": 89\n        },\n        {\n          \"id\": 154\n        }\n      ]\n}",
 			"folder": "44b5c4dc-236e-724f-62e1-778fec2e0aa0"
+		},
+		{
+			"id": "f3b42779-f1d3-6433-5276-a51107a39710",
+			"headers": "Content-Type: application/json\nAuthorization: Bearer Sc6wyCju_wFyuZgAjYWsE6W_qthANmBW\n",
+			"url": " https://api.jommakan.asia/api/web/v1/clients",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "PUT",
+			"collectionId": "bc26bbdb-0870-53e2-9c43-d3f747e575c5",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Update Client",
+			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key) (required) | Obtained from login\r\n\r\n##### Return:\r\n\r\n- 200 UserClient Object\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error\r\n- 501 Not Implemented",
+			"descriptionFormat": "html",
+			"time": 1475029538269,
+			"version": 2,
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 2590,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "615",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Wed, 28 Sep 2016 02:26:03 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=99",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"update success\",\"data\":[{\"full_name\":\"Fadi Ghattasd\",\"email\":\"fadighattas100@gmail.com\",\"auth_key\":\"Sc6wyCju_wFyuZgAjYWsE6W_qthANmBW\",\"phone_number\":\"00000000\",\"image\":\"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/923241_10200353897824543_637910534_n.jpg?oh=e33b5db9e55ed3f0dab6433d15efd0ba&oe=5885BCE7&__gda__=1484621695_a54122313d66e127e2366def0f15be90\",\"is_verified\":0,\"addresses\":[{\"id\":\"25\",\"is_default\":1,\"building_name\":\"building_name\",\"floor_unit\":\"4\",\"street_no\":\"5412\",\"postcode\":null,\"company\":null,\"label\":\"My Hous\",\"area\":{\"id\":\"92\",\"name\":\"Cyberjaya\"}}]}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "c6c9695a-27f8-57de-a7d6-307b7c416893",
+					"name": "200",
+					"request": {
+						"url": " https://api.jommakan.asia/api/web/v1/clients",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer Sc6wyCju_wFyuZgAjYWsE6W_qthANmBW",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"full_name\": \"Fadi Ghattasd\",\n      \"phone_number\": \"00000000\"\n}",
+						"method": "PUT",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 3275,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "615",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Wed, 28 Sep 2016 02:26:32 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"update success\",\"data\":[{\"full_name\":\"Fadi Ghattasd\",\"email\":\"fadighattas100@gmail.com\",\"auth_key\":\"Sc6wyCju_wFyuZgAjYWsE6W_qthANmBW\",\"phone_number\":\"00000000\",\"image\":\"https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/923241_10200353897824543_637910534_n.jpg?oh=e33b5db9e55ed3f0dab6433d15efd0ba&oe=5885BCE7&__gda__=1484621695_a54122313d66e127e2366def0f15be90\",\"is_verified\":1,\"addresses\":[{\"id\":\"25\",\"is_default\":1,\"building_name\":\"building_name\",\"floor_unit\":\"4\",\"street_no\":\"5412\",\"postcode\":null,\"company\":null,\"label\":\"My Hous\",\"area\":{\"id\":\"92\",\"name\":\"Cyberjaya\"}}]}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "17f54781-c803-7054-21f8-4c46b2778774",
+					"name": "200 is_verified",
+					"request": {
+						"url": " https://api.jommakan.asia/api/web/v1/clients",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer Sc6wyCju_wFyuZgAjYWsE6W_qthANmBW",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"is_verified\" : \"1\"\n}",
+						"method": "PUT",
+						"dataMode": "raw"
+					}
+				}
+			],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"folder": "69b4188e-edb9-18ae-21db-e537cdabf0d4",
+			"rawModeData": "{\n\t\"full_name\": \"Fadi Ghattasd\",\n      \"phone_number\": \"00000000\"\n}"
 		},
 		{
 			"id": "f565cd23-a5a5-0ba3-30ec-2e32fd4a93c8",

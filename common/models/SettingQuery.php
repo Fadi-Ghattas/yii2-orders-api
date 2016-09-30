@@ -1,6 +1,6 @@
 <?php
 
-namespace backend\models;
+namespace common\models;
 
 /**
  * This is the ActiveQuery class for [[Setting]].

@@ -12,7 +12,7 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/yii2"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": ">=2.0.6",
@@ -26,7 +26,8 @@
             "amass/yii2-bootstrap-panel-widget": "dev-master",
             "kartik-v/yii2-datecontrol": "@dev",
             "udokmeci/yii2-phone-validator" : "*",
-            "facebook/graph-sdk": "^5.3"
+            "facebook/graph-sdk": "^5.3",
+            "bryglen/yii2-twillio": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

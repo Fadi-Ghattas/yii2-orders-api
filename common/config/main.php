@@ -1,9 +1,17 @@
 <?php
+//use common\models\Setting;
+//use common\models\SettingsForm;
+
 return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
+        ],
+        'twillio' => [
+            'class' => 'bryglen\twillio\Twillio',
+            'sid' => 'AC6be9ed5be2fd7a4c51c4a91a1d0f89ba',
+            'token' => '9d5b4295f9dc4e7521249aa1905928bf',
         ],
         'formatter' => [
             'dateFormat' => 'd-M-Y',

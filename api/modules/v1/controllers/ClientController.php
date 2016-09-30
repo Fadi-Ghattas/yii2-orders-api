@@ -26,7 +26,19 @@ use yii\helpers\ArrayHelper;
 
 class ClientController extends ActiveController
 {
-    public $modelClass = '';
+    public $modelClass = 'common\models\User';
+
+    public function actions()
+    {
+        $actions = parent::actions();
+        unset($actions['create']);
+        unset($actions['update']);
+        unset($actions['delete']);
+        unset($actions['view']);
+        unset($actions['index']);
+        unset($actions['options']);
+        return $actions;
+    }
 
     public function behaviors()
     {
@@ -41,6 +53,19 @@ class ClientController extends ActiveController
                 ],
             ]
         );
+    }
+
+    public function actionIndex()
+    {
+        $client = Clients::getClientByAuthorization();
+        return Helpers::formatResponse(true, 'get success', $client->user->getUserClientFields());
+    }
+
+    public function actionOptions()
+    {
+        $post_data = Yii::$app->request->post();
+        $clientData = Clients::updateClient($post_data);
+        return Helpers::formatResponse(true, 'update success', $clientData);
     }
 
     public function actionSignUp()
@@ -209,10 +234,25 @@ class ClientController extends ActiveController
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
+    public function actionSmsCode()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if($request->isGet) {
+            if (empty($get_data)){
+                 return Clients::sendVerificationSmsCode();
+            }
+        }
+        return Helpers::HttpException(405, "Method Not Allowed", null);
+    }
+
     public function beforeAction($event)
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
         $actions = [
+            'index' => ['GET'],
+            'options' => ['PUT'],
             'sign-up' => ['POST'],
             'log-in' => ['POST'],
             'log-out' => ['POST'],
@@ -220,10 +260,11 @@ class ClientController extends ActiveController
             'menu-items' => ['GET'],
             'cuisines' => ['GET'],
             'address' => ['GET','PUT','POST','DELETE'],
+            'sms-code' => ['GET'],
         ];
 
         foreach ($actions as $action => $verb) {
-            if (in_array($action, $request_action)) {
+            if (in_array($action, $request_action) || $action == $event->id) {
                 if (!in_array(Yii::$app->getRequest()->getMethod(), $actions[$action]))
                     return Helpers::HttpException(405, "Method Not Allowed", null);
             }

@@ -30,13 +30,20 @@ return [
                         'message' => $response->statusText,
                         'data' => null
                     ];
-                } else if ($response->statusCode == 401) {
+                } else if ($response->statusCode == 400) {
                     $response->data = [
                         'success' => false,
-                        'message' => "Unauthorized",
-                        'data' => [['error' =>"You are requesting with an invalid credential"]]
+                        'message' => "Bad Request",
+                        'data' => [['error' => $response->data['message']]]
                     ];
                 }
+//                else if ($response->statusCode == 400) {
+//                    $response->data = [
+//                        'success' => false,
+//                        'message' => "Unauthorized",
+//                        'data' => [['error' => "You are requesting with an invalid credential"]]
+//                    ];
+//                }
             },
         ],
         'formatter' => [
@@ -126,6 +133,7 @@ return [
                         'GET,POST,PUT,DELETE cuisines' => 'cuisines',
                         'GET,POST,PUT,DELETE address' => 'address',
                         'GET,POST,PUT,DELETE address/{id}' => 'address',
+                        'GET,POST,PUT,DELETE sms-code' => 'sms-code',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
@@ -151,6 +159,3 @@ return [
     ],
     'params' => $params,
 ];
-
-
-

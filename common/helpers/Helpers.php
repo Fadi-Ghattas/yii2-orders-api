@@ -9,7 +9,14 @@
 namespace common\helpers;
 
 
+
+
+
+
+use Yii;
 use yii\web\Response;
+use common\models\Setting;
+use common\models\SettingsForm;
 
 class Helpers
 {
@@ -138,4 +145,25 @@ class Helpers
                 return 'UTC';
         }
     }
+
+    public static function generateRandomFourDigits(){
+        return rand(1000, 9999);
+    }
+    
+    public static function sendSms($message,$number)
+    {
+        try {
+            $twillio = Yii::$app->twillio;
+            $message = $twillio->getClient()->account->messages->sendMessage(
+                Setting::getSettingValueByName(SettingsForm::TWILLIO_NUMBER),
+                $number,
+                $message
+            );
+            return $message->body;
+        }catch (\Services_Twilio_RestException $e) {
+            //return $e->getMessage();
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later or contact the admin']);
+        }
+    }
+
 }
