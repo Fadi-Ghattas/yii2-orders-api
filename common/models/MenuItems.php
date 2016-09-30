@@ -339,9 +339,6 @@ class MenuItems extends \yii\db\ActiveRecord
 
             if (isset($data['addOns'])) {
 
-                if (empty($data['addOns']))
-                    return Helpers::HttpException(422, 'validation failed', ['error' => "addOns can't be blank"]);
-
                 $newAddons = $data['addOns'];
                 $menuItemAddons = $menuItem->menuItemAddons;
 
@@ -381,9 +378,6 @@ class MenuItems extends \yii\db\ActiveRecord
 
 
             if (isset($data['ItemChoices'])) {
-
-                if (empty($data['ItemChoices']))
-                    return Helpers::HttpException(422, 'validation failed', ['error' => "ItemChoices can't be blank"]);
 
                 $newItemChoices = $data['ItemChoices'];
                 $menuItemChoices = $menuItem->menuItemChoices;
