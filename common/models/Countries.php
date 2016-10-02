@@ -84,7 +84,9 @@ class Countries extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        return ['id', 'name'];
+        return ['id' => function(){
+            return (string)$this->id;
+        }, 'name'];
     }
 
     public function afterValidate()
