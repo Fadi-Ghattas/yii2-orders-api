@@ -37,13 +37,13 @@ return [
                         'data' => [['error' => $response->data['message']]]
                     ];
                 }
-//                else if ($response->statusCode == 400) {
-//                    $response->data = [
-//                        'success' => false,
-//                        'message' => "Unauthorized",
-//                        'data' => [['error' => "You are requesting with an invalid credential"]]
-//                    ];
-//                }
+                else if ($response->statusCode == 401) {
+                    $response->data = [
+                        'success' => false,
+                        'message' => "Unauthorized",
+                        'data' => [['error' => "You are requesting with an invalid credential"]]
+                    ];
+                }
             },
         ],
         'formatter' => [
