@@ -63,12 +63,7 @@ class States extends \yii\db\ActiveRecord
      */
     public function getAreas()
     {
-//        return $this->hasMany(Areas::className(), ['state_id' => 'id'])->select(['id', 'name'])->asArray()->all();
-        return $this->hasMany(Areas::className(), ['state_id' => 'id'])
-            ->where(['active' => 1])
-            ->andWhere(['deleted_at' => null])
-            ->select(['id', 'name'])
-            ->asArray()->all();
+        return $this->hasMany(Areas::className(), ['state_id' => 'id'])->where(['active' => 1])->andWhere(['deleted_at' => null]);
     }
 
     /**
