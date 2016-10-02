@@ -39,7 +39,7 @@ class Areas extends \yii\db\ActiveRecord
             [['name', 'state_id'], 'required'],
             [['state_id', 'active'], 'integer'],
             [['deleted_at', 'created_at', 'updated_at'], 'safe'],
-            [['name'], 'string', 'max' => 255],
+            [['name', 'state_id'], 'string', 'max' => 255],
             [['state_id'], 'exist', 'skipOnError' => true, 'targetClass' => States::className(), 'targetAttribute' => ['state_id' => 'id']],
         ];
     }
