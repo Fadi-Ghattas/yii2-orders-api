@@ -34,7 +34,7 @@ class PaymentMethods extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'status'], 'required'],
-            [['status'], 'integer'],
+            [['status'], 'boolean'],
             [['name'], 'string', 'max' => 255],
             [['name'], 'unique'],
         ];

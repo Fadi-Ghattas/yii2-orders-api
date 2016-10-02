@@ -39,9 +39,8 @@ class ItemChoices extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'status', 'restaurant_id'], 'required'],
-            [['status', 'restaurant_id'], 'integer'],
-            [['status'], 'boolean', 'trueValue' => 1, 'falseValue' => 0],
-            ['status', 'in', 'range' => [0, 1]],
+            [['restaurant_id'], 'integer'],
+            [['status'], 'boolean'],
             [['deleted_at', 'created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 255],
             [['restaurant_id'], 'exist', 'skipOnError' => true, 'targetClass' => Restaurants::className(), 'targetAttribute' => ['restaurant_id' => 'id']],

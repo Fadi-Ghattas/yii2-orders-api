@@ -134,6 +134,7 @@ return [
                         'GET,POST,PUT,DELETE address' => 'address',
                         'GET,POST,PUT,DELETE address/{id}' => 'address',
                         'GET,POST,PUT,DELETE sms-code' => 'sms-code',
+                        'GET,POST,PUT,DELETE rest-password' => 'rest-password',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

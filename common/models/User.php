@@ -419,8 +419,8 @@ class User extends ActiveRecord implements IdentityInterface
             'full_name' => (string)$this->username,
             'email' => (string)$this->email,
             'auth_key' => (string)$this->auth_key,
-            'phone_number' => (string)$client->phone_number,
-            'image' => (string)$client->image,
+            'phone_number' => (!empty($client->phone_number) ? (string)$client->phone_number : null),
+            'image' => (!empty($this->image) ? (string)$this->image : null),
             'is_verified' => (bool)$client->verified,
             'addresses' => $client->addresses
         ];

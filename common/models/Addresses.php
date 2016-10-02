@@ -48,7 +48,8 @@ class Addresses extends \yii\db\ActiveRecord
     {
         return [
             [['client_id', 'area_id', 'building_name', 'floor_unit', 'street_no', 'label'], 'required'],
-            [['client_id', 'area_id', 'is_default'], 'integer'],
+            [['client_id', 'area_id'], 'integer'],
+            [['is_default'], 'boolean'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['building_name', 'floor_unit', 'street_no', 'postcode', 'company', 'label'], 'string', 'max' => 255],
             [['area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Areas::className(), 'targetAttribute' => ['area_id' => 'id']],
@@ -238,10 +239,10 @@ class Addresses extends \yii\db\ActiveRecord
                 return (string)$this->street_no;
             },
             'postcode' => function () {
-                return (string)$this->postcode;
+                return (!empty($this->postcode) ? (string)$this->postcode : null);
             },
             'company' => function () {
-                return (string)$this->company;
+                return (!empty($this->company) ? (string)$this->company : null);
             },
             'label' => function () {
                 return (string)$this->label;

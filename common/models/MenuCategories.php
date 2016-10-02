@@ -139,11 +139,11 @@ class MenuCategories extends \yii\db\ActiveRecord
         foreach ($menuCategoryItems[0]['menuCategoryItems'] as $menuItem) {
             if (!empty($menuItem['menuItem'])) {
                 $singleMenuItem = array();
-                $singleMenuItem['id'] = $menuItem['menuItem']['id'];
-                $singleMenuItem['name'] = $menuItem['menuItem']['name'];
-                $singleMenuItem['price'] = $menuItem['menuItem']['price'];
-                $singleMenuItem['status'] = $menuItem['menuItem']['status'];
-                $singleMenuItem['is_verified'] = $menuItem['menuItem']['is_verified'];
+                $singleMenuItem['id'] = (int)$menuItem['menuItem']['id'];
+                $singleMenuItem['name'] = (string)$menuItem['menuItem']['name'];
+                $singleMenuItem['price'] = (double)$menuItem['menuItem']['price'];
+                $singleMenuItem['status'] = (bool)$menuItem['menuItem']['status'];
+                $singleMenuItem['is_verified'] = (bool)$menuItem['menuItem']['is_verified'];
                 $menuItems[] = $singleMenuItem;
             }
         }
@@ -268,6 +268,8 @@ class MenuCategories extends \yii\db\ActiveRecord
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
         if (in_array('clients', $request_action) && Yii::$app->request->isGet && isset(Yii::$app->request->get()['id'])) {
             return $this->scenarios()[self::SCENARIO_GET_DETAILS_BY_CLIENT];
+        } else {
+            return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
         }
         return parent::fields();
     }

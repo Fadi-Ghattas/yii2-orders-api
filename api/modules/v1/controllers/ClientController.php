@@ -46,7 +46,13 @@ class ClientController extends ActiveController
             parent::behaviors(), [
                 'authenticator' => [
                     'class' => CompositeAuth::className(),
-                    'except' => ['sign-up', 'log-in', 'facebook-login', 'restaurants', 'menu-items', 'cuisines'],
+                    'except' => ['sign-up',
+                        'log-in',
+                        'facebook-login',
+                        'restaurants',
+                        'menu-items',
+                        'cuisines',
+                        'rest-password'],
                     'authMethods' => [
                         HttpBearerAuth::className(),
                     ],
@@ -87,22 +93,22 @@ class ClientController extends ActiveController
         }
         if (!$user) {
             $new_user = User::NewBasicSignUp($sing_up_form->full_name, $sing_up_form->email, $sing_up_form->phone_number, $sing_up_form->password, User::CLIENT);
-            if(!$new_user)
+            if (!$new_user)
                 return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
-            return Helpers::formatResponse(true, 'sign up success',  $new_user->getUserClientFields());
+            return Helpers::formatResponse(true, 'sign up success', $new_user->getUserClientFields());
         }
-        return Helpers::HttpException(501,'not implemented', ['error' => 'Something went wrong, try again later or contact the admin.']);
+        return Helpers::HttpException(501, 'not implemented', ['error' => 'Something went wrong, try again later or contact the admin.']);
     }
 
     public function actionLogIn()
     {
         $post_data = Yii::$app->request->post();
-        if(!isset($post_data['source']))
+        if (!isset($post_data['source']))
             return Helpers::HttpException(422, 'validation failed', ['error' => "source is required"]);
-        if(empty($post_data['source']))
+        if (empty($post_data['source']))
             return Helpers::HttpException(422, 'validation failed', ['error' => "source can't be blank"]);
 
-        if($post_data['source'] == User::SOURCE_BASIC) {
+        if ($post_data['source'] == User::SOURCE_BASIC) {
             $login_form = new LoginForm();
             $login_form->setAttributes($post_data);
             if (!$login_form->validate()) {
@@ -112,9 +118,7 @@ class ClientController extends ActiveController
             if (!$user)
                 return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
             return Helpers::formatResponse(true, 'log in success', $user->getUserClientFields());
-        }
-        else if ($post_data['source'] == User::SOURCE_FACEBOOK)
-        {
+        } else if ($post_data['source'] == User::SOURCE_FACEBOOK) {
             $fb_login_form = new FacebookLoginForm();
             $fb_login_form->setAttributes($post_data);
 
@@ -125,17 +129,17 @@ class ClientController extends ActiveController
             $user = User::findOne(['email' => $fb_login_form->email]);
 
             $fb_verify = User::VerifyFB($fb_login_form->email, $fb_login_form->facebook_id, $fb_login_form->access_token);
-            if(!$fb_verify)
+            if (!$fb_verify)
                 return Helpers::HttpException(422, 'facebook validation failed', ['error' => 'facebook id or email verification failed']);
 
             if (!$user) {
                 $new_user = User::NewFacebookSignUp($fb_login_form->full_name, $fb_login_form->email, $fb_login_form->picture, $fb_login_form->facebook_id, User::CLIENT);
-                if(!$new_user)
+                if (!$new_user)
                     return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
-                return Helpers::formatResponse(true, 'sign up success',  $new_user->getUserClientFields());
+                return Helpers::formatResponse(true, 'sign up success', $new_user->getUserClientFields());
             }
 
-            if(!$user->regGenerateAuthKey()){
+            if (!$user->regGenerateAuthKey()) {
                 return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
             }
 
@@ -144,25 +148,25 @@ class ClientController extends ActiveController
             $client->image = $post_data['picture'];
             $user->username = $post_data['full_name'];
             $user->email = $post_data['email'];
-            if(!$user->save())
+            if (!$user->save())
                 return Helpers::HttpException(422, 'validation failed', ['error' => $user->errors]);
-            if(!$client->save())
+            if (!$client->save())
                 return Helpers::HttpException(422, 'validation failed', ['error' => $client->errors]);
 
             return Helpers::formatResponse(true, 'log in success', $user->getUserClientFields());
         }
     }
-    
+
     public function actionLogOut()
     {
         $headers = Yii::$app->getRequest()->getHeaders();
 
         $clientUser = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
         if (empty($clientUser))
-            return Helpers::HttpException(404 ,'not found', ['error' => 'user not found']);
+            return Helpers::HttpException(404, 'not found', ['error' => 'user not found']);
 
         $clientUser->auth_key = '';
-        if(!$clientUser->save(false))
+        if (!$clientUser->save(false))
             return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
 
         return Helpers::formatResponse(true, 'log out success', null);
@@ -172,11 +176,11 @@ class ClientController extends ActiveController
     {
         $request = Yii::$app->request;
         $get_data = $request->get();
-        
-        if($request->isGet) {
-            if(!isset($get_data['id']))
+
+        if ($request->isGet) {
+            if (!isset($get_data['id']))
                 return Restaurants::getRestaurants();
-            else if(!empty($get_data) && isset($get_data['id']))
+            else if (!empty($get_data) && isset($get_data['id']))
                 return Restaurants::getRestaurantDetails($get_data['id']);
         }
 
@@ -188,8 +192,8 @@ class ClientController extends ActiveController
         $request = Yii::$app->request;
         $get_data = $request->get();
 
-        if($request->isGet) {
-            if(!isset($get_data['id']))
+        if ($request->isGet) {
+            if (!isset($get_data['id']))
                 return Cuisines::getCuisines();
         }
 
@@ -201,8 +205,8 @@ class ClientController extends ActiveController
         $request = Yii::$app->request;
         $get_data = $request->get();
 
-        if($request->isGet) {
-            if(!empty($get_data) && isset($get_data['id']))
+        if ($request->isGet) {
+            if (!empty($get_data) && isset($get_data['id']))
                 return MenuItems::getMenuItemForClient($get_data['id']);
         }
 
@@ -214,20 +218,20 @@ class ClientController extends ActiveController
         $request = Yii::$app->request;
         $get_data = $request->get();
 
-        if($request->isGet) {
+        if ($request->isGet) {
             if (empty($get_data))
                 return Addresses::getAddresses();
             else if (!empty($get_data) && isset($get_data['id']))
                 return Addresses::getAddress($get_data['id']);
-        } else if($request->isPost && empty($get_data)) {
-            if(empty($request->post()))
-                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+        } else if ($request->isPost && empty($get_data)) {
+            if (empty($request->post()))
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
             return Addresses::createAddress($request->post());
-        } else if($request->isPut && !empty($get_data)) {
-            if(empty($request->post()))
-                return Helpers::HttpException(422,'validation failed', ['error' => 'please provide data']);
+        } else if ($request->isPut && !empty($get_data)) {
+            if (empty($request->post()))
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
             return Addresses::updateAddress($get_data['id'], $request->post());
-        } else if($request->isDelete && !empty($get_data)){
+        } else if ($request->isDelete && !empty($get_data)) {
             return Addresses::deleteAddress($get_data['id']);
         }
 
@@ -239,9 +243,20 @@ class ClientController extends ActiveController
         $request = Yii::$app->request;
         $get_data = $request->get();
 
-        if($request->isGet) {
-            if (empty($get_data)){
-                 return Clients::sendVerificationSmsCode();
+        if ($request->isGet) {
+            return Clients::sendVerificationSmsCode();
+        }
+        return Helpers::HttpException(405, "Method Not Allowed", null);
+    }
+
+    public function actionRestPassword()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if ($request->isGet) {
+            if (empty($get_data)) {
+                return Clients::resetPassword($request->post());
             }
         }
         return Helpers::HttpException(405, "Method Not Allowed", null);
@@ -259,8 +274,9 @@ class ClientController extends ActiveController
             'restaurants' => ['GET'],
             'menu-items' => ['GET'],
             'cuisines' => ['GET'],
-            'address' => ['GET','PUT','POST','DELETE'],
+            'address' => ['GET', 'PUT', 'POST', 'DELETE'],
             'sms-code' => ['GET'],
+            'rest-password' => ['POST'],
         ];
 
         foreach ($actions as $action => $verb) {

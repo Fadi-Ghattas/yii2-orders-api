@@ -42,9 +42,8 @@ class Addons extends \yii\db\ActiveRecord
         return [
             [['name', 'status', 'restaurant_id'], 'required'],
             [['price'], 'number'],
-            [['status', 'restaurant_id'], 'integer'],
-            [['status'], 'boolean', 'trueValue' => 1, 'falseValue' => 0],
-            ['status', 'in', 'range' => [0, 1]],
+            [['restaurant_id'], 'integer'],
+            [['status'], 'boolean'],
             [['name', 'description', 'image'], 'string', 'max' => 255],
             [['restaurant_id'], 'exist', 'skipOnError' => true, 'targetClass' => Restaurants::className(), 'targetAttribute' => ['restaurant_id' => 'id']],
         ];
@@ -217,7 +216,7 @@ class Addons extends \yii\db\ActiveRecord
                 return (string)$this->name;
             },
             'description' => function () {
-                return (string)$this->description;
+                return (!empty($this->description) ? (string)$this->description : null);
             },
             'price' => function () {
                 return (float)$this->price;

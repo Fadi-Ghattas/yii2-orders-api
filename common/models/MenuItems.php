@@ -53,7 +53,8 @@ class MenuItems extends \yii\db\ActiveRecord
         return [
             [['name', 'description', 'price', 'status', 'is_taxable'], 'required'],
             [['price'], 'number'],
-            [['status', 'discount', 'is_taxable', 'is_verified'], 'integer'],
+            [['is_taxable', 'is_verified'], 'boolean'],
+            [['status', 'discount'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at', 'name'], 'safe'],
             [['name', 'description', 'image'], 'string', 'max' => 255],
         ];
@@ -518,7 +519,7 @@ class MenuItems extends \yii\db\ActiveRecord
                         return (string)$this->name;
                     },
                     'image' => function () {
-                        return (string)$this->image;
+                        return (!empty($this->image) ? (string)$this->image : null);
                     },
                     'price' => function () {
                         return (float)$this->price;
@@ -557,7 +558,7 @@ class MenuItems extends \yii\db\ActiveRecord
                         return (string)$this->name;
                     },
                     'image' => function () {
-                        return (string)$this->image;
+                        return (!empty($this->image) ? (string)$this->image : null);
                     },
                     'price' => function () {
                         return (float)$this->price;

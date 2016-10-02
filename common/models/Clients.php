@@ -3,6 +3,7 @@
 namespace common\models;
 
 
+use api\modules\v1\models\RestPasswordForm;
 use Yii;
 use common\helpers\Helpers;
 
@@ -46,11 +47,12 @@ class Clients extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['active', 'user_id', 'verified'], 'integer'],
+            [['active', 'user_id'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['user_id', 'phone_number'], 'required', 'on' => self::SCENARIO_DEFAULT],
             [['user_id', 'image'], 'required', 'on' => self::SCENARIO_SIGN_UP_FACEBOOK],
             [['phone_number', 'image'], 'string', 'max' => 255],
+            [['verified'], 'boolean'],
             [['phone_number'], 'unique'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -221,8 +223,14 @@ class Clients extends \yii\db\ActiveRecord
             return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide valid phone number first!!']);
 
         $code = Helpers::sendSms(Helpers::generateRandomFourDigits(), $client->phone_number);
-        $code = str_replace("Sent from your Twilio trial account -", '', $code);
-        return Helpers::formatResponse(true, 'Verification code sent successfully', ['code' => trim($code)]);
+        $code = str_replace("Sent from your Twilio trial account -", '', trim($code));
+        return Helpers::formatResponse(true, 'Verification code sent successfully', ['code' => (int)$code]);
+    }
+
+    public static function resetPassword($data)
+    {
+        $rest_password_form = new RestPasswordForm();
+        $rest_password_form->setAttributes($data);
     }
 
     public function beforeSave($insert)
@@ -248,10 +256,10 @@ class Clients extends \yii\db\ActiveRecord
                 return (bool)$this->verified;
             },
             'phone_number' => function () {
-                return (string)$this->phone_number;
+                return (!empty($this->phone_number) ? (string)$this->phone_number : null);
             },
             'image' => function () {
-                return (string)$this->image;
+                return (!empty($this->image) ? (string)$this->image : null);
             },
             'email' => function () {
                 return (string)$this->user->email;

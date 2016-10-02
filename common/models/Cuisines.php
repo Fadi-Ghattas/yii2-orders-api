@@ -94,7 +94,7 @@ class Cuisines extends \yii\db\ActiveRecord
         }, 'name' => function () {
             return (string)$this->name;
         }, 'image' => function () {
-            return (string)$this->image;
+            return (!empty($this->image) ? (string)$this->image : null);
         }];
     }
 

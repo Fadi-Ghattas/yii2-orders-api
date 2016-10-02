@@ -98,7 +98,8 @@ class Restaurants extends \yii\db\ActiveRecord
             [['name', 'minimum_order_amount', 'time_order_open', 'time_order_close', 'delivery_fee', 'rank', 'halal', 'featured', 'working_opening_hours', 'working_closing_hours', 'disable_ordering', 'delivery_duration', 'phone_number', 'owner_number', 'country_id', 'longitude', 'latitude', 'image', 'status', 'user_id'], 'required'],
             [['minimum_order_amount', 'delivery_fee', 'rank', 'longitude', 'latitude'], 'number'],
             [['res_status', 'reviews_rank', 'favour_it', 'action', 'time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
-            [['halal', 'featured', 'disable_ordering', 'delivery_duration', 'status', 'user_id', 'is_verified_global', 'country_id'], 'integer'],
+            [[ 'delivery_duration', 'user_id', 'is_verified_global', 'country_id'], 'integer'],
+            [['disable_ordering' , 'halal', 'featured', 'status'], 'boolean'],
             [['name', 'phone_number', 'owner_number', 'image', 'image_background'], 'string', 'max' => 255],
             [['working_opening_hours', 'working_closing_hours', 'time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -457,10 +458,10 @@ class Restaurants extends \yii\db\ActiveRecord
                         return (double)$this->latitude;
                     },
                     'image' => function () {
-                        return (string)$this->image;
+                        return (!empty($this->image) ? (string)$this->image : null);
                     },
                     'image_background' => function () {
-                        return (string)$this->image_background;
+                        return (!empty($this->image_background) ? (string)$this->image_background : null);
                     },
                     'country_id' => function () {
                         return (int)$this->country_id;
@@ -491,7 +492,7 @@ class Restaurants extends \yii\db\ActiveRecord
                         return (string)$this->name;
                     },
                     'image' => function () {
-                        return (string)$this->image;
+                        return (!empty($this->image) ? (string)$this->image : null);
                     },
                     'minimum_order_amount' => function () {
                         return (float)$this->minimum_order_amount;
@@ -534,10 +535,10 @@ class Restaurants extends \yii\db\ActiveRecord
                         return (string)$this->getRestaurantsStatus($this->res_status);
                     },
                     'image' => function () {
-                        return (string)$this->image;
+                        return (!empty($this->image) ? (string)$this->image : null);
                     },
                     'image_background' => function () {
-                        return (string)$this->image_background;
+                        return (!empty($this->image_background) ? (string)$this->image_background : null);
                     },
                     'minimum_order_amount' => function () {
                         return (float)$this->minimum_order_amount;
