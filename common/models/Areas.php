@@ -39,7 +39,7 @@ class Areas extends \yii\db\ActiveRecord
             [['name', 'state_id'], 'required'],
             [['state_id', 'active'], 'integer'],
             [['deleted_at', 'created_at', 'updated_at'], 'safe'],
-            [['name', 'state_id'], 'string', 'max' => 255],
+            [['name'], 'string', 'max' => 255],
             [['state_id'], 'exist', 'skipOnError' => true, 'targetClass' => States::className(), 'targetAttribute' => ['state_id' => 'id']],
         ];
     }
@@ -104,12 +104,15 @@ class Areas extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
         }
     }
-    
+
     public function fields()
     {
-        return ['id','name'];
+        return ['id' => function () {
+            return (string)$this->id;
+        }
+            , 'name'];
     }
 }
