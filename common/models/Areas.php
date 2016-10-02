@@ -110,9 +110,6 @@ class Areas extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        return ['id' => function () {
-            return (string)$this->id;
-        }
-            , 'name'];
+        return ['id', 'name'];
     }
 }

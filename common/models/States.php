@@ -102,7 +102,7 @@ class States extends \yii\db\ActiveRecord
         $States = self::find()->where(['country_id' => $headers['country_id']])->all();
         $StatesResult = array();
         foreach ($States as $State) {
-            if(!empty($State->areas))
+            if (!empty($State->areas))
                 $StatesResult [] = $State;
         }
         return Helpers::formatResponse(true, 'get success', $StatesResult);
@@ -127,15 +127,17 @@ class States extends \yii\db\ActiveRecord
 
     public function fields()
     {
-            return [
-                'id',
-                'name',
-                'country' => function () {
-                    return $this->country;
-                },
-                'areas' => function () {
-                    return $this->areas;
-                }
-            ];
+        return [
+            'id' => function () {
+                return (string)$this->id;
+            },
+            'name',
+            'country' => function () {
+                return $this->country;
+            },
+            'areas' => function () {
+                return $this->areas;
+            }
+        ];
     }
 }
