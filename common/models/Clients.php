@@ -221,7 +221,7 @@ class Clients extends \yii\db\ActiveRecord
             return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide valid phone number first!!']);
 
         $code = Helpers::sendSms(Helpers::generateRandomFourDigits(), $client->phone_number);
-        $code = str_replace("Sent from your Twilio trial account -", '' ,$code);
+        $code = str_replace("Sent from your Twilio trial account -", '', $code);
         return Helpers::formatResponse(true, 'Verification code sent successfully', ['code' => trim($code)]);
     }
 
@@ -238,16 +238,26 @@ class Clients extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-            'id',
-            'active',
-            'verified',
-            'phone_number',
-            'image',
+            'id' => function () {
+                return (int)$this->id;
+            },
+            'active' => function () {
+                return (bool)$this->active;
+            },
+            'verified' => function () {
+                return (bool)$this->verified;
+            },
+            'phone_number' => function () {
+                return (string)$this->phone_number;
+            },
+            'image' => function () {
+                return (string)$this->image;
+            },
             'email' => function () {
-                return $this->user->email;
+                return (string)$this->user->email;
             },
             'name' => function () {
-                return $this->user->username;
+                return (string)$this->user->username;
             }
         ];
 

@@ -405,28 +405,66 @@ class Restaurants extends \yii\db\ActiveRecord
             parent::scenarios(),
             [
                 self::SCENARIO_GET_BY_RESTAURANTS_MANGER => [
-                    'id',
-                    'name',
-                    'email' => function () {
-                        return $this->user->email;
+                    'id' => function () {
+                        return (int)$this->id;
                     },
-                    'phone_number',
-                    'owner_number',
-                    'minimum_order_amount',
-                    'working_opening_hours',
-                    'working_closing_hours',
-                    'time_order_open',
-                    'time_order_close',
-                    'delivery_fee',
-                    'halal',
-                    'featured',
-                    'disable_ordering',
-                    'delivery_duration',
-                    'longitude',
-                    'latitude',
-                    'image',
-                    'image_background',
-                    'country_id',
+                    'name' => function () {
+                        return (string)$this->name;
+                    },
+                    'email' => function () {
+                        return (string)$this->user->email;
+                    },
+                    'phone_number' => function () {
+                        return (string)$this->phone_number;
+                    },
+                    'owner_number' => function () {
+                        return (string)$this->owner_number;
+                    },
+                    'minimum_order_amount' => function () {
+                        return (float)$this->minimum_order_amount;
+                    },
+                    'working_opening_hours' => function () {
+                        return (string)$this->working_opening_hours;
+                    },
+                    'working_closing_hours' => function () {
+                        return (string)$this->working_closing_hours;
+                    },
+                    'time_order_open' => function () {
+                        return (string)$this->time_order_open;
+                    },
+                    'time_order_close' => function () {
+                        return (string)$this->time_order_close;
+                    },
+                    'delivery_fee' => function () {
+                        return (float)$this->delivery_fee;
+                    },
+                    'halal' => function () {
+                        return (bool)$this->halal;
+                    },
+                    'featured' => function () {
+                        return (bool)$this->featured;
+                    },
+                    'disable_ordering' => function () {
+                        return (bool)$this->disable_ordering;
+                    },
+                    'delivery_duration' => function () {
+                        return (int)$this->delivery_fee;
+                    },
+                    'longitude' => function () {
+                        return (double)$this->longitude;
+                    },
+                    'latitude' => function () {
+                        return (double)$this->latitude;
+                    },
+                    'image' => function () {
+                        return (string)$this->image;
+                    },
+                    'image_background' => function () {
+                        return (string)$this->image_background;
+                    },
+                    'country_id' => function () {
+                        return (int)$this->country_id;
+                    },
                     'areas' => function () {
                         return $this->areas;
                     },
@@ -437,8 +475,8 @@ class Restaurants extends \yii\db\ActiveRecord
                         $paymentMethodRestaurants = array();
                         foreach ($this->paymentMethodRestaurants as $payment_method) {
                             $single_payment_method = array();
-                            $single_payment_method['id'] = $payment_method->paymentMethod->id;
-                            $single_payment_method['name'] = $payment_method->paymentMethod->name;
+                            $single_payment_method['id'] = (int)$payment_method->paymentMethod->id;
+                            $single_payment_method['name'] = (string)$payment_method->paymentMethod->name;
                             $paymentMethodRestaurants [] = $single_payment_method;
                         }
                         return $paymentMethodRestaurants;
@@ -446,24 +484,39 @@ class Restaurants extends \yii\db\ActiveRecord
                 ],
 
                 self::SCENARIO_GET_BY_CLIENT => [
-                    'id',
-                    'name',
-                    'image',
-                    'minimum_order_amount',
-                    'delivery_duration',
-                    'res_status' => function () {
-                        return $this->getRestaurantsStatus($this->res_status);
+                    'id' => function () {
+                        return (int)$this->id;
                     },
-                    'reviews_rank',
-                    'favour_it',
-                    'halal',
+                    'name' => function () {
+                        return (string)$this->name;
+                    },
+                    'image' => function () {
+                        return (string)$this->image;
+                    },
+                    'minimum_order_amount' => function () {
+                        return (float)$this->minimum_order_amount;
+                    },
+                    'delivery_duration' => function () {
+                        return (int)$this->delivery_fee;
+                    },
+                    'res_status' => function () {
+                        return (string)$this->getRestaurantsStatus($this->res_status);
+                    },
+                    'reviews_rank' => function () {
+                        return (float)$this->reviews_rank;
+                    },
+                    'favour_it' => function () {
+                        return (bool)$this->favour_it;
+                    },
+                    'halal' => function () {
+                        return (bool)$this->halal;
+                    },
                     'cuisine' => function () {
                         return $this->cuisines;
                     },
                     'paymentMethods' => function () {
                         $paymentMethods = array();
-                        foreach ($this->paymentMethodRestaurants as $paymentMethod)
-                        {
+                        foreach ($this->paymentMethodRestaurants as $paymentMethod) {
                             $paymentMethods [] = $paymentMethod->paymentMethod;
                         }
                         return $paymentMethods;
@@ -471,25 +524,57 @@ class Restaurants extends \yii\db\ActiveRecord
                 ],
 
                 self::SCENARIO_GET_DETAILS_BY_CLIENT => [
-                    'id',
-                    'name',
-                    'res_status' => function () {
-                        return $this->getRestaurantsStatus($this->res_status);
+                    'id' => function () {
+                        return (int)$this->id;
                     },
-                    'image',
-                    'image_background',
-                    'minimum_order_amount',
-                    'delivery_duration',
-                    'delivery_fee',
-                    'halal',
-                    'time_order_open',
-                    'time_order_close',
-                    'working_opening_hours',
-                    'working_closing_hours',
-                    'reviews_rank',
-                    'favour_it',
-                    'longitude',
-                    'latitude',
+                    'name' => function () {
+                        return (string)$this->name;
+                    },
+                    'res_status' => function () {
+                        return (string)$this->getRestaurantsStatus($this->res_status);
+                    },
+                    'image' => function () {
+                        return (string)$this->image;
+                    },
+                    'image_background' => function () {
+                        return (string)$this->image_background;
+                    },
+                    'minimum_order_amount' => function () {
+                        return (float)$this->minimum_order_amount;
+                    },
+                    'delivery_duration' => function () {
+                        return (int)$this->delivery_fee;
+                    },
+                    'delivery_fee' => function () {
+                        return (float)$this->delivery_fee;
+                    },
+                    'halal' => function () {
+                        return (bool)$this->halal;
+                    },
+                    'time_order_open' => function () {
+                        return (string)$this->time_order_open;
+                    },
+                    'time_order_close' => function () {
+                        return (string)$this->time_order_close;
+                    },
+                    'working_opening_hours' => function () {
+                        return (string)$this->working_opening_hours;
+                    },
+                    'working_closing_hours' => function () {
+                        return (string)$this->working_closing_hours;
+                    },
+                    'reviews_rank' => function () {
+                        return (float)$this->reviews_rank;
+                    },
+                    'favour_it' => function () {
+                        return (bool)$this->favour_it;
+                    },
+                    'longitude' => function () {
+                        return (double)$this->longitude;
+                    },
+                    'latitude' => function () {
+                        return (double)$this->latitude;
+                    },
                     'cuisine' => function () {
                         return $this->cuisines;
                     },
@@ -501,8 +586,7 @@ class Restaurants extends \yii\db\ActiveRecord
                     },
                     'paymentMethods' => function () {
                         $paymentMethods = array();
-                        foreach ($this->paymentMethodRestaurants as $paymentMethod)
-                        {
+                        foreach ($this->paymentMethodRestaurants as $paymentMethod) {
                             $paymentMethods [] = $paymentMethod->paymentMethod;
                         }
                         return $paymentMethods;
@@ -556,22 +640,22 @@ class Restaurants extends \yii\db\ActiveRecord
                            (
                             CASE 
                             WHEN (
-                            '".$time."' < restaurants.working_opening_hours 
+                            '" . $time . "' < restaurants.working_opening_hours 
 							 AND
-                            '".$time."' > restaurants.working_closing_hours 
+                            '" . $time . "' > restaurants.working_closing_hours 
                             ) THEN 4 
                             
                             WHEN (
                             
-                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' ) 
+                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' ) 
 							> 
                             CONVERT(restaurants.time_order_open USING utf8)
                             
                             AND 
                             
-                            '".$time."' 
+                            '" . $time . "' 
                             < 
-                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '".$time."' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
+                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '" . $time . "' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
                             
 							AND restaurants.disable_ordering = 1
                             
@@ -579,62 +663,62 @@ class Restaurants extends \yii\db\ActiveRecord
                             
                             WHEN (
                             
-                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' ) 
+                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' ) 
 							> 
                             CONVERT(restaurants.time_order_open USING utf8)
                             
                             AND 
                             
-                            '".$time."' 
+                            '" . $time . "' 
                             < 
-                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '".$time."' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
+                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '" . $time . "' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
                             
                             ) THEN 1
                             
                             WHEN (
                                   
-                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
                                   >= 
                                   CONVERT(restaurants.working_opening_hours USING utf8)
                                   
                                   AND 
                                   
-                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
                                   <= 
                                   CONVERT(restaurants.time_order_open USING utf8)
                                  
                                  OR
                                  
-                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
                                   >= 
                                   CONVERT(restaurants.time_order_close USING utf8)
                                   AND 
                                   
-                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('".$time."','24:00:00'), '".$time."' )   
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )   
                                   <= 
                                   CONVERT(restaurants.working_closing_hours USING utf8)
                                   ) THEN 3
                                   
                                   WHEN (
-                                  '".$time."'  
+                                  '" . $time . "'  
                                   >= 
                                   CONVERT(restaurants.working_opening_hours USING utf8)
                                   
                                   AND 
                                   
-                                  '".$time."'   
+                                  '" . $time . "'   
                                   <= 
                                   CONVERT(restaurants.time_order_open USING utf8)
                                  
                                  OR
                                  
-                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
                                   >= 
                                   CONVERT(restaurants.time_order_close USING utf8)
                                   
                                   AND 
                                   
-                                  '".$time."'
+                                  '" . $time . "'
                                   <= 
                                   IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME(restaurants.working_closing_hours,'24:00:00'), restaurants.working_closing_hours )
                                   ) THEN 3
@@ -786,10 +870,10 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public static function getRestaurantDetails($restaurantId)
     {
-        $countryName = Restaurants::find()->where(['id'=>$restaurantId])->one()->country->name;
+        $countryName = Restaurants::find()->where(['id' => $restaurantId])->one()->country->name;
 
-        if(empty($countryName))
-            return Helpers::HttpException(404 ,'not found', ['error' => 'restaurants not found']);
+        if (empty($countryName))
+            return Helpers::HttpException(404, 'not found', ['error' => 'restaurants not found']);
 
         $time = (new Formatter(['timeZone' => Helpers::getCountryTimeZone($countryName)]))->asTime(time(), 'php:H:i:s');
 
@@ -812,22 +896,22 @@ class Restaurants extends \yii\db\ActiveRecord
                            (
                             CASE 
                             WHEN (
-                            '".$time."' < restaurants.working_opening_hours 
+                            '" . $time . "' < restaurants.working_opening_hours 
 							 AND
-                            '".$time."' > restaurants.working_closing_hours 
+                            '" . $time . "' > restaurants.working_closing_hours 
                             ) THEN 4 
                             
                             WHEN (
                             
-                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' ) 
+                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' ) 
 							> 
                             CONVERT(restaurants.time_order_open USING utf8)
                             
                             AND 
                             
-                            '".$time."' 
+                            '" . $time . "' 
                             < 
-                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '".$time."' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
+                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '" . $time . "' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
                             
 							AND restaurants.disable_ordering = 1
                             
@@ -835,62 +919,62 @@ class Restaurants extends \yii\db\ActiveRecord
                             
                             WHEN (
                             
-                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' ) 
+                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' ) 
 							> 
                             CONVERT(restaurants.time_order_open USING utf8)
                             
                             AND 
                             
-                            '".$time."' 
+                            '" . $time . "' 
                             < 
-                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '".$time."' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
+                            IF( restaurants.time_order_open > restaurants.time_order_close AND  '" . $time . "' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
                             
                             ) THEN 1
                             
                             WHEN (
                                   
-                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
                                   >= 
                                   CONVERT(restaurants.working_opening_hours USING utf8)
                                   
                                   AND 
                                   
-                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
                                   <= 
                                   CONVERT(restaurants.time_order_open USING utf8)
                                  
                                  OR
                                  
-                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
                                   >= 
                                   CONVERT(restaurants.time_order_close USING utf8)
                                   AND 
                                   
-                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('".$time."','24:00:00'), '".$time."' )   
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )   
                                   <= 
                                   CONVERT(restaurants.working_closing_hours USING utf8)
                                   ) THEN 3
                                   
                                   WHEN (
-                                  '".$time."'  
+                                  '" . $time . "'  
                                   >= 
                                   CONVERT(restaurants.working_opening_hours USING utf8)
                                   
                                   AND 
                                   
-                                  '".$time."'   
+                                  '" . $time . "'   
                                   <= 
                                   CONVERT(restaurants.time_order_open USING utf8)
                                  
                                  OR
                                  
-                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('".$time."','24:00:00'), '".$time."' )  
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
                                   >= 
                                   CONVERT(restaurants.time_order_close USING utf8)
                                   
                                   AND 
                                   
-                                  '".$time."'
+                                  '" . $time . "'
                                   <= 
                                   IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME(restaurants.working_closing_hours,'24:00:00'), restaurants.working_closing_hours )
                                   ) THEN 3
@@ -904,7 +988,7 @@ class Restaurants extends \yii\db\ActiveRecord
                                           WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ") 
                            ) AS 'favour_it'
                            FROM `restaurants`) AS r
-                           WHERE r.id = ". $restaurantId;
+                           WHERE r.id = " . $restaurantId;
 
         $restaurants = Restaurants::findBySql($sql)->one();
         return Helpers::formatResponse(true, 'get success', $restaurants);

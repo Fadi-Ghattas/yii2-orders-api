@@ -239,12 +239,20 @@ class MenuCategories extends \yii\db\ActiveRecord
             parent::scenarios(),
             [
                 self::SCENARIO_GET_BY_RESTAURANTS_MANGER => [
-                    'id',
-                    'name'
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
+                    'name' => function () {
+                        return (string)$this->name;
+                    }
                 ],
                 self::SCENARIO_GET_DETAILS_BY_CLIENT => [
-                    'id',
-                    'name',
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
+                    'name' => function () {
+                        return (string)$this->name;
+                    },
                     'menuCategoriesItems' => function () {
                         $menuCategories = self::getMenuCategoryItemsAsArray($this->restaurant_id, $this->id);
                         if (!empty($menuCategories[0]['menuCategoryItems']))

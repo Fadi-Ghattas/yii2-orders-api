@@ -128,29 +128,37 @@ class OrderItems extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-            'id',
-            'price',
-            'quantity',
-            'note',
-            'menu_item' => function() {
+            'id' => function () {
+                return (int)$this->id;
+            },
+            'price' => function () {
+                return (float)$this->price;
+            },
+            'quantity' => function(){
+                return (int)$this->quantity;
+            },
+            'note' => function(){
+                return (string)$this->note;
+            },
+            'menu_item' => function () {
                 $item = array();
-                $item['id'] = $this->item->id;
-                $item['name'] = $this->item->name;
-                $item['description'] = $this->item->description;
-                $item['price'] = $this->item->price;
-                $item['status'] = $this->item->status;
-                $item['discount'] = $this->item->discount;
-                $item['image'] = $this->item->image;
-                $item['is_taxable'] = $this->item->is_taxable;
-                $item['is_verified'] = $this->item->is_verified;
+                $item['id'] = (int)$this->item->id;
+                $item['name'] = (string)$this->item->name;
+                $item['description'] = (string)$this->item->description;
+                $item['price'] = (float)$this->item->price;
+                $item['status'] = (bool)$this->item->status;
+                $item['discount'] = (int)$this->item->discount;
+                $item['image'] = (string)$this->item->image;
+                $item['is_taxable'] = (bool)$this->item->is_taxable;
+                $item['is_verified'] = (bool)$this->item->is_verified;
                 $restaurant = Restaurants::checkRestaurantAccess();
                 $item['categories'] = MenuItems::getMenuItemCategories($restaurant->id, $this->item->id);
                 return $item;
             },
-            'addons' => function() {
+            'addons' => function () {
                 return $this->orderItemAddons;
             },
-            'item_choices' => function() {
+            'item_choices' => function () {
                 return $this->orderItemChoices;
             }
         ];

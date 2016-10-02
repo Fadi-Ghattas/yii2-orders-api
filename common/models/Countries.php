@@ -74,7 +74,7 @@ class Countries extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
-        if(!$this->isNewRecord)
+        if (!$this->isNewRecord)
             $this->updated_at = date('Y-m-d H:i:s');
         else
             $this->created_at = date('Y-m-d H:i:s');
@@ -84,15 +84,18 @@ class Countries extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        return ['id' => function(){
-            return (string)$this->id;
-        }, 'name'];
+        return [
+            'id' => function () {
+            return (int)$this->id;
+        }, 'name' => function () {
+            return (string)$this->name;
+        }];
     }
 
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
         }
     }
 

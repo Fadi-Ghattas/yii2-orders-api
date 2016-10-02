@@ -5,6 +5,7 @@ namespace common\models;
 
 use Yii;
 use common\helpers\Helpers;
+
 /**
  * This is the model class for table "item_choices".
  *
@@ -111,7 +112,7 @@ class ItemChoices extends \yii\db\ActiveRecord
 
     public static function getItemChoiceByName($restaurant_id, $item_choice_name)
     {
-        return self::find()->where(['restaurant_id' => $restaurant_id])->andWhere(['name'=> $item_choice_name])->andWhere(['deleted_at' => null])->one();
+        return self::find()->where(['restaurant_id' => $restaurant_id])->andWhere(['name' => $item_choice_name])->andWhere(['deleted_at' => null])->one();
     }
 
     public static function getRestaurantItemsChoices()
@@ -141,9 +142,9 @@ class ItemChoices extends \yii\db\ActiveRecord
         $ItemChoice->restaurant_id = $restaurant->id;
         $ItemChoice->validate();
 
-        if(!empty(self::getItemChoiceByName($restaurant->id, $data['name'])))
-            return Helpers::HttpException(409,'name conflict', ['error' => 'There is already item of choice with the same name']);
-        
+        if (!empty(self::getItemChoiceByName($restaurant->id, $data['name'])))
+            return Helpers::HttpException(409, 'name conflict', ['error' => 'There is already item of choice with the same name']);
+
         $isCreated = $ItemChoice->save();
         if (!$isCreated)
             return Helpers::HttpException(422, 'create failed', null);
@@ -181,7 +182,7 @@ class ItemChoices extends \yii\db\ActiveRecord
         $ItemChoice = self::getItemChoice($restaurant->id, $item_choice_id);
 
         if (empty($ItemChoice))
-            return Helpers::HttpException(404,'deleted failed', ['error' => "This item choices dos't exist"]);
+            return Helpers::HttpException(404, 'deleted failed', ['error' => "This item choices dos't exist"]);
 
         $ItemChoice->deleted_at = date('Y-m-d H:i:s');
         $isUpdated = $ItemChoice->save();
@@ -195,7 +196,7 @@ class ItemChoices extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
         }
     }
 
@@ -212,9 +213,15 @@ class ItemChoices extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-            'id',
-            'name',
-            'status',
+            'id' => function () {
+                return (int)$this->id;
+            },
+            'name' => function () {
+                return (string)$this->name;
+            },
+            'status' => function () {
+                return (bool)$this->status;
+            },
         ];
 
     }

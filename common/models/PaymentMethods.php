@@ -90,8 +90,12 @@ class PaymentMethods extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-            'id',
-            'name'
+            'id' => function () {
+                return (int)$this->id;
+            },
+            'name' => function () {
+                return (string)$this->name;
+            }
         ];
     }
 }

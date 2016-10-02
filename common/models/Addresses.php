@@ -222,14 +222,30 @@ class Addresses extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-            'id',
-            'is_default',
-            'building_name',
-            'floor_unit',
-            'street_no',
-            'postcode',
-            'company',
-            'label',
+            'id' => function () {
+                return (int)$this->id;
+            },
+            'is_default' => function () {
+                return (bool)$this->is_default;
+            },
+            'building_name' => function () {
+                return (string)$this->building_name;
+            },
+            'floor_unit' => function () {
+                return (string)$this->floor_unit;
+            },
+            'street_no' => function () {
+                return (string)$this->street_no;
+            },
+            'postcode' => function () {
+                return (string)$this->postcode;
+            },
+            'company' => function () {
+                return (string)$this->company;
+            },
+            'label' => function () {
+                return (string)$this->label;
+            },
             'area' => function () {
                 return $this->area;
             }

@@ -444,18 +444,18 @@ class MenuItems extends \yii\db\ActiveRecord
         return Helpers::formatResponse(true, 'deleted success', ['id' => $MenuItem->id]);
     }
 
-    public static function getMenuItemForClient($menu_item_id) 
+    public static function getMenuItemForClient($menu_item_id)
     {
         $menuItem = self::find()->where(['id' => $menu_item_id])->andWhere(['deleted_at' => null])->andWhere(['status' => 1])->one();
-        if(empty($menuItem))
-            return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
+        if (empty($menuItem))
+            return Helpers::HttpException(404, 'not found', ['error' => 'menu item not found']);
 
         $restaurant = MenuCategoryItem::find()->where(['menu_item_id' => $menu_item_id])->one();
-        if(empty($restaurant))
-            return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
-        if( !$menuItem->is_verified &&  !$restaurant->menuCategory->restaurant->is_verified_global)
-            return Helpers::HttpException(404 ,'not found', ['error' => 'menu item not found']);
-        
+        if (empty($restaurant))
+            return Helpers::HttpException(404, 'not found', ['error' => 'menu item not found']);
+        if (!$menuItem->is_verified && !$restaurant->menuCategory->restaurant->is_verified_global)
+            return Helpers::HttpException(404, 'not found', ['error' => 'menu item not found']);
+
         return Helpers::formatResponse(true, 'get success', $menuItem);
     }
 
@@ -467,7 +467,7 @@ class MenuItems extends \yii\db\ActiveRecord
             foreach ($menuCategoryItems as $menuItem) {
                 $singleMenuItem = array();
                 if ($isVerifiedGlobal) {
-                    if($menuItem['menuItem']['status']) {
+                    if ($menuItem['menuItem']['status']) {
                         $singleMenuItem['id'] = $menuItem['menuItem']['id'];
                         $singleMenuItem['image'] = $menuItem['menuItem']['image'];
                         $singleMenuItem['name'] = $menuItem['menuItem']['name'];
@@ -475,7 +475,7 @@ class MenuItems extends \yii\db\ActiveRecord
                         $menuCategoryItemsResult [] = $singleMenuItem;
                     }
                 } else if ($menuItem['menuItem']['is_verified']) {
-                    if($menuItem['menuItem']['status']) {
+                    if ($menuItem['menuItem']['status']) {
                         $singleMenuItem['id'] = $menuItem['menuItem']['id'];
                         $singleMenuItem['image'] = $menuItem['menuItem']['image'];
                         $singleMenuItem['name'] = $menuItem['menuItem']['name'];
@@ -487,7 +487,7 @@ class MenuItems extends \yii\db\ActiveRecord
         }
         return $menuCategoryItemsResult;
     }
-    
+
     public function afterValidate()
     {
         if ($this->hasErrors()) {
@@ -511,25 +511,37 @@ class MenuItems extends \yii\db\ActiveRecord
             parent::scenarios(),
             [
                 self::SCENARIO_GET_DETAILS_BY_CLIENT => [
-                    'id',
-                    'name',
-                    'image',
-                    'price',
-                    'description',
-                    'discount',
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
+                    'name' => function () {
+                        return (string)$this->name;
+                    },
+                    'image' => function () {
+                        return (string)$this->image;
+                    },
+                    'price' => function () {
+                        return (float)$this->price;
+                    },
+                    'description' => function () {
+                        return (string)$this->description;
+                    },
+                    'discount' => function () {
+                        return (int)$this->discount;
+                    },
                     'addOns' => function () {
                         $addOns = array();
-                        foreach ($this->addons as $addOn){
-                            if($addOn->status){
-                                $addOns [] =  $addOn;
+                        foreach ($this->addons as $addOn) {
+                            if ($addOn->status) {
+                                $addOns [] = $addOn;
                             }
                         }
                         return $addOns;
                     },
                     'ItemChoices' => function () {
                         $choices = array();
-                        foreach ($this->choices as $choice){
-                            if($choice->status){
+                        foreach ($this->choices as $choice) {
+                            if ($choice->status) {
                                 $choices [] = $choice;
                             }
                         }
@@ -538,15 +550,30 @@ class MenuItems extends \yii\db\ActiveRecord
                 ],
 
                 self::SCENARIO_GET_BY_RESTAURANTS_MANGER => [
-                    'id',
-                    'name',
-                    'description',
-                    'price',
-                    'status',
-                    'discount',
-                    'image',
-                    'is_taxable',
-                    'is_verified',
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
+                    'name' => function () {
+                        return (string)$this->name;
+                    },
+                    'image' => function () {
+                        return (string)$this->image;
+                    },
+                    'price' => function () {
+                        return (float)$this->price;
+                    },
+                    'description' => function () {
+                        return (string)$this->description;
+                    },
+                    'discount' => function () {
+                        return (int)$this->discount;
+                    },
+                    'is_taxable' => function () {
+                        return (bool)$this->is_taxable;
+                    },
+                    'is_verified' => function () {
+                        return (bool)$this->is_verified;
+                    },
                     'categories' => function () {
                         $restaurant = Restaurants::checkRestaurantAccess();
                         return self::getMenuItemCategories($restaurant->id, $this->id);

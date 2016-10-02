@@ -89,13 +89,19 @@ class Cuisines extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        return ['id','name', 'image'];
+        return ['id' => function () {
+            return (int)$this->id;
+        }, 'name' => function () {
+            return (string)$this->name;
+        }, 'image' => function () {
+            return (string)$this->image;
+        }];
     }
 
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
         }
     }
 

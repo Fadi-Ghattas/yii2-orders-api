@@ -81,18 +81,22 @@ class OrderItemAddon extends \yii\db\ActiveRecord
     {
         return [
             'id' => function () {
-                return $this->addon->id;
+                return (int)$this->addon->id;
             },
             'name' => function () {
-                return $this->addon->name;
+                return (string)$this->addon->name;
             },
             'description' => function () {
-                return $this->addon->description;
+                return (string)$this->addon->description;
             },
-            'price',
-            'quantity',
+            'price' => function(){
+                return (float)$this->price;
+            },
+            'quantity' => function(){
+                return (int)$this->quantity;
+            },
             'status' => function () {
-                return $this->addon->status;
+                return (bool)$this->addon->status;
             }
         ];
     }

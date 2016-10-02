@@ -97,7 +97,7 @@ class Reviews extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
         }
     }
 
@@ -114,13 +114,21 @@ class Reviews extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-            'id',
-            'name' => function() {
-                return $this->client->user->username;
+            'id' => function () {
+                return (int)$this->id;
             },
-            'comment',
-            'rank',
-            'created_at'
+            'name' => function () {
+                return (string)$this->client->user->username;
+            },
+            'comment' => function () {
+                return (string)$this->comment;
+            },
+            'rank' => function () {
+                return (float)$this->rank;
+            },
+            'created_at' => function () {
+                return (string)$this->created_at;
+            }
         ];
 
     }

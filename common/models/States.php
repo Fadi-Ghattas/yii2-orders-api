@@ -129,9 +129,11 @@ class States extends \yii\db\ActiveRecord
     {
         return [
             'id' => function () {
-                return (string)$this->id;
+                return (int)$this->id;
             },
-            'name',
+            'name' => function () {
+                return (string)$this->name;
+            },
             'country' => function () {
                 return $this->country;
             },

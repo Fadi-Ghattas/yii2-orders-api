@@ -106,7 +106,7 @@ class Addons extends \yii\db\ActiveRecord
 
     public static function getAddOnByName($restaurant_id, $add_on_name)
     {
-       return self::find()->where(['restaurant_id' => $restaurant_id])->andWhere(['name'=>$add_on_name])->andWhere(['deleted_at' => null])->one();
+        return self::find()->where(['restaurant_id' => $restaurant_id])->andWhere(['name' => $add_on_name])->andWhere(['deleted_at' => null])->one();
     }
 
     public static function getRestaurantAddOns()
@@ -135,9 +135,9 @@ class Addons extends \yii\db\ActiveRecord
         $addOn->status = 1;
         $addOn->restaurant_id = $restaurant->id;
         $addOn->validate();
-        
-        if(!empty(self::getAddOnByName($restaurant->id, $data['name'])))
-            return Helpers::HttpException(409,'name conflict', ['error' => 'There is already add-on with the same name']);
+
+        if (!empty(self::getAddOnByName($restaurant->id, $data['name'])))
+            return Helpers::HttpException(409, 'name conflict', ['error' => 'There is already add-on with the same name']);
 
         $isCreated = $addOn->save();
         if (!$isCreated)
@@ -152,13 +152,13 @@ class Addons extends \yii\db\ActiveRecord
         $addOn = self::getAddOn($restaurant->id, $add_on_id);
 
         if (empty($addOn))
-            return Helpers::HttpException(404,'update failed', ['error' => "This add-on dos't exist"]);
+            return Helpers::HttpException(404, 'update failed', ['error' => "This add-on dos't exist"]);
 
         $model['Addons'] = $data;
         $addOn->load($model);
         $addOn->validate();
-        
-        if(isset($data['name'])) {
+
+        if (isset($data['name'])) {
             //check restaurant add-on name if is it unique before update
             $CheckUniqueAddOn = self::getAddOnByName($restaurant->id, $data['name']);
             if (!empty($CheckUniqueAddOn) && $CheckUniqueAddOn->id != $add_on_id)
@@ -193,7 +193,7 @@ class Addons extends \yii\db\ActiveRecord
     public function afterValidate()
     {
         if ($this->hasErrors()) {
-            return Helpers::HttpException(422,'validation failed', ['error' => $this->errors]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
         }
     }
 
@@ -210,11 +210,21 @@ class Addons extends \yii\db\ActiveRecord
     public function fields()
     {
         return [
-            'id',
-            'name',
-            'description',
-            'price',
-            'status',
+            'id' => function () {
+                return (int)$this->id;
+            },
+            'name' => function () {
+                return (string)$this->name;
+            },
+            'description' => function () {
+                return (string)$this->description;
+            },
+            'price' => function () {
+                return (float)$this->price;
+            },
+            'status' => function () {
+                return (bool)$this->status;
+            },
         ];
     }
 }
