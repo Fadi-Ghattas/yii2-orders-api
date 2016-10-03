@@ -53,8 +53,8 @@ class MenuItems extends \yii\db\ActiveRecord
         return [
             [['name', 'description', 'price', 'status', 'is_taxable'], 'required'],
             [['price'], 'number'],
-            [['is_taxable', 'is_verified'], 'boolean'],
-            [['status', 'discount'], 'integer'],
+            [['status', 'is_taxable', 'is_verified'], 'boolean'],
+            [['discount'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at', 'name'], 'safe'],
             [['name', 'description', 'image'], 'string', 'max' => 255],
         ];
