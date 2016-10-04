@@ -584,6 +584,9 @@ class MenuItems extends \yii\db\ActiveRecord
                     },
                     'ItemChoices' => function () {
                         return $this->choices;
+                    },
+                    'status' => function () {
+                        return (bool)$this->status;
                     }
                 ]
             ]);

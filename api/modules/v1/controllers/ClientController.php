@@ -52,7 +52,8 @@ class ClientController extends ActiveController
                         'restaurants',
                         'menu-items',
                         'cuisines',
-                        'rest-password'],
+                        'reset-password-sms-code',
+                        'reset-password'],
                     'authMethods' => [
                         HttpBearerAuth::className(),
                     ],
@@ -249,15 +250,41 @@ class ClientController extends ActiveController
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
-    public function actionRestPassword()
+    public function actionResetPasswordSmsCode()
     {
         $request = Yii::$app->request;
         $get_data = $request->get();
 
-        if ($request->isGet) {
-            if (empty($get_data)) {
-                return Clients::resetPassword($request->post());
-            }
+        if ($request->isPost && empty($get_data)) {
+            if (empty($request->post()))
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
+            return Clients::resetPasswordSmsCode($request->post());
+        }
+        return Helpers::HttpException(405, "Method Not Allowed", null);
+    }
+
+    public function actionResetPassword()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if ($request->isPost && empty($get_data)) {
+            if (empty($request->post()))
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
+            return Clients::resetPassword($request->post());
+        }
+        return Helpers::HttpException(405, "Method Not Allowed", null);
+    }
+
+    public function actionChangePassword()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if ($request->isPost && empty($get_data)) {
+            if (empty($request->post()))
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
+            return Clients::changePassword($request->post());
         }
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
@@ -276,7 +303,9 @@ class ClientController extends ActiveController
             'cuisines' => ['GET'],
             'address' => ['GET', 'PUT', 'POST', 'DELETE'],
             'sms-code' => ['GET'],
-            'rest-password' => ['POST'],
+            'reset-password-sms-code' => ['POST'],
+            'reset-password' => ['POST'],
+            'change-password' => ['POST'],
         ];
 
         foreach ($actions as $action => $verb) {

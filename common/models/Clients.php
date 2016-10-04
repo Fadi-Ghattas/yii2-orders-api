@@ -3,9 +3,12 @@
 namespace common\models;
 
 
-use api\modules\v1\models\RestPasswordForm;
+
 use Yii;
 use common\helpers\Helpers;
+use api\modules\v1\models\ResetPasswordSmsCodeForm;
+use api\modules\v1\models\ResetPasswordForm;
+use api\modules\v1\models\ChangePassword;
 
 /**
  * This is the model class for table "clients".
@@ -227,10 +230,54 @@ class Clients extends \yii\db\ActiveRecord
         return Helpers::formatResponse(true, 'Verification code sent successfully', ['code' => (int)$code]);
     }
 
+    public static function resetPasswordSmsCode($data)
+    {
+        $reset_password_sms_code_form = new ResetPasswordSmsCodeForm();
+        $reset_password_sms_code_form->setAttributes($data);
+        if (!$reset_password_sms_code_form->validate())
+            return Helpers::HttpException(422, 'validation failed', ['error' => $reset_password_sms_code_form->errors]);
+        $client = self::findOne(['phone_number' => $reset_password_sms_code_form->phone_number]);
+        if (empty($client))
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'there is no account with this phone number please try to sing up first!!']);
+        $code = Helpers::sendSms(Helpers::generateRandomFourDigits(), $reset_password_sms_code_form->phone_number);
+        $code = str_replace("Sent from your Twilio trial account -", '', trim($code));
+        return Helpers::formatResponse(true, 'Rest password code sent successfully', ['code' => (int)$code]);
+    }
+
     public static function resetPassword($data)
     {
-        $rest_password_form = new RestPasswordForm();
-        $rest_password_form->setAttributes($data);
+        $reset_password_form = new ResetPasswordForm();
+        $reset_password_form->setAttributes($data);
+        if (!$reset_password_form->validate())
+            return Helpers::HttpException(422, 'validation failed', ['error' => $reset_password_form->errors]);
+        $client = self::findOne(['phone_number' => $reset_password_form->phone_number]);
+        if (empty($client))
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'there is no account with this phone number please try to sing up first!!']);
+        $user = User::findOne(['id' => $client->user_id]);
+        $user->setPassword($reset_password_form->new_password);
+        if (!$user->save())
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+        $user = User::Login($user->email, $user->password_hash);
+        if (!$user)
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+        return Helpers::formatResponse(true, 'rest password and log in success', $user->getUserClientFields());
+    }
+
+    public static function changePassword($data)
+    {
+        $client = self::getClientByAuthorization();
+        $user = User::findOne(['id' => $client->user_id]);
+        $change_password = new ChangePassword();
+        $change_password->setAttributes($data);
+        if (!$change_password->validate())
+            return Helpers::HttpException(422, 'validation failed', ['error' => $change_password->errors]);
+        $user->setPassword($change_password->new_password);
+        if (!$user->save())
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+        $user = User::Login($user->email, $user->password_hash);
+        if (!$user)
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+        return Helpers::formatResponse(true, 'rest password success', $user->getUserClientFields());
     }
 
     public function beforeSave($insert)

@@ -6,9 +6,8 @@ namespace api\modules\v1\models;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
-class ResetPasswordForm extends Model {
+class ChangePassword extends Model {
 
-    public $phone_number;
     public $new_password;
     public $new_password_confirm;
 
@@ -17,8 +16,8 @@ class ResetPasswordForm extends Model {
         return ArrayHelper::merge(
             parent::rules(),
             [
-                [['new_password','new_password_confirm', 'phone_number'], 'required'],
-                [['new_password', 'new_password_confirm','phone_number'], 'filter', 'filter' => 'trim'],
+                [['new_password','new_password_confirm'], 'required'],
+                [['new_password', 'new_password_confirm'], 'filter', 'filter' => 'trim'],
                 ['new_password_confirm', 'compare', 'compareAttribute'=>'new_password', 'message'=>"passwords don't match" ]
             ]
         );
