@@ -137,6 +137,7 @@ return [
                         'GET,POST,PUT,DELETE reset-password-sms-code' => 'reset-password-sms-code',
                         'GET,POST,PUT,DELETE reset-password' => 'reset-password',
                         'GET,POST,PUT,DELETE change-password' => 'change-password',
+                        'GET,POST,PUT,DELETE new-restaurant' => 'new-restaurant',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

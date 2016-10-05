@@ -8,6 +8,7 @@
 
 namespace api\modules\v1\controllers;
 
+
 use Yii;
 use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\SignUpForm;
@@ -19,6 +20,7 @@ use common\models\MenuItems;
 use common\models\Restaurants;
 use common\models\Addresses;
 use common\models\Clients;
+use common\models\NewRestaurant;
 use yii\rest\ActiveController;
 use yii\filters\auth\CompositeAuth;
 use yii\filters\auth\HttpBearerAuth;
@@ -289,6 +291,19 @@ class ClientController extends ActiveController
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
+    public function actionNewRestaurant()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if ($request->isPost && empty($get_data)) {
+            if (empty($request->post()))
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
+            return NewRestaurant::createNewRestaurant($request->post());
+        }
+        return Helpers::HttpException(405, "Method Not Allowed", null);
+    }
+
     public function beforeAction($event)
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
@@ -306,6 +321,7 @@ class ClientController extends ActiveController
             'reset-password-sms-code' => ['POST'],
             'reset-password' => ['POST'],
             'change-password' => ['POST'],
+            'new-restaurant' => ['POST'],
         ];
 
         foreach ($actions as $action => $verb) {
