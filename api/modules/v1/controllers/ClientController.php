@@ -55,7 +55,9 @@ class ClientController extends ActiveController
                         'menu-items',
                         'cuisines',
                         'reset-password-sms-code',
-                        'reset-password'],
+                        'reset-password',
+                        'new-restaurant',
+                    ],
                     'authMethods' => [
                         HttpBearerAuth::className(),
                     ],

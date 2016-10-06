@@ -3,7 +3,6 @@
 namespace common\models;
 
 
-
 use Yii;
 use common\helpers\Helpers;
 use api\modules\v1\models\ResetPasswordSmsCodeForm;
@@ -198,13 +197,13 @@ class Clients extends \yii\db\ActiveRecord
                 return Helpers::HttpException(403, "forbidden", ['error' => $lockedValueKey . " can't be changed"]);
         }
 
+        if (isset($post_data['is_verified'])) {
+            $client->verified = $post_data['is_verified'];
+        }
+
         if (isset($post_data['phone_number'])) {
             $client->phone_number = $post_data['phone_number'];
             $client->verified = 0;
-        }
-
-        if (isset($post_data['is_verified'])) {
-            $client->verified = $post_data['is_verified'];
         }
 
         $user = User::findOne(['id' => $client->user_id]);
@@ -212,10 +211,21 @@ class Clients extends \yii\db\ActiveRecord
             $user->username = $post_data['full_name'];
         }
 
-        if (!$client->save() && $user->save())
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        try {
+            $client->validate();
+            $user->validate();
+            $client->save();
+            $user->save();
+            $transaction->commit();
+            return $user->getUserClientFields();
+        } catch (\Exception $e) {
+            $transaction->rollBack();
             return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
-
-        return $user->getUserClientFields();
+            //throw $e;
+        }
+        return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
     }
 
     public static function sendVerificationSmsCode()
@@ -271,6 +281,8 @@ class Clients extends \yii\db\ActiveRecord
         $change_password->setAttributes($data);
         if (!$change_password->validate())
             return Helpers::HttpException(422, 'validation failed', ['error' => $change_password->errors]);
+        if(!Yii::$app->getSecurity()->validatePassword($change_password->old_password, $user->password_hash))
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'old password incorrect please try again.']);
         $user->setPassword($change_password->new_password);
         if (!$user->save())
             return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);

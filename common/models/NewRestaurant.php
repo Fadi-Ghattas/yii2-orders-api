@@ -5,6 +5,7 @@ namespace common\models;
 
 use Yii;
 use common\helpers\Helpers;
+
 /**
  * This is the model class for table "new_restaurant".
  *
@@ -99,11 +100,14 @@ class NewRestaurant extends \yii\db\ActiveRecord
 
     public static function createNewRestaurant($data)
     {
-        $client = Clients::getClientByAuthorization();
+        $headers = Yii::$app->request->headers;
+        if (isset($headers['authorization']))
+            $client = Clients::getClientByAuthorization();
         $newRestaurant = new NewRestaurant();
         $model['NewRestaurant'] = $data;
         $newRestaurant->load($model);
-        $newRestaurant->client_id = $client->id;
+        if (isset($headers['authorization']))
+            $newRestaurant->client_id = $client->id;
         $newRestaurant->validate();
 
         $isCreated = $newRestaurant->save();
