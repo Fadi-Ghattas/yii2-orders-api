@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\helpers\Helpers;
 use Yii;
 
 /**
@@ -124,22 +125,28 @@ class Vouchers extends \yii\db\ActiveRecord
         ];
     }
 
-    public function isStart()
+    public function isStart($restaurantId)
     {
-        $nowDate = new \DateTime();
-        return $nowDate >= new \DateTime($this->start_date);
+        $countryName = Restaurants::find()->where(['id' => $restaurantId])->one()->country->name;
+        $countryTimeZone = new \DateTimeZone(Helpers::getCountryTimeZone($countryName));
+        $nowDate = new \DateTime('now', $countryTimeZone);
+        return $nowDate >= new \DateTime($this->start_date, $countryTimeZone);
     }
 
-    public function isExpired()
+    public function isExpired($restaurantId)
     {
-        $nowDate = new \DateTime();
-        return $nowDate > new \DateTime($this->expiry_date);
+        $countryName = Restaurants::find()->where(['id' => $restaurantId])->one()->country->name;
+        $countryTimeZone = new \DateTimeZone(Helpers::getCountryTimeZone($countryName));
+        $nowDate = new \DateTime('now', $countryTimeZone);
+        return $nowDate > new \DateTime($this->expiry_date, $countryTimeZone);
     }
 
-    public function getStartDate()
+    public function getStartDate($restaurantId)
     {
-        $datetime1 = new \DateTime();
-        $interval = $datetime1->diff(new \DateTime($this->start_date));
+        $countryName = Restaurants::find()->where(['id' => $restaurantId])->one()->country->name;
+        $countryTimeZone = new \DateTimeZone(Helpers::getCountryTimeZone($countryName));
+        $datetime1 =  new \DateTime('now', $countryTimeZone);
+        $interval = $datetime1->diff(new \DateTime($this->start_date, $countryTimeZone));
         $years = $interval->format('%y');
         $months = $interval->format('%m');
         $days = $interval->format('%a');

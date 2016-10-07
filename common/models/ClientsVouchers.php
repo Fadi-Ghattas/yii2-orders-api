@@ -100,10 +100,10 @@ class ClientsVouchers extends \yii\db\ActiveRecord
         $voucher = Vouchers::find()->where(['code' => $voucherForm->voucher_code])->one();
         if (empty($voucher))
             return Helpers::HttpException(422, 'validation failed', ['error' => 'there is no voucher with this code please try again with different code']);
-        if (!$voucher->isStart())
-            return Helpers::HttpException(422, 'validation failed', ['error' => 'this voucher is not yet active please check the voucher start date']);
-        //return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher after '.  $voucher->getStartDate()]);
-        if ($voucher->isExpired())
+        if (!$voucher->isStart($voucherForm->restaurant_id))
+            //return Helpers::HttpException(422, 'validation failed', ['error' => 'this voucher is not yet active please check the voucher start date']);
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher after '.  $voucher->getStartDate($voucherForm->restaurant_id)]);
+        if ($voucher->isExpired($voucherForm->restaurant_id))
             return Helpers::HttpException(422, 'validation failed', ['error' => 'this voucher date is expired']);
         if (doubleval($voucher->minimum_order) > doubleval($voucherForm->order_total_amount))
             return Helpers::HttpException(422, 'validation failed', ['error' => 'sorry but this voucher work only for order total bigger than ' . doubleval($voucher->minimum_order)]);
