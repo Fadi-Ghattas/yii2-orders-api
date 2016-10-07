@@ -138,6 +138,7 @@ return [
                         'GET,POST,PUT,DELETE reset-password' => 'reset-password',
                         'GET,POST,PUT,DELETE change-password' => 'change-password',
                         'GET,POST,PUT,DELETE new-restaurant' => 'new-restaurant',
+                        'GET,POST,PUT,DELETE vouchers' => 'vouchers',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

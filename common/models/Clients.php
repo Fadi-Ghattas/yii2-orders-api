@@ -25,6 +25,8 @@ use api\modules\v1\models\ChangePassword;
  * @property Addresses[] $addresses
  * @property BlacklistedClients[] $blacklistedClients
  * @property User $user
+ * @property ClientsVouchers[] $clientsVouchers
+ * @property Vouchers[] $vouchers
  * @property FavoriteRestaurants[] $favoriteRestaurants
  * @property Feedbacks[] $feedbacks
  * @property Orders[] $orders
@@ -103,6 +105,22 @@ class Clients extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClientsVouchers()
+    {
+        return $this->hasMany(ClientsVouchers::className(), ['client_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVouchers()
+    {
+        return $this->hasMany(Vouchers::className(), ['id' => 'voucher_id'])->viaTable('clients_vouchers', ['client_id' => 'id']);
     }
 
     /**

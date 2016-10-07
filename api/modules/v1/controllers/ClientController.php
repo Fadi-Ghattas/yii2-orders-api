@@ -9,6 +9,7 @@
 namespace api\modules\v1\controllers;
 
 
+use common\models\ClientsVouchers;
 use Yii;
 use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\SignUpForm;
@@ -306,6 +307,19 @@ class ClientController extends ActiveController
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
+    public function actionVouchers()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if ($request->isPost && empty($get_data)) {
+            if (empty($request->post()))
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
+            return ClientsVouchers::createClientVoucher($request->post());
+        }
+        return Helpers::HttpException(405, "Method Not Allowed", null);
+    }
+
     public function beforeAction($event)
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
@@ -324,6 +338,7 @@ class ClientController extends ActiveController
             'reset-password' => ['POST'],
             'change-password' => ['POST'],
             'new-restaurant' => ['POST'],
+            'vouchers' => ['POST'],
         ];
 
         foreach ($actions as $action => $verb) {

@@ -40,6 +40,7 @@ use common\helpers\Helpers;
  * @property string $res_status
  * @property double $reviews_rank
  * @property integer $favour_it
+ * @property integer $accepts_vouchers
  *
  * @property Addons[] $addons
  * @property AreaRestaurant[] $areaRestaurants
@@ -98,7 +99,7 @@ class Restaurants extends \yii\db\ActiveRecord
             [['name', 'minimum_order_amount', 'time_order_open', 'time_order_close', 'delivery_fee', 'rank', 'halal', 'featured', 'working_opening_hours', 'working_closing_hours', 'disable_ordering', 'delivery_duration', 'phone_number', 'owner_number', 'country_id', 'longitude', 'latitude', 'image', 'status', 'user_id'], 'required'],
             [['minimum_order_amount', 'delivery_fee', 'rank', 'longitude', 'latitude'], 'number'],
             [['res_status', 'reviews_rank', 'favour_it', 'action', 'time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
-            [[ 'delivery_duration', 'user_id', 'is_verified_global', 'country_id'], 'integer'],
+            [[ 'delivery_duration', 'user_id', 'is_verified_global', 'country_id','accepts_vouchers'], 'integer'],
             [['disable_ordering' , 'halal', 'featured', 'status'], 'boolean'],
             [['name', 'phone_number', 'owner_number', 'image', 'image_background'], 'string', 'max' => 255],
             [['working_opening_hours', 'working_closing_hours', 'time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
@@ -1011,4 +1012,8 @@ class Restaurants extends \yii\db\ActiveRecord
         }
     }
 
+    public static function isAcceptsVouchers($id)
+    {
+        return self::findOne(['id' => $id])->accepts_vouchers;
+    }
 }
