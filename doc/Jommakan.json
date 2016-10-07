@@ -11597,7 +11597,7 @@
 			"helperAttributes": {},
 			"time": 1475849411009,
 			"name": "Validate Voucher",
-			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key)(required) | Obtained from login\r\n\r\n##### JSON Parameters:\r\n\r\n- restaurant_id (integer) (required)\r\n- voucher_code (integer) (required)\r\n- order_total_amount (double) (required)\r\n\r\n\r\n##### Return:\r\n\r\n- 200 ClientVoucher Object\r\n- 401 Unauthrized\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error",
+			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key)(required) | Obtained from login\r\n\r\n##### JSON Parameters:\r\n\r\n- restaurant_id (integer) (required)\r\n- voucher_code (integer) (required)\r\n- order_total_amount (double) (required)\r\n\r\n\r\n##### Return:\r\n\r\n- 200 voucher_code\r\n- 401 Unauthrized\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error",
 			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
 			"responses": [
 				{
