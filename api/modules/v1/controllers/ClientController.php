@@ -307,7 +307,7 @@ class ClientController extends ActiveController
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
-    public function actionVouchers()
+    public function actionValidateVoucher()
     {
         $request = Yii::$app->request;
         $get_data = $request->get();
@@ -315,7 +315,7 @@ class ClientController extends ActiveController
         if ($request->isPost && empty($get_data)) {
             if (empty($request->post()))
                 return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
-            return ClientsVouchers::createClientVoucher($request->post());
+            return ClientsVouchers::validateClientVoucher($request->post());
         }
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
@@ -338,7 +338,7 @@ class ClientController extends ActiveController
             'reset-password' => ['POST'],
             'change-password' => ['POST'],
             'new-restaurant' => ['POST'],
-            'vouchers' => ['POST'],
+            'validate-voucher' => ['POST'],
         ];
 
         foreach ($actions as $action => $verb) {

@@ -82,7 +82,7 @@ class ClientsVouchers extends \yii\db\ActiveRecord
         }
     }
 
-    public static function createClientVoucher($data)
+    public static function validateClientVoucher($data)
     {
         $client_id = Clients::checkClientAuthorization();
         $client = Clients::find()->where(['id' => $client_id])->one();
@@ -102,7 +102,7 @@ class ClientsVouchers extends \yii\db\ActiveRecord
             return Helpers::HttpException(422, 'validation failed', ['error' => 'there is no voucher with this code please try again with different code']);
         if (!$voucher->isStart($voucherForm->restaurant_id))
             //return Helpers::HttpException(422, 'validation failed', ['error' => 'this voucher is not yet active please check the voucher start date']);
-            return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher after '.  $voucher->getStartDate($voucherForm->restaurant_id)]);
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher after ' . $voucher->getStartDate($voucherForm->restaurant_id)]);
         if ($voucher->isExpired($voucherForm->restaurant_id))
             return Helpers::HttpException(422, 'validation failed', ['error' => 'this voucher date is expired']);
         if (doubleval($voucher->minimum_order) > doubleval($voucherForm->order_total_amount))
@@ -112,13 +112,14 @@ class ClientsVouchers extends \yii\db\ActiveRecord
         if (!empty($clientVoucher))
             return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher for on time only']);
 
-        $clientVoucher = new ClientsVouchers();
-        $clientVoucher->client_id = $client_id;
-        $clientVoucher->voucher_id = $voucher->id;
-
-        if (!$clientVoucher->save())
-            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
-        return Helpers::formatResponse(true, 'rest password success', $voucher->getClientVoucherFields());;
+//        $clientVoucher = new ClientsVouchers();
+//        $clientVoucher->client_id = $client_id;
+//        $clientVoucher->voucher_id = $voucher->id;
+//
+//        if (!$clientVoucher->save())
+//            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+//        return Helpers::formatResponse(true, 'rest password success', $voucher->getClientVoucherFields());
+        return Helpers::formatResponse(true, 'voucher is valid',  ['voucher_code' => $voucherForm->voucher_code]);
     }
 
 }
