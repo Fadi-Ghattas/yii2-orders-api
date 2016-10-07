@@ -168,8 +168,9 @@ class Addresses extends \yii\db\ActiveRecord
             return Helpers::formatResponse(true, 'create success', ['id' => $Address->id]);
         } catch (\Exception $e) {
             $transaction->rollBack();
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
         }
-        return Helpers::HttpException(422, 'create failed', null);
+        return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
     }
 
     public static function updateAddress($address_id, $data)
@@ -195,8 +196,9 @@ class Addresses extends \yii\db\ActiveRecord
             return Helpers::formatResponse(true, 'create success', ['id' => $address->id]);
         } catch (\Exception $e) {
             $transaction->rollBack();
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
         }
-        return Helpers::HttpException(422, 'create failed', null);
+        return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
     }
 
     public static function deleteAddress($address_id)
@@ -212,10 +214,9 @@ class Addresses extends \yii\db\ActiveRecord
             return Helpers::HttpException(404, 'deleted failed', ['error' => "This address dos't exist"]);
 
         $address->deleted_at = date('Y-m-d H:i:s');
-        $isUpdated = $address->save(false);
 
-        if (!$isUpdated)
-            return Helpers::HttpException(422, 'deleted failed', null);
+        if (!$address->save(false))
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
 
         return Helpers::formatResponse(true, 'deleted success', ['id' => $address->id]);
     }

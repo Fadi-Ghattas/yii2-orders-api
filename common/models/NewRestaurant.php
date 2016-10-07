@@ -108,11 +108,9 @@ class NewRestaurant extends \yii\db\ActiveRecord
         $newRestaurant->load($model);
         if (isset($headers['authorization']))
             $newRestaurant->client_id = $client->id;
-        $newRestaurant->validate();
 
-        $isCreated = $newRestaurant->save();
-        if (!$isCreated)
-            return Helpers::HttpException(422, 'create failed', null);
+        if (!$newRestaurant->save())
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
         return Helpers::formatResponse(true, 'create success', ['id' => $newRestaurant->id]);
     }
 }

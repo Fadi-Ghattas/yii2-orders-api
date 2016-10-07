@@ -160,11 +160,11 @@ class Helpers
             );
             return $message->body;
         } catch (\Services_Twilio_RestException $e) {
-            //return $e->getMessage();
             if ($e->getCode() == 21211)
                 return Helpers::HttpException(422, 'validation failed', ['error' => 'phone number ' . $number . ' format is not valid.']);
             return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later or contact the admin']);
         }
+        return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later or contact the admin']);
     }
 
 }
