@@ -347,8 +347,8 @@ class Orders extends \yii\db\ActiveRecord
             return Helpers::HttpException(422, 'validation failed', ['error' => 'Please provide valid address first!!']);
 
         $restaurants = Restaurants::find()->where(['id' => $makeOrderForm->restaurant_id])->one();
-        //if (!$restaurants->isOpenForOrders())
-        //return Helpers::HttpException(422, 'validation failed', ['error' => 'Sorry restaurant ' . $restaurants->name . ' is not taken any order for now pleas try some time later.']);
+        if (!$restaurants->isOpenForOrders())
+        return Helpers::HttpException(422, 'validation failed', ['error' => 'Sorry restaurant ' . $restaurants->name . ' is not taken any order for now pleas try some time later.']);
         if (!$restaurants->checkPaymentMethod($makeOrderForm->payment_method_id))
             return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry restaurant " . $restaurants->name . " don't accept this payment method."]);
 
@@ -451,7 +451,6 @@ class Orders extends \yii\db\ActiveRecord
                         $transaction->rollBack();
                         return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry there is item Choices not belong to this restaurant."]);
                     }
-
 
                     $orderItemChoicesModel = new OrderItemChoices();
                     $orderItemChoicesModel->order_item_id = $orderItem->id;
