@@ -2,8 +2,10 @@
 
 namespace common\models;
 
-use common\helpers\Helpers;
+
 use Yii;
+use yii\helpers\ArrayHelper;
+use common\helpers\Helpers;
 
 /**
  * This is the model class for table "vouchers".
@@ -25,6 +27,8 @@ use Yii;
  */
 class Vouchers extends \yii\db\ActiveRecord
 {
+    const SCENARIO_CHECK_VOUCHER = 'check_voucher';
+
     /**
      * @inheritdoc
      */
@@ -145,7 +149,7 @@ class Vouchers extends \yii\db\ActiveRecord
     {
         $countryName = Restaurants::find()->where(['id' => $restaurantId])->one()->country->name;
         $countryTimeZone = new \DateTimeZone(Helpers::getCountryTimeZone($countryName));
-        $datetime1 =  new \DateTime('now', $countryTimeZone);
+        $datetime1 = new \DateTime('now', $countryTimeZone);
         $interval = $datetime1->diff(new \DateTime($this->start_date, $countryTimeZone));
         $years = $interval->format('%y');
         $months = $interval->format('%m');
@@ -168,5 +172,33 @@ class Vouchers extends \yii\db\ActiveRecord
             $elapsedFormat .= '%S second(s)';
         $elapsed = $interval->format($elapsedFormat);
         return $elapsed;
+    }
+
+    public function scenarios()
+    {
+        return ArrayHelper::merge(
+            parent::scenarios(),
+            [
+                self::SCENARIO_CHECK_VOUCHER => [
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
+                    'name' => function () {
+                        return (string)$this->name;
+                    },
+                    'value' => function () {
+                        return (double)$this->value;
+                    },
+                    'minimum_order' => function () {
+                        return (double)$this->minimum_order;
+                    }
+                ],
+            ]);
+    }
+
+
+    public function fields()
+    {
+        return $this->scenarios()[$this->scenario];
     }
 }

@@ -147,6 +147,6 @@ class ClientsVouchers extends \yii\db\ActiveRecord
         if (!empty($clientVoucher))
             return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher for on time only']);
 
-        return true;
+        return $voucher;
     }
 }

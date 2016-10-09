@@ -2,10 +2,17 @@
 
 namespace common\models;
 
-use common\helpers\Helpers;
+
+
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
+use api\modules\v1\models\MakeOrderForm;
+use api\modules\v1\models\OrderItemAddOnForm;
+use api\modules\v1\models\OrderItemForm;
+use api\modules\v1\models\OrderItemItemChoicesForm;
+use api\modules\v1\models\VoucherForm;
+use common\helpers\Helpers;
 
 /**
  * This is the model class for table "orders".
@@ -25,6 +32,7 @@ use yii\helpers\ArrayHelper;
  * @property string $updated_at
  * @property string $deleted_at
  * @property string $status_id
+ * @property string $delivery_fee
  *
  * @property OrderItems[] $orderItems
  * @property OrderStatus $status
@@ -56,7 +64,7 @@ class Orders extends \yii\db\ActiveRecord
         return [
             [['restaurant_id', 'client_id', 'reference_number', 'total', 'commission_amount', 'address_id', 'payment_method_id', 'status_id'], 'required'],
             [['restaurant_id', 'client_id', 'address_id', 'voucher_id', 'payment_method_id', 'status_id'], 'integer'],
-            [['total', 'total_with_voucher', 'commission_amount'], 'number'],
+            [['total', 'total_with_voucher', 'commission_amount', 'delivery_fee'], 'number'],
             [['note'], 'string'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['reference_number'], 'string', 'max' => 255],
@@ -205,8 +213,8 @@ class Orders extends \yii\db\ActiveRecord
                     'total_with_voucher',
                     'commission_amount',
                     'note',
-                    'delivery_fee' => function() {
-                      return $this->restaurant->delivery_fee;
+                    'delivery_fee' => function () {
+                        return $this->restaurant->delivery_fee;
                     },
                     'status' => function () {
                         return $this->status->name;
@@ -215,21 +223,21 @@ class Orders extends \yii\db\ActiveRecord
 //                        return $this->voucher;
                         return [];
                     },
-                    'customer_details' => function(){
+                    'customer_details' => function () {
                         $customer_details = array();
                         $customer_details['id'] = $this->client->id;
                         $customer_details['name'] = $this->client->user->username;
                         $customer_details['email'] = $this->client->user->email;
                         $customer_details['phone_number'] = $this->client->phone_number;
                         $address = Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['is_default' => 1])->andWhere(['deleted_at' => null])->one();
-                        if(empty($address))
+                        if (empty($address))
                             $address = Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['deleted_at' => null])->orderBy('created_at DESC')->one();
                         $customer_details['address'] = $address;
                         return $customer_details;
                     },
                     'order_items' => function () {
                         $order_items = array();
-                        foreach ($this->orderItems as $orderItem){
+                        foreach ($this->orderItems as $orderItem) {
                             $singleOrderItem = array();
                             $singleOrderItem['id'] = $orderItem->id;
                             $singleOrderItem['price'] = $orderItem->price;
@@ -322,6 +330,189 @@ class Orders extends \yii\db\ActiveRecord
             return Helpers::HttpException(422, 'update failed', null);
 
         return Helpers::formatResponse(true, 'update success', ['id' => $order->id]);
+    }
+
+    public static function makeOrder($data)
+    {
+        $client = Clients::getClientByAuthorization();
+        if (!$client->verified)
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'please verify your account first!!']);
+
+        $makeOrderForm = new MakeOrderForm();
+        $makeOrderForm->setAttributes($data);
+        if (!$makeOrderForm->validate())
+            return Helpers::HttpException(422, 'validation failed', ['error' => $makeOrderForm->errors]);
+
+        if (!$client->checkClientAddress($makeOrderForm->address_id))
+            return Helpers::HttpException(422, 'validation failed', ['error' => 'Please provide valid address first!!']);
+
+        $restaurants = Restaurants::find()->where(['id' => $makeOrderForm->restaurant_id])->one();
+        //if (!$restaurants->isOpenForOrders())
+        //return Helpers::HttpException(422, 'validation failed', ['error' => 'Sorry restaurant ' . $restaurants->name . ' is not taken any order for now pleas try some time later.']);
+        if (!$restaurants->checkPaymentMethod($makeOrderForm->payment_method_id))
+            return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry restaurant " . $restaurants->name . " don't accept this payment method."]);
+
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        try {
+
+            $orderTotal = 0;
+            $orderTotalWithVoucher = 0;
+
+            $order = new Orders();
+            $order->restaurant_id = $makeOrderForm->restaurant_id;
+            $order->client_id = $client->id;
+            $order->address_id = $makeOrderForm->address_id;
+            $order->note = $makeOrderForm->note;
+            $order->payment_method_id = $makeOrderForm->payment_method_id;
+            $order->status_id = 1;
+            $order->reference_number = '0';
+            $order->total = 0;
+            $order->total_with_voucher = 0;
+            $order->commission_amount = 0;
+            $order->save();
+            $order->reference_number = $makeOrderForm->restaurant_id . '_' . $client->id . '_' . $order->id;
+            $order->save();
+
+            foreach ($makeOrderForm->items as $item) {
+                if (empty($item)) {
+                    $transaction->rollBack();
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "order item can't be blank."]);
+                }
+                $orderItemForm = new OrderItemForm();
+                $orderItemForm->setAttributes($item);
+                if (!$orderItemForm->validate()) {
+                    $transaction->rollBack();
+                    return Helpers::HttpException(422, 'validation failed', ['error' => $orderItemForm->errors]);
+                }
+
+                $menuItem = MenuItems::find()->where(['id' => $orderItemForm->id])->andWhere(['status' => 1])->andWhere(['deleted_at' => null])->one();
+                if (empty($menuItem)) {
+                    $transaction->rollBack();
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry menu item does not exist"]);
+                }
+
+                $orderItem = new OrderItems();
+                $orderItem->order_id = $order->id;
+                $orderItem->item_id = $menuItem->id;
+                $orderItem->price = $menuItem->price;
+                $orderItem->quantity = $orderItemForm->quantity;
+                $orderItem->note = $orderItemForm->note;
+                $orderItem->save();
+                $orderTotal += $menuItem->price * $orderItemForm->quantity;
+
+                if (!empty($orderItemForm->add_on)) {
+                    foreach ($orderItemForm->add_on as $orderItemAddOn) {
+
+                        $orderItemAddOnForm = new OrderItemAddOnForm();
+                        $orderItemAddOnForm->setAttributes($orderItemAddOn);
+                        if (!$orderItemAddOnForm->validate()) {
+                            $transaction->rollBack();
+                            return Helpers::HttpException(422, 'validation failed', ['error' => $orderItemAddOnForm->errors]);
+                        }
+                        $menuItemAddOn = MenuItemAddon::find()->where(['menu_item_id' => $menuItem->id])->andWhere(['addon_id' => $orderItemAddOnForm->id])->one();
+                        if (empty($menuItemAddOn)) {
+
+                            return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry there is add on not belong to this menu item."]);
+                        }
+                        $addOn = Addons::find()->where(['id' => $orderItemAddOnForm->id])->andWhere(['restaurant_id' => $makeOrderForm->restaurant_id])->andWhere(['status' => 1])->andWhere(['deleted_at' => null])->one();
+                        if (empty($addOn)) {
+                            $transaction->rollBack();
+                            return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry there is add on not belong to this restaurant."]);
+                        }
+
+
+                        $orderItemAddOnModel = new OrderItemAddon();
+                        $orderItemAddOnModel->order_item_id = $orderItem->id;
+                        $orderItemAddOnModel->addon_id = $addOn->id;
+                        $orderItemAddOnModel->price = $addOn->price;
+                        $orderItemAddOnModel->quantity = $orderItemAddOnForm->quantity;
+                        $orderItemAddOnModel->save();
+                        $orderTotal += $addOn->price * $orderItemAddOnForm->quantity;
+                    }
+                }
+
+                if (!empty($orderItemForm->item_choices)) {
+
+                    $orderItemItemChoicesForm = new OrderItemItemChoicesForm();
+                    $orderItemItemChoicesForm->setAttributes($orderItemForm->item_choices);
+                    if (!$orderItemItemChoicesForm->validate()) {
+                        $transaction->rollBack();
+                        return Helpers::HttpException(422, 'validation failed', ['error' => $orderItemItemChoicesForm->errors]);
+                    }
+                    $menuItemChoice = MenuItemChoice::find()->where(['menu_item_id' => $menuItem->id])->andWhere(['choice_id' => $orderItemItemChoicesForm->id])->one();
+                    if (empty($menuItemChoice)) {
+                        $transaction->rollBack();
+                        return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry there is item choice not belong to this menu item."]);
+                    }
+
+                    $itemChoices = ItemChoices::find()->where(['id' => $orderItemItemChoicesForm->id])->andWhere(['restaurant_id' => $makeOrderForm->restaurant_id])->andWhere(['status' => 1])->andWhere(['deleted_at' => null])->one();
+                    if (empty($itemChoices)) {
+                        $transaction->rollBack();
+                        return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry there is item Choices not belong to this restaurant."]);
+                    }
+
+
+                    $orderItemChoicesModel = new OrderItemChoices();
+                    $orderItemChoicesModel->order_item_id = $orderItem->id;
+                    $orderItemChoicesModel->item_choice_id = $itemChoices->id;
+                    $orderItemChoicesModel->save();
+                }
+            }
+
+            if (!empty($makeOrderForm->voucher_code))
+            {
+                $voucherForm = new VoucherForm();
+                $voucherForm->setAttributes(['restaurant_id' => $makeOrderForm->restaurant_id, 'voucher_code' => $makeOrderForm->voucher_code, 'order_total_amount' => $orderTotal]);
+                if (!$voucherForm->validate()) {
+                    $transaction->rollBack();
+                    return Helpers::HttpException(422, 'validation failed', ['error' => $voucherForm->errors]);
+                }
+                if (!Restaurants::isAcceptsVouchers($voucherForm->restaurant_id)) {
+                    $transaction->rollBack();
+                    return Helpers::HttpException(422, 'validation failed', ['error' => 'this restaurants currently not accepting vouchers']);
+                }
+
+                $voucher = Vouchers::find()->where(['code' => $voucherForm->voucher_code])->one();
+                if (empty($voucher)) {
+                    $transaction->rollBack();
+                    return Helpers::HttpException(422, 'validation failed', ['error' => 'there is no voucher with this code please try again with different code']);
+                }
+                if (!$voucher->isStart($voucherForm->restaurant_id)) {
+                    $transaction->rollBack();
+                    //return Helpers::HttpException(422, 'validation failed', ['error' => 'this voucher is not yet active please check the voucher start date']);
+                    return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher after ' . $voucher->getStartDate($voucherForm->restaurant_id)]);
+                }
+                if ($voucher->isExpired($voucherForm->restaurant_id)) {
+                    $transaction->rollBack();
+                    return Helpers::HttpException(422, 'validation failed', ['error' => 'this voucher date is expired']);
+                }
+
+                if (doubleval($voucher->minimum_order) > doubleval($voucherForm->order_total_amount)) {
+                    $transaction->rollBack();
+                    return Helpers::HttpException(422, 'validation failed', ['error' => 'sorry but this voucher work only for order total bigger than ' . doubleval($voucher->minimum_order)]);
+                }
+
+                $clientVoucher = ClientsVouchers::find()->where(['client_id' => $client->id])->andWhere(['voucher_id' => $voucher->id])->one();
+                if (!empty($clientVoucher)) {
+                    $transaction->rollBack();
+                    return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher for on time only']);
+                }
+
+                $orderTotalWithVoucher = $orderTotal - $voucher->value;
+            }
+
+            $order->total = $orderTotal;
+            $order->total_with_voucher = $orderTotalWithVoucher;
+            $order->commission_amount = Commissions::getOrderCommissions($orderTotal)->value;
+            $order->save();
+
+            $transaction->commit();
+            return Helpers::formatResponse(true, 'make order success', [ "id" => $order->id]);
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+        }
     }
 
     public function fields()

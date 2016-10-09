@@ -53,6 +53,7 @@ use common\helpers\Helpers;
  * @property MenuCategories[] $menuCategories
  * @property Orders[] $orders
  * @property PaymentMethodRestaurant[] $paymentMethodRestaurants
+ * @property PaymentMethods[] $paymentMethods
  * @property User $user
  * @property Countries $country
  * @property Reviews[] $reviews
@@ -99,8 +100,8 @@ class Restaurants extends \yii\db\ActiveRecord
             [['name', 'minimum_order_amount', 'time_order_open', 'time_order_close', 'delivery_fee', 'rank', 'halal', 'featured', 'working_opening_hours', 'working_closing_hours', 'disable_ordering', 'delivery_duration', 'phone_number', 'owner_number', 'country_id', 'longitude', 'latitude', 'image', 'status', 'user_id'], 'required'],
             [['minimum_order_amount', 'delivery_fee', 'rank', 'longitude', 'latitude'], 'number'],
             [['res_status', 'reviews_rank', 'favour_it', 'action', 'time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
-            [[ 'delivery_duration', 'user_id', 'is_verified_global', 'country_id','accepts_vouchers'], 'integer'],
-            [['disable_ordering' , 'halal', 'featured', 'status'], 'boolean'],
+            [['delivery_duration', 'user_id', 'is_verified_global', 'country_id', 'accepts_vouchers'], 'integer'],
+            [['disable_ordering', 'halal', 'featured', 'status'], 'boolean'],
             [['name', 'phone_number', 'owner_number', 'image', 'image_background'], 'string', 'max' => 255],
             [['working_opening_hours', 'working_closing_hours', 'time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -169,6 +170,7 @@ class Restaurants extends \yii\db\ActiveRecord
         return $this->hasMany(Areas::className(), ['id' => 'area_id'])->viaTable('area_restaurant', ['restaurant_id' => 'id'])->where(['deleted_at' => null]);
     }
 
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -230,7 +232,12 @@ class Restaurants extends \yii\db\ActiveRecord
      */
     public function getPaymentMethodRestaurants()
     {
-        return $this->hasMany(PaymentMethodRestaurant::className(), ['restaurant_id' => 'id'])->joinWith(['paymentMethod']);
+        return $this->hasMany(PaymentMethodRestaurant::className(), ['restaurant_id' => 'id'])->joinWith(['paymentMethod'])->where(['payment_methods.deleted_at' => null])->andWhere(['payment_methods.status' => 1]);
+    }
+
+    public function getPaymentMethods()
+    {
+        return $this->hasMany(PaymentMethods::className(), ['id' => 'payment_method_id'])->viaTable('payment_method_restaurant', ['restaurant_id' => 'id']);
     }
 
     /**
@@ -474,14 +481,7 @@ class Restaurants extends \yii\db\ActiveRecord
                         return $this->cuisines;
                     },
                     'payment_method' => function () {
-                        $paymentMethodRestaurants = array();
-                        foreach ($this->paymentMethodRestaurants as $payment_method) {
-                            $single_payment_method = array();
-                            $single_payment_method['id'] = (int)$payment_method->paymentMethod->id;
-                            $single_payment_method['name'] = (string)$payment_method->paymentMethod->name;
-                            $paymentMethodRestaurants [] = $single_payment_method;
-                        }
-                        return $paymentMethodRestaurants;
+                        return $this->paymentMethods;
                     }
                 ],
 
@@ -517,11 +517,7 @@ class Restaurants extends \yii\db\ActiveRecord
                         return $this->cuisines;
                     },
                     'paymentMethods' => function () {
-                        $paymentMethods = array();
-                        foreach ($this->paymentMethodRestaurants as $paymentMethod) {
-                            $paymentMethods [] = $paymentMethod->paymentMethod;
-                        }
-                        return $paymentMethods;
+                        return $this->paymentMethods;
                     }
                 ],
 
@@ -587,11 +583,7 @@ class Restaurants extends \yii\db\ActiveRecord
                         return $this->reviews;
                     },
                     'paymentMethods' => function () {
-                        $paymentMethods = array();
-                        foreach ($this->paymentMethodRestaurants as $paymentMethod) {
-                            $paymentMethods [] = $paymentMethod->paymentMethod;
-                        }
-                        return $paymentMethods;
+                        return $this->paymentMethods;
                     }
                 ],
             ]);
@@ -626,15 +618,7 @@ class Restaurants extends \yii\db\ActiveRecord
         $headers = Yii::$app->getRequest()->getHeaders();
         $client_id = 0;
         if (isset($headers['authorization'])) {
-            if (empty($headers['authorization']))
-                return Helpers::HttpException(422, 'validation failed', ['error' => "authorization can't be blank"]);
-            $authorization = explode(' ', $headers['authorization'])[1];
-            $ClientUser = User::findIdentityByAccessToken($authorization);
-            if (empty($ClientUser))
-                return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
-            $client_id = Clients::findOne(['user_id' => $ClientUser->id])->id;
-            if (empty($client_id))
-                return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
+            $client_id = Clients::getClientByAuthorization()->id;
         }
 
         $sql = "SELECT r.* 
@@ -870,7 +854,15 @@ class Restaurants extends \yii\db\ActiveRecord
         return Helpers::formatResponse(true, 'get success', $restaurants);
     }
 
-    public static function getRestaurantDetails($restaurantId)
+    public static function getRestaurantDetailsByClient($restaurantId)
+    {
+        $restaurant = self::getRestaurantDetails($restaurantId);
+        if (empty($restaurant))
+            return Helpers::HttpException(404, 'not found', ['error' => 'restaurants not found']);
+        return Helpers::formatResponse(true, 'get success', $restaurant);
+    }
+
+    public static function getRestaurantDetails($restaurantId, $clientCheck = 1)
     {
         $countryName = Restaurants::find()->where(['id' => $restaurantId])->one()->country->name;
 
@@ -879,18 +871,12 @@ class Restaurants extends \yii\db\ActiveRecord
 
         $time = (new Formatter(['timeZone' => Helpers::getCountryTimeZone($countryName)]))->asTime(time(), 'php:H:i:s');
 
-        $headers = Yii::$app->getRequest()->getHeaders();
         $client_id = 0;
-        if (isset($headers['authorization'])) {
-            if (empty($headers['authorization']))
-                return Helpers::HttpException(422, 'validation failed', ['error' => "authorization can't be blank"]);
-            $authorization = explode(' ', $headers['authorization'])[1];
-            $ClientUser = User::findIdentityByAccessToken($authorization);
-            if (empty($ClientUser))
-                return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
-            $client_id = Clients::findOne(['user_id' => $ClientUser->id])->id;
-            if (empty($client_id))
-                return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
+        if ($clientCheck) {
+            $headers = Yii::$app->getRequest()->getHeaders();
+            if (isset($headers['authorization'])) {
+                $client_id = Clients::getClientByAuthorization()->id;
+            }
         }
 
         $sql = "SELECT r.* 
@@ -993,7 +979,7 @@ class Restaurants extends \yii\db\ActiveRecord
                            WHERE r.id = " . $restaurantId;
 
         $restaurants = Restaurants::findBySql($sql)->one();
-        return Helpers::formatResponse(true, 'get success', $restaurants);
+        return $restaurants;
     }
 
     public function getRestaurantsStatus($statusId)
@@ -1015,5 +1001,20 @@ class Restaurants extends \yii\db\ActiveRecord
     public static function isAcceptsVouchers($id)
     {
         return self::findOne(['id' => $id])->accepts_vouchers;
+    }
+
+    public function isOpenForOrders()
+    {
+        $restaurant = self::getRestaurantDetails($this->id, 0);
+        return ($restaurant['res_status'] == 1 ? 1 : 0);
+    }
+
+    public function checkPaymentMethod($paymentMethodId)
+    {
+        foreach ($this->paymentMethods as $paymentMethod) {
+            if ($paymentMethod->id == $paymentMethodId)
+                return 1;
+        }
+        return 0;
     }
 }

@@ -2,7 +2,9 @@
 
 namespace common\models;
 
+
 use Yii;
+use common\helpers\Helpers;
 
 /**
  * This is the model class for table "order_item_choices".
@@ -73,6 +75,13 @@ class OrderItemChoices extends \yii\db\ActiveRecord
     public static function find()
     {
         return new OrderItemChoicesQuery(get_called_class());
+    }
+
+    public function afterValidate()
+    {
+        if ($this->hasErrors()) {
+            return Helpers::HttpException(422, 'validation failed', ['error' => $this->errors]);
+        }
     }
 
     public function fields()

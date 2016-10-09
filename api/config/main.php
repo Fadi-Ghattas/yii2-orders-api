@@ -44,6 +44,13 @@ return [
                         'data' => [['error' => "You are requesting with an invalid credential"]]
                     ];
                 }
+//                else if ($response->statusCode == 500) {
+//                    $response->data = [
+//                        'success' => false,
+//                        'message' => "server error",
+//                        'data' => [['error' => "Something went wrong, try again later."]]
+//                    ];
+//                }
             },
         ],
         'formatter' => [
@@ -72,12 +79,12 @@ return [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
-        'urlManagerFrontEnd' => [
-            'class' => 'yii\web\urlManager',
-            'baseUrl' => '/',
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-        ],
+//        'urlManagerFrontEnd' => [
+//            'class' => 'yii\web\urlManager',
+//            'baseUrl' => '/',
+//            'enablePrettyUrl' => true,
+//            'showScriptName' => false,
+//        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,
@@ -139,6 +146,7 @@ return [
                         'GET,POST,PUT,DELETE change-password' => 'change-password',
                         'GET,POST,PUT,DELETE new-restaurant' => 'new-restaurant',
                         'GET,POST,PUT,DELETE validate-voucher' => 'validate-voucher',
+                        'GET,POST,PUT,DELETE order' => 'order',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

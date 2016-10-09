@@ -31,7 +31,8 @@
 				"7255a662-68b8-380c-d60f-7d0868603963",
 				"5329e7a5-f441-14ee-c2ef-351e90872846",
 				"9cd5e9d6-2488-bbf4-b8e2-0d969cbc2d19",
-				"ca4ab488-88e4-b27c-e647-c34df5d63aa8"
+				"ca4ab488-88e4-b27c-e647-c34df5d63aa8",
+				"21a9186f-3192-1d91-0477-9e2ecbd21f27"
 			]
 		},
 		{
@@ -2524,6 +2525,725 @@
 			],
 			"rawModeData": "{\n   \"phone_number\": \"+963991892529\"\n}",
 			"folder": "8fe34db4-f82a-7a4c-437e-864cf1942e8a"
+		},
+		{
+			"id": "21a9186f-3192-1d91-0477-9e2ecbd21f27",
+			"headers": "Content-Type: application/json\nAuthorization: {{client_token}}\n",
+			"url": "{{url}}/api/web/v1/clients/order",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1476053478329,
+			"name": "Make Order",
+			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key)(required) | Obtained from login\r\n\r\n##### JSON Parameters:\r\n\r\n- restaurant_id (integer) (required)\r\n- address_id (integer) (required)\r\n- payment_method_id (integer) (required)\r\n- items (array of item object) (required)\r\n- note (string) (optinal)\r\n- voucher_code (string) (optinal)\r\n\r\n##### Return:\r\n\r\n- 200 order_id\r\n- 401 Unauthrized\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error",
+			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 422,
+						"name": "Unprocessable entity"
+					},
+					"time": 9131,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": ""
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "148",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sat, 08 Oct 2016 13:28:07 GMT",
+							"description": ""
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": ""
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": ""
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"validation failed\",\"data\":[{\"error\":\"Sorry restaurant tony is not taken any order for now pleas try some time later.\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "31161609-af86-f5ca-8268-6bc6641626e7",
+					"name": "422 Restaurant not open",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/order",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"restaurant_id\" : 4,\n\t\"address_id\" : 1,\n\t\"payment_method_id\" : 1,\n\t\"items\" : [{}]\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 422,
+						"name": "Unprocessable entity",
+						"detail": "The request was well-formed but was unable to be followed due to semantic errors."
+					},
+					"time": 3185,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "103",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sat, 08 Oct 2016 13:32:15 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"validation failed\",\"data\":[{\"error\":\"please verify your account first!!\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "bf161d1e-8116-9c03-25f6-7ebd20b7339c",
+					"name": "422 Client Account not verified",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/order",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"restaurant_id\" : 4,\n\t\"address_id\" : 1,\n\t\"payment_method_id\" : 1,\n\t\"items\" : [{}]\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 422,
+						"name": "Unprocessable entity",
+						"detail": "The request was well-formed but was unable to be followed due to semantic errors."
+					},
+					"time": 640,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "162",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sat, 08 Oct 2016 13:34:21 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"validation failed\",\"data\":[{\"error\":{\"payment_method_id\":[\"Payment Method Id cannot be blank.\"],\"items\":[\"Items cannot be blank.\"]}}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "3373dc6e-cee4-176e-65dc-403a93690b95",
+					"name": "422",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/order",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"restaurant_id\" : 4,\n\t\"address_id\" : 1,\n\t\"items\" : []\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 422,
+						"name": "Unprocessable entity",
+						"detail": "The request was well-formed but was unable to be followed due to semantic errors."
+					},
+					"time": 228,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "105",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sat, 08 Oct 2016 13:44:05 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"validation failed\",\"data\":[{\"error\":\"Please provide valid address first!!\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "6c9fffc7-a684-6c43-682e-c5c5f7607a87",
+					"name": "422 Not valied client address",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/order",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"restaurant_id\" : 4,\n\t\"address_id\" : 1,\n\t\"payment_method_id\" : 1,\n\t\"items\" : [{}]\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 401,
+						"name": "Unauthorized",
+						"detail": "Similar to 403 Forbidden, but specifically for use when authentication is possible but has failed or not yet been provided. The response must include a WWW-Authenticate header field containing a challenge applicable to the requested resource."
+					},
+					"time": 475,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "109",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 09 Oct 2016 22:50:22 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "Www-Authenticate",
+							"key": "Www-Authenticate",
+							"value": "Bearer realm=\"api\"",
+							"description": "Indicates the authentication scheme that should be used to access the requested entity."
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"Unauthorized\",\"data\":[{\"error\":\"You are requesting with an invalid credential\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "ba518096-8c76-aaa8-c8b6-0b3902f5298c",
+					"name": "401",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/order",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content",
+								"warning": ""
+							}
+						],
+						"data": "{\n\t\"restaurant_id\" : 4,\n\t\"address_id\" : 27,\n\t\"payment_method_id\" : 1,\n\t\"voucher_code\": \"22\",\n\t\"items\" : [{\n\t\t\"id\": 34,\n\t\t\"quantity\": 1,\n\t\t\"note\" : \"with out salt\", \n\t\t \"add_on\" :[\n\n        {\n            \"id\" : 60 ,\n            \"quantity\" : 2 \n        }\n\n    ],\n    \"item_choices\":{\n        \"id\" : 4 \n    }\n\t}]\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 500,
+						"name": "Internal Server Error",
+						"detail": "A generic error message, given when no more specific message is suitable."
+					},
+					"time": 1090,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "close",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "102",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 09 Oct 2016 23:05:17 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"server error\",\"data\":[{\"error\":\"Something went wrong, try again later.\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "b2e275e4-8e28-bee4-5e1a-8f5d80ea4a4a",
+					"name": "500",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/order",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{  \r\n   \"restaurant_id\":4,\r\n   \"address_id\":27,\r\n   \"payment_method_id\":1,\r\n   \"voucher_code\":\"22\",\r\n   \"items\":[  \r\n      {  \r\n         \"id\":34,\r\n         \"quantity\":1,\r\n         \"note\":\"with out salt\",\r\n         \"add_on\":[  \r\n            {  \r\n               \"id\":60,\r\n               \"quantity\":2\r\n            }\r\n         ],\r\n         \"item_choices\":{  \r\n            \"id\":4\r\n         }\r\n      }\r\n   ]\r\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 405,
+						"name": "Method Not Allowed",
+						"detail": "A request was made of a resource using a request method not supported by that resource; for example, using GET on a form which requires data to be presented via POST, or using PUT on a read-only resource."
+					},
+					"time": 69,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "60",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 09 Oct 2016 23:05:38 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"Method Not Allowed\",\"data\":null}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "7550c3e3-2642-c7a6-dc0f-964d264d3ecc",
+					"name": "405",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/order",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{  \r\n   \"restaurant_id\":4,\r\n   \"address_id\":27,\r\n   \"payment_method_id\":1,\r\n   \"voucher_code\":\"22\",\r\n   \"items\":[  \r\n      {  \r\n         \"id\":34,\r\n         \"quantity\":1,\r\n         \"note\":\"with out salt\",\r\n         \"add_on\":[  \r\n            {  \r\n               \"id\":60,\r\n               \"quantity\":2\r\n            }\r\n         ],\r\n         \"item_choices\":{  \r\n            \"id\":4\r\n         }\r\n      }\r\n   ]\r\n}",
+						"method": "DELETE",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK"
+					},
+					"time": 479,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": ""
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "68",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 09 Oct 2016 23:06:52 GMT",
+							"description": ""
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=99",
+							"description": ""
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": ""
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"make order success\",\"data\":[{\"id\":\"48\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "7f4ce3f2-613b-f0a1-1a7c-29fca3c9e013",
+					"name": "200",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/order",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{  \r\n   \"restaurant_id\":4,\r\n   \"address_id\":27,\r\n   \"payment_method_id\":1,\r\n   \"voucher_code\":\"22\",\r\n   \"items\":[  \r\n      {  \r\n         \"id\":34,\r\n         \"quantity\":1,\r\n         \"note\":\"with out salt\",\r\n         \"add_on\":[  \r\n            {  \r\n               \"id\":60,\r\n               \"quantity\":2\r\n            }\r\n         ],\r\n         \"item_choices\":{  \r\n            \"id\":4\r\n         }\r\n      }\r\n   ]\r\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				}
+			],
+			"rawModeData": "{  \r\n   \"restaurant_id\":4,\r\n   \"address_id\":27,\r\n   \"payment_method_id\":1,\r\n   \"voucher_code\":\"22\",\r\n   \"items\":[  \r\n      {  \r\n         \"id\":34,\r\n         \"quantity\":1,\r\n         \"note\":\"with out salt\",\r\n         \"add_on\":[  \r\n            {  \r\n               \"id\":60,\r\n               \"quantity\":2\r\n            }\r\n         ],\r\n         \"item_choices\":{  \r\n            \"id\":4\r\n         }\r\n      }\r\n   ]\r\n}"
 		},
 		{
 			"id": "22216dec-3ee0-f83c-8534-8a01e58df583",
@@ -11597,7 +12317,7 @@
 			"helperAttributes": {},
 			"time": 1475849411009,
 			"name": "Validate Voucher",
-			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key)(required) | Obtained from login\r\n\r\n##### JSON Parameters:\r\n\r\n- restaurant_id (integer) (required)\r\n- voucher_code (integer) (required)\r\n- order_total_amount (double) (required)\r\n\r\n\r\n##### Return:\r\n\r\n- 200 voucher_code\r\n- 401 Unauthrized\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error",
+			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key)(required) | Obtained from login\r\n\r\n##### JSON Parameters:\r\n\r\n- restaurant_id (integer) (required)\r\n- voucher_code (integer) (required)\r\n- order_total_amount (double) (required)\r\n\r\n\r\n##### Return:\r\n\r\n- 200 voucher_id\r\n- 401 Unauthrized\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error",
 			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
 			"responses": [
 				{

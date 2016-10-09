@@ -131,17 +131,17 @@ class Addresses extends \yii\db\ActiveRecord
 
     public static function getAddresses()
     {
-        $client_id = Clients::checkClientAuthorization();
-        $addresses = self::find()->where(['client_id' => $client_id])->andWhere(['deleted_at' => null])->orderBy('is_default DESC')->all();
+        $client = Clients::getClientByAuthorization();
+        $addresses = self::find()->where(['client_id' => $client->id])->andWhere(['deleted_at' => null])->orderBy('is_default DESC')->all();
         return Helpers::formatResponse(true, 'get success', $addresses);
     }
 
     public static function getAddress($address_id)
     {
-        $client_id = Clients::checkClientAuthorization();
+        $client = Clients::getClientByAuthorization();
         $address = self::find()->where(['id' => $address_id])->andWhere(['deleted_at' => null])->one();
         if (!empty($address)) {
-            if ($address->client_id != $client_id)
+            if ($address->client_id != $client->id)
                 return Helpers::HttpException(403, "forbidden", ['error' => "you don't have permission to do this action"]);
         }
         if (empty($address))
@@ -152,14 +152,14 @@ class Addresses extends \yii\db\ActiveRecord
 
     public static function createAddress($data)
     {
-        $client_id = Clients::checkClientAuthorization();
+        $client = Clients::getClientByAuthorization();
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
         try {
             $Address = new Addresses();
             $model['Addresses'] = $data;
             $Address->load($model);
-            $Address->client_id = $client_id;
+            $Address->client_id = $client->id;
             $Address->validate();
             if ($Address->is_default)
                 $connection->createCommand()->update('addresses', ['is_default' => 0], 'client_id = ' . $Address->client_id)->execute();
@@ -175,7 +175,7 @@ class Addresses extends \yii\db\ActiveRecord
 
     public static function updateAddress($address_id, $data)
     {
-        $client_id = Clients::checkClientAuthorization();
+        $client = Clients::getClientByAuthorization();
         $address = self::find()->where(['id' => $address_id])->andWhere(['deleted_at' => null])->one();
 
         if (empty($address))
@@ -187,7 +187,7 @@ class Addresses extends \yii\db\ActiveRecord
         try {
             $model['Addresses'] = $data;
             $address->load($model);
-            $address->client_id = $client_id;
+            $address->client_id = $client->id;
             $address->validate();
             if ($address->is_default)
                 $connection->createCommand()->update('addresses', ['is_default' => 0], 'client_id = ' . $address->client_id)->execute();
@@ -203,11 +203,11 @@ class Addresses extends \yii\db\ActiveRecord
 
     public static function deleteAddress($address_id)
     {
-        $client_id = Clients::checkClientAuthorization();
+        $client = Clients::getClientByAuthorization();
         $address = self::find()->where(['id' => $address_id])->andWhere(['deleted_at' => null])->one();
 
         if (!empty($address)) {
-            if ($address->client_id != $client_id)
+            if ($address->client_id != $client->id)
                 return Helpers::HttpException(403, "forbidden", ['error' => "you don't have permission to do this action"]);
         }
         if (empty($address))

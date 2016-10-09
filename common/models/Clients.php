@@ -179,19 +179,6 @@ class Clients extends \yii\db\ActiveRecord
         }
     }
 
-    public static function checkClientAuthorization()
-    {
-        $headers = Yii::$app->request->headers;
-        $authorization = explode(' ', $headers['authorization'])[1];
-        $ClientUser = User::findIdentityByAccessToken($authorization);
-        if (empty($ClientUser))
-            return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
-        $client_id = Clients::findOne(['user_id' => $ClientUser->id])->id;
-        if (empty($client_id))
-            return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
-        return $client_id;
-    }
-
     public static function getClientByAuthorization()
     {
         $headers = Yii::$app->request->headers;
@@ -199,7 +186,7 @@ class Clients extends \yii\db\ActiveRecord
         $ClientUser = User::findIdentityByAccessToken($authorization);
         if (empty($ClientUser))
             return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
-        $client = Clients::findOne(['user_id' => $ClientUser->id]);
+        $client = Clients::find()->where(['user_id' => $ClientUser->id])->one();
         if (empty($client))
             return Helpers::HttpException(404, 'not found', ['error' => 'client not found']);
         return $client;
@@ -207,8 +194,7 @@ class Clients extends \yii\db\ActiveRecord
 
     public static function updateClient($post_data)
     {
-        $clientId = self::checkClientAuthorization();
-        $client = Clients::findOne(['id' => $clientId]);
+        $client = self::getClientByAuthorization();
         $lockedValues = ['image', 'email', 'rank', 'password_hash', 'auth_key', 'role', 'facebook_id', 'source', 'status', 'last_logged_at'];
         foreach ($post_data as $lockedValueKey => $lockedValue) {
             if (in_array($lockedValueKey, $lockedValues))
@@ -224,7 +210,7 @@ class Clients extends \yii\db\ActiveRecord
             $client->verified = 0;
         }
 
-        $user = User::findOne(['id' => $client->user_id]);
+        $user = User::find()->where(['id' => $client->user_id])->one();
         if (isset($post_data['full_name'])) {
             $user->username = $post_data['full_name'];
         }
@@ -248,8 +234,7 @@ class Clients extends \yii\db\ActiveRecord
 
     public static function sendVerificationSmsCode()
     {
-        $clientId = self::checkClientAuthorization();
-        $client = Clients::findOne(['id' => $clientId]);
+        $client = self::getClientByAuthorization();
         if (empty($client->phone_number))
             return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide valid phone number first!!']);
 
@@ -299,7 +284,7 @@ class Clients extends \yii\db\ActiveRecord
         $change_password->setAttributes($data);
         if (!$change_password->validate())
             return Helpers::HttpException(422, 'validation failed', ['error' => $change_password->errors]);
-        if(!Yii::$app->getSecurity()->validatePassword($change_password->old_password, $user->password_hash))
+        if (!Yii::$app->getSecurity()->validatePassword($change_password->old_password, $user->password_hash))
             return Helpers::HttpException(422, 'validation failed', ['error' => 'old password incorrect please try again.']);
         $user->setPassword($change_password->new_password);
         if (!$user->save())
@@ -346,5 +331,14 @@ class Clients extends \yii\db\ActiveRecord
             }
         ];
 
+    }
+
+    public function checkClientAddress($addressId)
+    {
+        foreach ($this->addresses as $address) {
+            if ($address->id == $addressId)
+                return 1;
+        }
+        return 0;
     }
 }
