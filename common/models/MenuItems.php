@@ -469,18 +469,18 @@ class MenuItems extends \yii\db\ActiveRecord
                 $singleMenuItem = array();
                 if ($isVerifiedGlobal) {
                     if ($menuItem['menuItem']['status']) {
-                        $singleMenuItem['id'] = $menuItem['menuItem']['id'];
-                        $singleMenuItem['image'] = $menuItem['menuItem']['image'];
-                        $singleMenuItem['name'] = $menuItem['menuItem']['name'];
-                        $singleMenuItem['price'] = $menuItem['menuItem']['price'];
+                        $singleMenuItem['id'] = (int)$menuItem['menuItem']['id'];
+                        $singleMenuItem['image'] = (string)$menuItem['menuItem']['image'];
+                        $singleMenuItem['name'] = (string)$menuItem['menuItem']['name'];
+                        $singleMenuItem['price'] = (double)$menuItem['menuItem']['price'];
                         $menuCategoryItemsResult [] = $singleMenuItem;
                     }
                 } else if ($menuItem['menuItem']['is_verified']) {
                     if ($menuItem['menuItem']['status']) {
-                        $singleMenuItem['id'] = $menuItem['menuItem']['id'];
-                        $singleMenuItem['image'] = $menuItem['menuItem']['image'];
-                        $singleMenuItem['name'] = $menuItem['menuItem']['name'];
-                        $singleMenuItem['price'] = $menuItem['menuItem']['price'];
+                        $singleMenuItem['id'] = (int)$menuItem['menuItem']['id'];
+                        $singleMenuItem['image'] = (string)$menuItem['menuItem']['image'];
+                        $singleMenuItem['name'] = (string)$menuItem['menuItem']['name'];
+                        $singleMenuItem['price'] = (double)$menuItem['menuItem']['price'];
                         $menuCategoryItemsResult [] = $singleMenuItem;
                     }
                 }
