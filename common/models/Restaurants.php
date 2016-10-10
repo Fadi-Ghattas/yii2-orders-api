@@ -457,7 +457,7 @@ class Restaurants extends \yii\db\ActiveRecord
                         return (bool)$this->disable_ordering;
                     },
                     'delivery_duration' => function () {
-                        return (int)$this->delivery_fee;
+                        return (int)$this->delivery_duration;
                     },
                     'longitude' => function () {
                         return (double)$this->longitude;
@@ -499,7 +499,7 @@ class Restaurants extends \yii\db\ActiveRecord
                         return (float)$this->minimum_order_amount;
                     },
                     'delivery_duration' => function () {
-                        return (int)$this->delivery_fee;
+                        return (int)$this->delivery_duration;
                     },
                     'res_status' => function () {
                         return (string)$this->getRestaurantsStatus($this->res_status);
@@ -541,7 +541,7 @@ class Restaurants extends \yii\db\ActiveRecord
                         return (float)$this->minimum_order_amount;
                     },
                     'delivery_duration' => function () {
-                        return (int)$this->delivery_fee;
+                        return (int)$this->delivery_duration;
                     },
                     'delivery_fee' => function () {
                         return (float)$this->delivery_fee;
