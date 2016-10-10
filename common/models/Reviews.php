@@ -17,6 +17,7 @@ use common\helpers\Helpers;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ * @property string $title
  *
  * @property Clients $client
  * @property Restaurants $restaurant
@@ -37,11 +38,11 @@ class Reviews extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rank', 'comment', 'restaurant_id', 'client_id'], 'required'],
+            [['rank', 'restaurant_id', 'client_id', 'title'], 'required'],
             [['rank'], 'number'],
-            [['comment'], 'string'],
             [['restaurant_id', 'client_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['comment', 'title'], 'string', 'max' => 255],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Clients::className(), 'targetAttribute' => ['client_id' => 'id']],
             [['restaurant_id'], 'exist', 'skipOnError' => true, 'targetClass' => Restaurants::className(), 'targetAttribute' => ['restaurant_id' => 'id']],
         ];
@@ -118,7 +119,10 @@ class Reviews extends \yii\db\ActiveRecord
                 return (int)$this->id;
             },
             'name' => function () {
-                return (string)$this->client->user->username;
+                return (!empty($this->client) ? (string)$this->client->user->username : 'Unknown User');
+            },
+            'title' => function () {
+                return (string)$this->title;
             },
             'comment' => function () {
                 return (string)$this->comment;
@@ -130,6 +134,5 @@ class Reviews extends \yii\db\ActiveRecord
                 return (string)$this->created_at;
             }
         ];
-
     }
 }

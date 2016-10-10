@@ -421,7 +421,6 @@ class Orders extends \yii\db\ActiveRecord
                             return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry there is add on not belong to this restaurant."]);
                         }
 
-
                         $orderItemAddOnModel = new OrderItemAddon();
                         $orderItemAddOnModel->order_item_id = $orderItem->id;
                         $orderItemAddOnModel->addon_id = $addOn->id;
