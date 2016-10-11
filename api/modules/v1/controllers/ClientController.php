@@ -188,7 +188,7 @@ class ClientController extends ActiveController
             if (!isset($get_data['id']))
                 return Restaurants::getRestaurants();
             else if (!empty($get_data) && isset($get_data['id']))
-                return Restaurants::getRestaurantDetails($get_data['id']);
+                return Restaurants::getRestaurantDetailsByClient($get_data['id']);
         }
 
         return Helpers::HttpException(405, "Method Not Allowed", null);
