@@ -167,7 +167,8 @@ class Restaurants extends \yii\db\ActiveRecord
      */
     public function getAreas()
     {
-        return $this->hasMany(Areas::className(), ['id' => 'area_id'])->viaTable('area_restaurant', ['restaurant_id' => 'id'])->where(['deleted_at' => null]);
+        //WE ADD THE ORDER BY ON AREA ID TO GET THE AREA AND STATE
+        return $this->hasMany(Areas::className(), ['id' => 'area_id'])->viaTable('area_restaurant', ['restaurant_id' => 'id'])->where(['deleted_at' => null])->orderBy('id DESC');
     }
 
 
@@ -513,12 +514,23 @@ class Restaurants extends \yii\db\ActiveRecord
                     'halal' => function () {
                         return (bool)$this->halal;
                     },
+                    'state' => function () {
+                        foreach ($this->areas as $area) {
+                            return States::find()->where(['id' => $area->state_id])->one()->name;
+                        }
+                    },
+                    'area' => function () {
+                        foreach ($this->areas as $area) {
+                            return $area->name;
+                        }
+                    },
                     'cuisine' => function () {
                         return $this->cuisines;
                     },
                     'paymentMethods' => function () {
                         return $this->paymentMethods;
-                    }
+                    },
+
                 ],
 
                 self::SCENARIO_GET_DETAILS_BY_CLIENT => [
@@ -573,6 +585,16 @@ class Restaurants extends \yii\db\ActiveRecord
                     'latitude' => function () {
                         return (double)$this->latitude;
                     },
+                    'state' => function () {
+                        foreach ($this->areas as $area) {
+                            return States::find()->where(['id' => $area->state_id])->one()->name;
+                        }
+                    },
+                    'area' => function () {
+                        foreach ($this->areas as $area) {
+                            return $area->name;
+                        }
+                    },
                     'cuisine' => function () {
                         return $this->cuisines;
                     },
@@ -584,7 +606,8 @@ class Restaurants extends \yii\db\ActiveRecord
                     },
                     'paymentMethods' => function () {
                         return $this->paymentMethods;
-                    }
+                    },
+
                 ],
             ]);
     }
