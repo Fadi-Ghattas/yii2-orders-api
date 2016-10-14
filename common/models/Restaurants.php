@@ -516,12 +516,12 @@ class Restaurants extends \yii\db\ActiveRecord
                     },
                     'state' => function () {
                         foreach ($this->areas as $area) {
-                            return States::find()->where(['id' => $area->state_id])->one()->name;
+                            return (string)States::find()->where(['id' => $area->state_id])->one()->name;
                         }
                     },
                     'area' => function () {
                         foreach ($this->areas as $area) {
-                            return $area->name;
+                            return (string)$area->name;
                         }
                     },
                     'cuisine' => function () {
@@ -587,12 +587,12 @@ class Restaurants extends \yii\db\ActiveRecord
                     },
                     'state' => function () {
                         foreach ($this->areas as $area) {
-                            return States::find()->where(['id' => $area->state_id])->one()->name;
+                            return (string)States::find()->where(['id' => $area->state_id])->one()->name;
                         }
                     },
                     'area' => function () {
                         foreach ($this->areas as $area) {
-                            return $area->name;
+                            return (string)$area->name;
                         }
                     },
                     'cuisine' => function () {
