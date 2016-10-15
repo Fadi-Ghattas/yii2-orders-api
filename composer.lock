@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "637de79e020149ed5fbceff32a87b21e",
-    "content-hash": "debbe34db6a9cabafec210679a55c0f4",
+    "hash": "bdb37d8bb5d265186a66bffc7bd23a0a",
+    "content-hash": "bb5d1fe2efadc4547961a1a8da94b637",
     "packages": [
         {
             "name": "amass/yii2-bootstrap-panel-widget",
@@ -214,25 +214,6 @@
                 "responsive",
                 "web"
             ]
-        },
-        {
-            "name": "bower-asset/holderjs",
-            "version": "v2.8.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/imsky/holder.git",
-                "reference": "fe3013d9a9aef36e1d31d64fa06ee65ff0cfc67e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/imsky/holder/zipball/fe3013d9a9aef36e1d31d64fa06ee65ff0cfc67e",
-                "reference": "fe3013d9a9aef36e1d31d64fa06ee65ff0cfc67e",
-                "shasum": ""
-            },
-            "type": "bower-asset-library",
-            "extra": {
-                "bower-asset-main": "holder.js"
-            }
         },
         {
             "name": "bower-asset/jquery",
@@ -808,63 +789,6 @@
             ],
             "abandoned": "guzzlehttp/guzzle",
             "time": "2015-04-29 17:06:53"
-        },
-        {
-            "name": "imagine/imagine",
-            "version": "v0.6.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/avalanche123/Imagine.git",
-                "reference": "149041d2a1b517107bfe270ca2b1a17aa341715d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/149041d2a1b517107bfe270ca2b1a17aa341715d",
-                "reference": "149041d2a1b517107bfe270ca2b1a17aa341715d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "sami/sami": "dev-master"
-            },
-            "suggest": {
-                "ext-gd": "to use the GD implementation",
-                "ext-gmagick": "to use the Gmagick implementation",
-                "ext-imagick": "to use the Imagick implementation"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-develop": "0.7-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Imagine": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bulat Shakirzyanov",
-                    "email": "mallluhuct@gmail.com",
-                    "homepage": "http://avalanche123.com"
-                }
-            ],
-            "description": "Image processing for PHP 5.3",
-            "homepage": "http://imagine.readthedocs.org/",
-            "keywords": [
-                "drawing",
-                "graphics",
-                "image manipulation",
-                "image processing"
-            ],
-            "time": "2015-09-19 16:54:05"
         },
         {
             "name": "johnitvn/yii2-ajaxcrud",
@@ -2720,48 +2644,6 @@
             "time": "2015-12-05 10:37:16"
         },
         {
-            "name": "kinglozzer/tinypng",
-            "version": "0.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kinglozzer/tinypng.git",
-                "reference": "8ed59147c6b5a6b99ad8b1ae866923a844914508"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kinglozzer/tinypng/zipball/8ed59147c6b5a6b99ad8b1ae866923a844914508",
-                "reference": "8ed59147c6b5a6b99ad8b1ae866923a844914508",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Kinglozzer\\TinyPng\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "TinyPNG PHP API",
-            "keywords": [
-                "compression",
-                "image",
-                "jpg",
-                "php",
-                "png",
-                "tinyjpg",
-                "tinypng"
-            ],
-            "time": "2015-01-30 15:01:16"
-        },
-        {
             "name": "mpdf/mpdf",
             "version": "6.1.x-dev",
             "source": {
@@ -2897,54 +2779,6 @@
             ],
             "description": "A comprehensive library for generating differences between two hashable objects (strings or arrays).",
             "time": "2016-04-07 12:29:16"
-        },
-        {
-            "name": "sadovojav/yii2-image-thumbnail",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sadovojav/yii2-image-thumbnail.git",
-                "reference": "23c35d805c4ac6b20600d84314a9874136cef569"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sadovojav/yii2-image-thumbnail/zipball/23c35d805c4ac6b20600d84314a9874136cef569",
-                "reference": "23c35d805c4ac6b20600d84314a9874136cef569",
-                "shasum": ""
-            },
-            "require": {
-                "bower-asset/holderjs": "2.8",
-                "kinglozzer/tinypng": "0.1.*",
-                "php": ">=5.4.0",
-                "yiisoft/yii2": "*",
-                "yiisoft/yii2-imagine": "*"
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "sadovojav\\image\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Aleksandr Sadovoj",
-                    "email": "sadovojav@gmail.com",
-                    "homepage": "https://github.com/sadovojav"
-                }
-            ],
-            "description": "Yii2 image thumbnail component",
-            "keywords": [
-                "component",
-                "crop",
-                "image",
-                "placeholder",
-                "resize",
-                "thumbnail",
-                "tinypng",
-                "yii2"
-            ],
-            "time": "2016-08-22 22:27:13"
         },
         {
             "name": "setasign/fpdi",
@@ -3449,54 +3283,6 @@
             "time": "2016-10-13 08:51:30"
         },
         {
-            "name": "yiisoft/yii2-imagine",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yiisoft/yii2-imagine.git",
-                "reference": "e8c7161b38bf2a3067e9203b4370424709232d87"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-imagine/zipball/e8c7161b38bf2a3067e9203b4370424709232d87",
-                "reference": "e8c7161b38bf2a3067e9203b4370424709232d87",
-                "shasum": ""
-            },
-            "require": {
-                "imagine/imagine": "~0.6.0",
-                "yiisoft/yii2": "~2.0.0"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "yii\\imagine\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Antonio Ramirez",
-                    "email": "amigo.cobos@gmail.com"
-                }
-            ],
-            "description": "The Imagine integration for the Yii framework",
-            "keywords": [
-                "helper",
-                "image",
-                "imagine",
-                "yii2"
-            ],
-            "time": "2016-09-20 20:58:01"
-        },
-        {
             "name": "yiisoft/yii2-swiftmailer",
             "version": "dev-master",
             "source": {
@@ -3743,8 +3529,7 @@
     "stability-flags": {
         "amass/yii2-bootstrap-panel-widget": 20,
         "kartik-v/yii2-datecontrol": 20,
-        "bryglen/yii2-twillio": 20,
-        "sadovojav/yii2-image-thumbnail": 20
+        "bryglen/yii2-twillio": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
