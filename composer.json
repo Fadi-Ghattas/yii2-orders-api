@@ -27,7 +27,8 @@
             "kartik-v/yii2-datecontrol": "@dev",
             "udokmeci/yii2-phone-validator" : "*",
             "facebook/graph-sdk": "^5.3",
-            "bryglen/yii2-twillio": "*"
+            "bryglen/yii2-twillio": "dev-master",
+            "aws/aws-sdk-php": "2.*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

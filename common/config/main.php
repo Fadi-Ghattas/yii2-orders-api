@@ -18,36 +18,6 @@ return [
             'datetimeFormat' => 'd-M-Y H:i:s',
             'timeFormat' => 'H:i:s',
         ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            'viewPath' => '@common/mail',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => false,
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => '',
-                'username' => 'mailer@jommakan.com',
-                'password' => '',
-                'port' => '587',
-                'encryption' => 'tls',
-            ],
-        ],
-        'urlManagerFrontEnd' => [
-            'class' => 'yii\web\urlManager',
-            'baseUrl' => '/',
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-        ],
-        'urlManagerBackend' => [
-            'class' => 'yii\web\urlManager',
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'baseUrl' => '/backend',
-            'rules' => [
-            ],
-        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
             'defaultRoles' => ['user'],

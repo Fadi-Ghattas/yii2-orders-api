@@ -79,12 +79,6 @@ return [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
-//        'urlManagerFrontEnd' => [
-//            'class' => 'yii\web\urlManager',
-//            'baseUrl' => '/',
-//            'enablePrettyUrl' => true,
-//            'showScriptName' => false,
-//        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,
@@ -147,26 +141,12 @@ return [
                         'GET,POST,PUT,DELETE new-restaurant' => 'new-restaurant',
                         'GET,POST,PUT,DELETE validate-voucher' => 'validate-voucher',
                         'GET,POST,PUT,DELETE order' => 'order',
+                        'GET,POST,PUT,DELETE upload-image' => 'upload-image',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
                     ]
                 ],
-//                [
-//                    'class' => 'yii\rest\UrlRule',
-//                    'controller' => ['v1/vendor/menu'],
-//                    'extraPatterns' => [
-//                        'POST' => 'create', // 'xxxxx' refers to 'actionXxxxx'
-//                        'PUT {id}' => 'update',
-//                        'PATCH {id}' => 'update',
-//                        'DELETE {id}' => 'delete',
-//                        'GET {id}' => 'view',
-//                        'GET' => 'index',
-//                    ],
-//                    'tokens' => [
-//                        '{id}' => '<id:\\w+>'
-//                    ]
-//                ],
             ],
         ]
     ],

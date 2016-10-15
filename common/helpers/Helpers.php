@@ -167,4 +167,79 @@ class Helpers
         return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later or contact the admin']);
     }
 
+
+    public static function getImageFileContentType($extension)
+    {
+        switch ($extension) {
+            case 'png':
+                return "image/png";
+                break;
+            case "jpeg":
+                return 'image/jpeg';
+                break;
+            case "bmp":
+                return 'image/bmp';
+                break;
+            case "jpg":
+                return 'image/jpg';
+                break;
+            default:
+                return false;
+                break;
+        }
+    }
+
+    public static function Thumbnail($imageBase64, $filename, $width = 150, $height = true) {
+
+
+        // Decode base64 encoded image into Image
+        $imgDecoded = base64_decode($imageBase64);
+
+// Requires string image as parm, returns image resource
+        $im = imagecreatefromstring($imgDecoded);
+
+// Get width and height of original image resource
+        $origWidth = imagesx($im);
+        $origHeight = imagesy($im);
+
+// Create new destination image resource for new 24 x 24 image
+        $imNew = imagecreatetruecolor(24, 24);
+
+// Re-sample image to smaller size and display
+        imagecopyresampled($imNew, $im, 0, 0, 0, 0, 24, 24, $origWidth, $origHeight);
+        imagepng($imNew);
+//        imagedestroy($im);
+//        imagedestroy($imNew);
+    }
+
+    public static function ThumbnailE($imageBase64, $filename, $width = 15, $height = 15)
+    {
+        $image = imagecreatefromstring(base64_decode($imageBase64));
+
+        $origWidth = imagesx($image);
+        $origHeight = imagesy($image);
+        $image_p = imagecreatetruecolor($width, $height);
+        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $origWidth, $origHeight);
+        ob_start();
+        imagepng($image_p);
+        $data = ob_get_contents();
+        ob_end_clean();
+        return $data;
+    }
+
+
+    public static function resizeImage($imageBase64, $width = 150, $height = 150)
+    {
+        $image = imagecreatefromstring(base64_decode($imageBase64));
+        $origWidth = imagesx($image);
+        $origHeight = imagesy($image);
+        $resizeImage = imagecreatetruecolor($width, $height);
+        imagecopyresampled($resizeImage, $image, 0, 0, 0, 0, $width, $height, $origWidth, $origHeight);
+        ob_start();
+        imagepng($resizeImage);
+        $resizeImage = ob_get_contents();
+        ob_end_clean();
+        return base64_encode($resizeImage);
+    }
+
 }

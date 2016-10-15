@@ -20,6 +20,9 @@ return [
                 ],
             ],
         ],
+        'thumbnail' => [
+            'class' => 'sadovojav\image\Thumbnail',
+        ],
     ],
     'params' => $params,
 ];

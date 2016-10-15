@@ -64,6 +64,8 @@ class Restaurants extends \yii\db\ActiveRecord
     public $res_status;
     public $reviews_rank;
     public $favour_it;
+    public $extension;
+
     const SCENARIO_GET_BY_RESTAURANTS_MANGER = 'get_by_restaurants_manger';
     const SCENARIO_GET_BY_CLIENT = 'get_by_client';
     const SCENARIO_GET_DETAILS_BY_CLIENT = 'get_details_by_client';
@@ -102,10 +104,19 @@ class Restaurants extends \yii\db\ActiveRecord
             [['res_status', 'reviews_rank', 'favour_it', 'action', 'time_order_open', 'time_order_close', 'working_opening_hours', 'working_closing_hours', 'created_at', 'updated_at'], 'safe'],
             [['delivery_duration', 'user_id', 'is_verified_global', 'country_id', 'accepts_vouchers'], 'integer'],
             [['disable_ordering', 'halal', 'featured', 'status'], 'boolean'],
-            [['name', 'phone_number', 'owner_number', 'image', 'image_background'], 'string', 'max' => 255],
+            [['name', 'phone_number', 'owner_number', 'image'], 'string', 'max' => 255],
             [['working_opening_hours', 'working_closing_hours', 'time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],
+            ['image_background','extension', 'safe'],
+            ['extension', 'filter', 'filter' => 'strtolower'],
+            ['extension', 'in', 'range' => ['jpg', 'jpeg', 'png']],
+            ['extension', 'required', 'when' => function () {
+                return !empty($this->image_background);
+            }],
+            ['image_background', 'required', 'when' => function () {
+                return !empty($this->extension);
+            }],
 //            [['phone_number'],  'udokmeci\yii2PhoneValidator\PhoneValidator','country'=> 'MY', 'strict'=>false],
 //            [['owner_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
         ];
@@ -355,7 +366,7 @@ class Restaurants extends \yii\db\ActiveRecord
         $transaction = $connection->beginTransaction();
         try {
 
-            $restaurants->save();
+                $restaurants->save();
 
             if (isset($data['areas'])) {
 
