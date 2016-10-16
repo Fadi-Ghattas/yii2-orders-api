@@ -3,8 +3,11 @@
 namespace common\models;
 
 
+use Aws\S3\S3Client;
+use common\component\AWSFileManager;
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 use yii\i18n\Formatter;
 use common\helpers\Helpers;
 
@@ -108,15 +111,15 @@ class Restaurants extends \yii\db\ActiveRecord
             [['working_opening_hours', 'working_closing_hours', 'time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],
-            [['image_background','extension'], 'safe'],
-//            ['extension', 'filter', 'filter' => 'strtolower'],
-//            ['extension', 'in', 'range' => ['jpg', 'jpeg', 'png']],
-//            ['extension', 'required', 'when' => function () {
-//                return !empty($this->image_background);
-//            }],
-//            ['image_background', 'required', 'when' => function () {
-//                return !empty($this->extension);
-//            }],
+            [['image_background', 'extension'], 'safe'],
+            ['extension', 'filter', 'filter' => 'strtolower'],
+            ['extension', 'in', 'range' => ['jpg', 'jpeg', 'png']],
+            ['extension', 'required', 'when' => function () {
+                return !empty($this->image_background);
+            }],
+            ['image_background', 'required', 'when' => function () {
+                return !empty($this->extension);
+            }],
 //            [['phone_number'],  'udokmeci\yii2PhoneValidator\PhoneValidator','country'=> 'MY', 'strict'=>false],
 //            [['owner_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
         ];
@@ -366,7 +369,19 @@ class Restaurants extends \yii\db\ActiveRecord
         $transaction = $connection->beginTransaction();
         try {
 
-                $restaurants->save();
+            if (!empty($restaurants->image_background)) {
+                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => 'AKIAISPZVYQE7UQWKY2A', 'secret' => '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']));
+                $AWSImageUrl = $AWSFileManager->uploadedImageBase64ToBucket('jommakan-all-images-s3/' . $restaurants->id,
+                    $restaurants->id . '_background',
+                    $restaurants->image_background,
+                    $restaurants->extension,
+                    $sizes = ['Normal']);
+                if($AWSImageUrl['success']) {
+                    $restaurants->image_background = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
+                }
+            }
+
+            $restaurants->save();
 
             if (isset($data['areas'])) {
 
@@ -888,7 +903,7 @@ class Restaurants extends \yii\db\ActiveRecord
         return Helpers::formatResponse(true, 'get success', $restaurants);
     }
 
-    public static function  getRestaurantDetailsByClient($restaurantId)
+    public static function getRestaurantDetailsByClient($restaurantId)
     {
         $restaurant = self::getRestaurantDetails($restaurantId);
         if (empty($restaurant))

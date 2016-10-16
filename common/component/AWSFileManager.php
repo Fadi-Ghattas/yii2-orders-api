@@ -13,6 +13,7 @@ use Aws\Common\Aws;
 use Aws\S3\Model\ClearBucket;
 use Aws\S3\Exception\S3Exception;
 use common\helpers\Helpers;
+use yii\helpers\Json;
 
 class AWSFileManager extends Aws
 {
@@ -35,7 +36,7 @@ class AWSFileManager extends Aws
                 'ContentType' => Helpers::getImageFileContentType($extension),
                 'ACL' => 'public-read',
             ]);
-            return ['success' => true, 'result' => $result];
+            return ['success' => true, 'result' => Json::encode($result)];
         } catch (S3Exception $e) {
             return ['success' => false, 'result' => $e->getMessage()];
         }
