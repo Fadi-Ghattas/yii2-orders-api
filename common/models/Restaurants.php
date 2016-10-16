@@ -108,15 +108,15 @@ class Restaurants extends \yii\db\ActiveRecord
             [['working_opening_hours', 'working_closing_hours', 'time_order_open', 'time_order_close'], 'date', 'format' => 'H:m:s'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['country_id'], 'exist', 'skipOnError' => true, 'targetClass' => Countries::className(), 'targetAttribute' => ['country_id' => 'id']],
-            ['image_background','extension', 'safe'],
-            ['extension', 'filter', 'filter' => 'strtolower'],
-            ['extension', 'in', 'range' => ['jpg', 'jpeg', 'png']],
-            ['extension', 'required', 'when' => function () {
-                return !empty($this->image_background);
-            }],
-            ['image_background', 'required', 'when' => function () {
-                return !empty($this->extension);
-            }],
+            [['image_background','extension'], 'safe'],
+//            ['extension', 'filter', 'filter' => 'strtolower'],
+//            ['extension', 'in', 'range' => ['jpg', 'jpeg', 'png']],
+//            ['extension', 'required', 'when' => function () {
+//                return !empty($this->image_background);
+//            }],
+//            ['image_background', 'required', 'when' => function () {
+//                return !empty($this->extension);
+//            }],
 //            [['phone_number'],  'udokmeci\yii2PhoneValidator\PhoneValidator','country'=> 'MY', 'strict'=>false],
 //            [['owner_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
         ];
@@ -655,101 +655,101 @@ class Restaurants extends \yii\db\ActiveRecord
             $client_id = Clients::getClientByAuthorization()->id;
         }
 
-        $sql = "SELECT r.* 
-                   FROM (SELECT *, 
+        $sql = "SELECT r.*
+                   FROM (SELECT *,
                            (
-                            CASE 
+                            CASE
                             WHEN (
-                            '" . $time . "' < restaurants.working_opening_hours 
+                            '" . $time . "' < restaurants.working_opening_hours
 							 AND
-                            '" . $time . "' > restaurants.working_closing_hours 
-                            ) THEN 4 
-                            
+                            '" . $time . "' > restaurants.working_closing_hours
+                            ) THEN 4
+
                             WHEN (
-                            
-                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' ) 
-							> 
+
+                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )
+							>
                             CONVERT(restaurants.time_order_open USING utf8)
-                            
-                            AND 
-                            
-                            '" . $time . "' 
-                            < 
+
+                            AND
+
+                            '" . $time . "'
+                            <
                             IF( restaurants.time_order_open > restaurants.time_order_close AND  '" . $time . "' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
-                            
+
 							AND restaurants.disable_ordering = 1
-                            
+
                             ) THEN 2
-                            
+
                             WHEN (
-                            
-                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' ) 
-							> 
+
+                            IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )
+							>
                             CONVERT(restaurants.time_order_open USING utf8)
-                            
-                            AND 
-                            
-                            '" . $time . "' 
-                            < 
+
+                            AND
+
+                            '" . $time . "'
+                            <
                             IF( restaurants.time_order_open > restaurants.time_order_close AND  '" . $time . "' > restaurants.time_order_open, ADDTIME(restaurants.time_order_close,'24:00:00'), restaurants.time_order_close )
-                            
+
                             ) THEN 1
-                            
+
                             WHEN (
-                                  
-                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
-                                  >= 
+
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )
+                                  >=
                                   CONVERT(restaurants.working_opening_hours USING utf8)
-                                  
-                                  AND 
-                                  
-                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
-                                  <= 
+
+                                  AND
+
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )
+                                  <=
                                   CONVERT(restaurants.time_order_open USING utf8)
-                                 
+
                                  OR
-                                 
-                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
-                                  >= 
+
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )
+                                  >=
                                   CONVERT(restaurants.time_order_close USING utf8)
-                                  AND 
-                                  
-                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )   
-                                  <= 
+                                  AND
+
+                                  IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )
+                                  <=
                                   CONVERT(restaurants.working_closing_hours USING utf8)
                                   ) THEN 3
-                                  
+
                                   WHEN (
-                                  '" . $time . "'  
-                                  >= 
-                                  CONVERT(restaurants.working_opening_hours USING utf8)
-                                  
-                                  AND 
-                                  
-                                  '" . $time . "'   
-                                  <= 
-                                  CONVERT(restaurants.time_order_open USING utf8)
-                                 
-                                 OR
-                                 
-                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )  
-                                  >= 
-                                  CONVERT(restaurants.time_order_close USING utf8)
-                                  
-                                  AND 
-                                  
                                   '" . $time . "'
-                                  <= 
+                                  >=
+                                  CONVERT(restaurants.working_opening_hours USING utf8)
+
+                                  AND
+
+                                  '" . $time . "'
+                                  <=
+                                  CONVERT(restaurants.time_order_open USING utf8)
+
+                                 OR
+
+                                  IF( restaurants.time_order_open > restaurants.time_order_close ,  ADDTIME('" . $time . "','24:00:00'), '" . $time . "' )
+                                  >=
+                                  CONVERT(restaurants.time_order_close USING utf8)
+
+                                  AND
+
+                                  '" . $time . "'
+                                  <=
                                   IF( restaurants.working_opening_hours > restaurants.working_closing_hours ,  ADDTIME(restaurants.working_closing_hours,'24:00:00'), restaurants.working_closing_hours )
                                   ) THEN 3
-                                  
+
 							ELSE 4 END
                            ) AS 'res_status',
                            (SELECT ROUND(AVG(reviews.rank), 1) FROM reviews WHERE reviews.restaurant_id = restaurants.id) AS 'reviews_rank',
                            (
-                            SELECT EXISTS(SELECT favorite_restaurants.id 
-                                          FROM favorite_restaurants 
-                                          WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ") 
+                            SELECT EXISTS(SELECT favorite_restaurants.id
+                                          FROM favorite_restaurants
+                                          WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ")
                            ) AS 'favour_it'
                            FROM `restaurants`) AS r
                            JOIN area_restaurant ON r.id = area_restaurant.restaurant_id
@@ -888,7 +888,7 @@ class Restaurants extends \yii\db\ActiveRecord
         return Helpers::formatResponse(true, 'get success', $restaurants);
     }
 
-    public static function getRestaurantDetailsByClient($restaurantId)
+    public static function  getRestaurantDetailsByClient($restaurantId)
     {
         $restaurant = self::getRestaurantDetails($restaurantId);
         if (empty($restaurant))
