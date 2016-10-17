@@ -44,6 +44,7 @@ use common\helpers\Helpers;
  * @property double $reviews_rank
  * @property integer $favour_it
  * @property integer $accepts_vouchers
+ * @property string $extension
  *
  * @property Addons[] $addons
  * @property AreaRestaurant[] $areaRestaurants
@@ -114,12 +115,12 @@ class Restaurants extends \yii\db\ActiveRecord
             [['image_background', 'extension'], 'safe'],
             ['extension', 'filter', 'filter' => 'strtolower'],
             ['extension', 'in', 'range' => ['jpg', 'jpeg', 'png']],
-            ['extension', 'required', 'when' => function () {
-                return !empty($this->image_background);
-            }],
-            ['image_background', 'required', 'when' => function () {
-                return !empty($this->extension);
-            }],
+//            ['extension', 'required', 'when' => function () {
+//                return !empty($this->image_background);
+//            }],
+//            ['image_background', 'required', 'when' => function () {
+//                return !empty($this->extension);
+//            }],
 //            [['phone_number'],  'udokmeci\yii2PhoneValidator\PhoneValidator','country'=> 'MY', 'strict'=>false],
 //            [['owner_number'], 'number', 'numberPattern' => '/^\s*[-+]?[0-9]*[.,]?[0-9]+([eE][-+]?[0-9]+)?\s*$/'],
         ];
@@ -363,13 +364,19 @@ class Restaurants extends \yii\db\ActiveRecord
         $model['Restaurants'] = $data;
 
         $restaurants->load($model);
-        $restaurants->validate();
-
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
         try {
 
-            if (!empty($restaurants->image_background)) {
+            if (isset($data['image_background'])) {
+
+                if(empty(trim($data['image_background'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "image_background can't be blank"]);
+                if(!isset($data['extension']))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension is required"]);
+                if(empty(trim($data['image_background'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
+
                 $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => 'AKIAISPZVYQE7UQWKY2A', 'secret' => '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']));
                 $AWSImageUrl = $AWSFileManager->uploadedImageBase64ToBucket('jommakan-all-images-s3/' . $restaurants->id,
                     $restaurants->id . '_background',
@@ -380,7 +387,7 @@ class Restaurants extends \yii\db\ActiveRecord
                     $restaurants->image_background = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
                 }
             }
-
+            $restaurants->validate();
             $restaurants->save();
 
             if (isset($data['areas'])) {
