@@ -22,6 +22,9 @@ class SettingsForm extends Model
     const TWILLIO_SID = 'twillio_sid';
     const TWILLIO_TOKEN = 'twillio_token';
     const TWILLIO_NUMBER = 'twillio_number';
+    //ASW S3
+    const S3_KEY = 's3_key';
+    const S3_SECRET = 's3_secret';
 
     public $home_url;
     public $facebook_app_id_key;
@@ -29,6 +32,8 @@ class SettingsForm extends Model
     public $twillio_sid;
     public $twillio_token;
     public $twillio_number;
+    public $s3_key;
+    public $s3_secret;
 
     public function rules()
     {
@@ -52,6 +57,8 @@ class SettingsForm extends Model
         Setting::setSettingValueByName(SettingsForm::TWILLIO_SID, $this->twillio_sid);
         Setting::setSettingValueByName(SettingsForm::TWILLIO_TOKEN, $this->twillio_token);
         Setting::setSettingValueByName(SettingsForm::TWILLIO_NUMBER, $this->twillio_number);
+        Setting::setSettingValueByName(SettingsForm::S3_KEY, $this->s3_key);
+        Setting::setSettingValueByName(SettingsForm::S3_SECRET, $this->s3_secret);
     }
     
     public function fill()
@@ -62,5 +69,7 @@ class SettingsForm extends Model
         $this->twillio_sid = Setting::getSettingValueByName(SettingsForm::TWILLIO_SID);
         $this->twillio_token = Setting::getSettingValueByName(SettingsForm::TWILLIO_TOKEN);
         $this->twillio_number = Setting::getSettingValueByName(SettingsForm::TWILLIO_NUMBER);
+        $this->s3_key = Setting::getSettingValueByName(SettingsForm::S3_KEY);
+        $this->s3_secret = Setting::getSettingValueByName(SettingsForm::S3_SECRET);
     }
 }

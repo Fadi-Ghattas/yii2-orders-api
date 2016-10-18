@@ -3,6 +3,8 @@
 namespace common\models;
 
 
+use Aws\S3\S3Client;
+use common\component\AWSFileManager;
 use Yii;
 use common\helpers\Helpers;
 use yii\helpers\ArrayHelper;
@@ -23,6 +25,7 @@ use yii\helpers\Json;
  * @property string $created_at
  * @property string $updated_at
  * @property string $deleted_at
+ * @property string $extension
  *
  * @property MenuCategoryItem[] $menuCategoryItems
  * @property MenuItemAddon[] $menuItemAddons
@@ -34,8 +37,11 @@ use yii\helpers\Json;
 class MenuItems extends \yii\db\ActiveRecord
 {
 
+    public $extension;
+
     const SCENARIO_GET_BY_RESTAURANTS_MANGER = 'get_by_restaurants_manger';
     const SCENARIO_GET_DETAILS_BY_CLIENT = 'get_details_by_client';
+
 
     /**
      * @inheritdoc
@@ -56,7 +62,10 @@ class MenuItems extends \yii\db\ActiveRecord
             [['status', 'is_taxable', 'is_verified'], 'boolean'],
             [['discount'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at', 'name'], 'safe'],
-            [['name', 'description', 'image'], 'string', 'max' => 255],
+            [['name', 'description'], 'string', 'max' => 255],
+            [['image', 'extension'], 'safe'],
+            ['extension', 'filter', 'filter' => 'strtolower'],
+            ['extension', 'in', 'range' => ['jpg', 'jpeg', 'png']],
         ];
     }
 
@@ -225,7 +234,7 @@ class MenuItems extends \yii\db\ActiveRecord
         $model['MenuItems'] = $data;
         $menuItem->load($model);
         $menuItem->status = 1;
-        $menuItem->validate();
+
 
         if (!empty(self::getMenuItemByName($restaurant->id, $data['name'])))
             return Helpers::HttpException(409, 'name conflict', ['error' => 'There is already menu item with the same name']);
@@ -233,7 +242,11 @@ class MenuItems extends \yii\db\ActiveRecord
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
         try {
+            $menuItem->image = '';
+            $menuItem->validate();
             $menuItem->save();
+
+
 
             foreach ($data['categories'] as $category) {
                 $menuCategoryItem = new MenuCategoryItem();
@@ -261,11 +274,37 @@ class MenuItems extends \yii\db\ActiveRecord
                     $menuItemChoice->save();
                 }
             }
+
+            if (isset($data['image'])) {
+
+                if (empty(trim($data['image'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "image can't be blank"]);
+                if (!isset($data['extension']))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension is required"]);
+                if (empty(trim($data['extension'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
+
+                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
+                $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
+                    'jommakan-all-images-s3/' . $restaurant->id,
+                    'res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
+                    $menuItem->image,
+                    $menuItem->extension,
+                    $sizes = ['Normal' , 'Thumbnail' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
+                );
+                if ($AWSImageUrl['success']) {
+                    $menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
+                }
+            }
+
+            $menuItem->validate();
+            $menuItem->save();
+
             $transaction->commit();
             return Helpers::formatResponse(true, 'create success', ['id' => $menuItem->id]);
         } catch (\Exception $e) {
             $transaction->rollBack();
-            return Helpers::HttpException(422, 'create failed', null);
+            return Helpers::HttpException(422, 'create failed', $e->getMessage());
 //            throw $e;
         }
         return Helpers::HttpException(422, 'create failed', null);
@@ -282,7 +321,6 @@ class MenuItems extends \yii\db\ActiveRecord
 
         $model['MenuItems'] = $data;
         $menuItem->load($model);
-        $menuItem->validate();
 
         if (isset($data['name'])) {
             $CheckUniqueMenuItem = self::getMenuItemByName($restaurant->id, $data['name']);
@@ -294,6 +332,29 @@ class MenuItems extends \yii\db\ActiveRecord
         $transaction = $connection->beginTransaction();
         try {
 
+            if (isset($data['image'])) {
+
+                if (empty(trim($data['image'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "image can't be blank"]);
+                if (!isset($data['extension']))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension is required"]);
+                if (empty(trim($data['extension'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
+
+                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
+                $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
+                    'jommakan-all-images-s3/' . $restaurant->id,
+                    'res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
+                    $menuItem->image,
+                    $menuItem->extension,
+                    $sizes = ['Normal' , 'Thumbnail' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
+                );
+                if ($AWSImageUrl['success']) {
+                    $menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
+                }
+            }
+
+            $menuItem->validate();
             $menuItem->save();
 
             if (isset($data['categories'])) {

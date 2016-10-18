@@ -75,7 +75,7 @@ class AWSFileManager extends Aws
                 $result [] = $command->getResult();
                 // Do something with result
             }
-            return ['success' => true, 'result' => $result];
+            return ['success' => true, 'result' => Json::encode($result)];
         } catch (S3Exception $e) {
             return ['success' => false, 'result' => $e->getMessage()];
         }

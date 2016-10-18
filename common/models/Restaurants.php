@@ -3,13 +3,13 @@
 namespace common\models;
 
 
-use Aws\S3\S3Client;
-use common\component\AWSFileManager;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\i18n\Formatter;
 use common\helpers\Helpers;
+use common\component\AWSFileManager;
+use Aws\S3\S3Client;
 
 /**
  * This is the model class for table "restaurants".
@@ -370,20 +370,20 @@ class Restaurants extends \yii\db\ActiveRecord
 
             if (isset($data['image_background'])) {
 
-                if(empty(trim($data['image_background'])))
-                    return Helpers::HttpException(422, 'validation failed', ['error' => "image_background can't be blank"]);
-                if(!isset($data['extension']))
+                if (empty(trim($data['image_background'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "image background can't be blank"]);
+                if (!isset($data['extension']))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "extension is required"]);
-                if(empty(trim($data['image_background'])))
+                if (empty(trim($data['extension'])))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
 
-                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => 'AKIAISPZVYQE7UQWKY2A', 'secret' => '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']));
+                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
                 $AWSImageUrl = $AWSFileManager->uploadedImageBase64ToBucket('jommakan-all-images-s3/' . $restaurants->id,
-                    $restaurants->id . '_background',
+                    'res_' . $restaurants->id . '_background',
                     $restaurants->image_background,
                     $restaurants->extension,
                     $sizes = ['Normal']);
-                if($AWSImageUrl['success']) {
+                if ($AWSImageUrl['success']) {
                     $restaurants->image_background = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
                 }
             }
