@@ -776,7 +776,7 @@ class Restaurants extends \yii\db\ActiveRecord
                            FROM `restaurants`) AS r
                            JOIN area_restaurant ON r.id = area_restaurant.restaurant_id
                            JOIN areas ON areas.id =  area_restaurant.area_id
-                   WHERE areas.id IN (" . $area_id . ") AND ( ";
+                   WHERE areas.id IN (" . $area_id . ") AND r.status = 1 AND ( ";
 
         $addOr = 0;
         if (isset($get_data['minimum_order_amount'])) {
@@ -1032,7 +1032,7 @@ class Restaurants extends \yii\db\ActiveRecord
                                           WHERE favorite_restaurants.restaurant_id = restaurants.id AND favorite_restaurants.client_id = " . $client_id . ") 
                            ) AS 'favour_it'
                            FROM `restaurants`) AS r
-                           WHERE r.id = " . $restaurantId;
+                           WHERE r.status = 1 AND r.id = " . $restaurantId;
 
         $restaurants = Restaurants::findBySql($sql)->one();
         return $restaurants;

@@ -1,7 +1,5 @@
 <?php
-
 namespace api\modules\v1\models;
-
 
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
