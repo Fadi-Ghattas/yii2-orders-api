@@ -61,7 +61,6 @@ class ClientController extends ActiveController
                         'reset-password-sms-code',
                         'reset-password',
                         'new-restaurant',
-                        'upload-image',
                     ],
                     'authMethods' => [
                         HttpBearerAuth::className(),
@@ -333,31 +332,6 @@ class ClientController extends ActiveController
             if (empty($request->post()))
                 return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
             return Orders::makeOrder($request->post());
-        }
-        return Helpers::HttpException(405, "Method Not Allowed", null);
-    }
-
-    public function actionUploadImage()
-    {
-        $request = Yii::$app->request;
-        $get_data = $request->get();
-        if ($request->isPost && empty($get_data)) {
-            if (empty($request->post()))
-                return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
-
-            $AWSFileManager = new AWSFileManager(S3Client::factory([
-                'key' => 'AKIAISPZVYQE7UQWKY2A',
-                'secret' => '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'
-            ]));
-            return $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
-                'jommakan-all-images-s3',
-                'name_sizes',
-                $request->post()['image'],
-                'jpg',
-                $sizes = ['Normal' ,
-                         'Thumbnail' => ['suffix' => 'Thumbnail', 'width' => 50 , 'height' => 50]
-                ]);
-
         }
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }

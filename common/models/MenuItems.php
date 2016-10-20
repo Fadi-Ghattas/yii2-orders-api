@@ -288,12 +288,12 @@ class MenuItems extends \yii\db\ActiveRecord
                 $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
                     'jommakan-all-images-s3/' . $restaurant->id,
                     'res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
-                    $menuItem->image,
-                    $menuItem->extension,
+                    $data['image'],
+                    $data['extension'],
                     $sizes = ['Normal' , 'Thumbnail' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
                 );
                 if ($AWSImageUrl['success']) {
-                    $menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
+                    $menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
                 }
             }
 

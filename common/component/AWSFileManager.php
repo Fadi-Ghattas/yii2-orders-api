@@ -31,7 +31,7 @@ class AWSFileManager extends Aws
         try {
             $result = $this->createObject([
                 'Bucket' => $bucket,
-                'Key' => $imageName,
+                'Key' => $imageName . '.' . $extension,
                 'Body' => base64_decode($imageBase64),
                 'ContentType' => Helpers::getImageFileContentType($extension),
                 'ACL' => 'public-read',

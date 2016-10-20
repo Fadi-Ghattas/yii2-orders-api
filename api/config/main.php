@@ -141,7 +141,6 @@ return [
                         'GET,POST,PUT,DELETE new-restaurant' => 'new-restaurant',
                         'GET,POST,PUT,DELETE validate-voucher' => 'validate-voucher',
                         'GET,POST,PUT,DELETE order' => 'order',
-                        'GET,POST,PUT,DELETE upload-image' => 'upload-image',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
