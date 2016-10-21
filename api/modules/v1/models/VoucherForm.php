@@ -17,7 +17,6 @@ class VoucherForm extends Model
             parent::rules(),
             [
                 [['restaurant_id', 'order_total_amount', 'voucher_code'], 'required'],
-                [['voucher_code'], 'number'],
             ]);
     }
 }

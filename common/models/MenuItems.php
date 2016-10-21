@@ -296,7 +296,6 @@ class MenuItems extends \yii\db\ActiveRecord
                     $menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
                 }
             }
-
             $menuItem->validate();
             $menuItem->save();
 

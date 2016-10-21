@@ -1054,11 +1054,6 @@ class Restaurants extends \yii\db\ActiveRecord
         }
     }
 
-    public static function isAcceptsVouchers($id)
-    {
-        return self::findOne(['id' => $id])->accepts_vouchers;
-    }
-
     public function isOpenForOrders()
     {
         $restaurant = self::getRestaurantDetails($this->id, 0);

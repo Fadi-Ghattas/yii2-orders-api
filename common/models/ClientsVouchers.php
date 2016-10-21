@@ -93,7 +93,12 @@ class ClientsVouchers extends \yii\db\ActiveRecord
         if (!$voucherForm->validate())
             return Helpers::HttpException(422, 'validation failed', ['error' => $voucherForm->errors]);
 
-        if (!Restaurants::isAcceptsVouchers($voucherForm->restaurant_id))
+        $restaurant = Restaurants::find()->where(['id' => $voucherForm->restaurant_id])->one();
+        if(empty($restaurant))
+            return Helpers::HttpException(422, 'validation failed', ['error' => "this restaurants is not exist"]);
+        if (!$restaurant->status)
+            return Helpers::HttpException(422, 'validation failed', ['error' => "this restaurants is not exist"]);
+        if (!$restaurant->accepts_vouchers)
             return Helpers::HttpException(422, 'validation failed', ['error' => 'this restaurants currently not accepting vouchers']);
 
         $voucher = Vouchers::find()->where(['code' => $voucherForm->voucher_code])->one();
@@ -120,33 +125,5 @@ class ClientsVouchers extends \yii\db\ActiveRecord
 //        return Helpers::formatResponse(true, 'rest password success', $voucher->getClientVoucherFields());
         $voucher->setScenario(Vouchers::SCENARIO_CHECK_VOUCHER);
         return Helpers::formatResponse(true, 'voucher is valid',  ['voucher' => $voucher]);
-    }
-
-    public static function validateVoucher($data, $client)
-    {
-        $voucherForm = new VoucherForm();
-        $voucherForm->setAttributes($data);
-        if (!$voucherForm->validate())
-            return Helpers::HttpException(422, 'validation failed', ['error' => $voucherForm->errors]);
-
-        if (!Restaurants::isAcceptsVouchers($voucherForm->restaurant_id))
-            return Helpers::HttpException(422, 'validation failed', ['error' => 'this restaurants currently not accepting vouchers']);
-
-        $voucher = Vouchers::find()->where(['code' => $voucherForm->voucher_code])->one();
-        if (empty($voucher))
-            return Helpers::HttpException(422, 'validation failed', ['error' => 'there is no voucher with this code please try again with different code']);
-        if (!$voucher->isStart($voucherForm->restaurant_id))
-            //return Helpers::HttpException(422, 'validation failed', ['error' => 'this voucher is not yet active please check the voucher start date']);
-            return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher after ' . $voucher->getStartDate($voucherForm->restaurant_id)]);
-        if ($voucher->isExpired($voucherForm->restaurant_id))
-            return Helpers::HttpException(422, 'validation failed', ['error' => 'this voucher date is expired']);
-        if (doubleval($voucher->minimum_order) > doubleval($voucherForm->order_total_amount))
-            return Helpers::HttpException(422, 'validation failed', ['error' => 'sorry but this voucher work only for order total bigger than ' . doubleval($voucher->minimum_order)]);
-
-        $clientVoucher = self::find()->where(['client_id' => $client->id])->andWhere(['voucher_id' => $voucher->id])->one();
-        if (!empty($clientVoucher))
-            return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher for on time only']);
-
-        return $voucher;
     }
 }

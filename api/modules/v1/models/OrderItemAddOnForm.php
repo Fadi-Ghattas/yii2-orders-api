@@ -17,6 +17,7 @@ class OrderItemAddOnForm extends Model
             [
                 [['id', 'quantity'], 'required'],
                 [['id', 'quantity'], 'integer'],
+                [['quantity'], 'compare', 'compareValue' => 0, 'operator' => '>'],
             ]);
     }
 }

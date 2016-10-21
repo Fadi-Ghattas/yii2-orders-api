@@ -35,6 +35,7 @@ class OrderItemAddon extends \yii\db\ActiveRecord
         return [
             [['order_item_id', 'addon_id'], 'required'],
             [['order_item_id', 'addon_id', 'quantity'], 'integer'],
+            [['quantity'], 'compare', 'compareValue' => 0, 'operator' => '>'],
             [['price'], 'number'],
             [['addon_id'], 'exist', 'skipOnError' => true, 'targetClass' => Addons::className(), 'targetAttribute' => ['addon_id' => 'id']],
             [['order_item_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrderItems::className(), 'targetAttribute' => ['order_item_id' => 'id']],
