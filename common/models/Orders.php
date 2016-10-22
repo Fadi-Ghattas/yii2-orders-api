@@ -468,7 +468,7 @@ class Orders extends \yii\db\ActiveRecord
             $response = [
                 'id' => $order->id,
                 'status' => $order->status->name,
-                'reference' => $order->reference_number,
+                'reference_number' => $order->reference_number,
                 'restaurant_name' => $restaurants->name,
                 'order_date_time' => Restaurants::getDateTimeBaseOnRestaurantCountry($restaurants->id, $order->created_at),
                 'restaurant_delivery_fee' => $restaurants->delivery_fee,
@@ -561,7 +561,7 @@ class Orders extends \yii\db\ActiveRecord
                     'status' => function () {
                         return (string)$this->status->name;
                     },
-                    'reference' => function () {
+                    'reference_number' => function () {
                         return $this->reference_number;
                     },
                     'restaurant_name' => function () {
