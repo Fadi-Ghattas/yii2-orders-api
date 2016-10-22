@@ -1068,4 +1068,10 @@ class Restaurants extends \yii\db\ActiveRecord
         }
         return 0;
     }
+
+    public static function getDateTimeBaseOnRestaurantCountry($id, $dateTime)
+    {
+        $restaurant = self::find()->where(['id' => $id])->one();
+        return (new Formatter(['timeZone' => Helpers::getCountryTimeZone($restaurant->country->name)]))->asDatetime($dateTime, 'php:d/m/Y H:i:s');
+    }
 }

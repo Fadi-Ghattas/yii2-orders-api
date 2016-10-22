@@ -116,13 +116,6 @@ class ClientsVouchers extends \yii\db\ActiveRecord
         if (!empty($clientVoucher))
             return Helpers::HttpException(422, 'validation failed', ['error' => 'you can use this voucher for on time only']);
 
-//        $clientVoucher = new ClientsVouchers();
-//        $clientVoucher->client_id = $client_id;
-//        $clientVoucher->voucher_id = $voucher->id;
-//
-//        if (!$clientVoucher->save())
-//            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
-//        return Helpers::formatResponse(true, 'rest password success', $voucher->getClientVoucherFields());
         $voucher->setScenario(Vouchers::SCENARIO_CHECK_VOUCHER);
         return Helpers::formatResponse(true, 'voucher is valid',  ['voucher' => $voucher]);
     }

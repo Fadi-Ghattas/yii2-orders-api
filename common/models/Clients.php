@@ -341,4 +341,20 @@ class Clients extends \yii\db\ActiveRecord
         }
         return 0;
     }
+
+    public static function getClientOrders()
+    {
+        $client = self::getClientByAuthorization();
+        $orders = Orders::find()->where(['client_id' => $client->id])->all();
+        return Helpers::formatResponse(true, 'get success', ['orders' => $orders]);
+    }
+
+    public static function getClientOrder($order_id)
+    {
+        $client = self::getClientByAuthorization();
+        $order = Orders::find()->where(['client_id' => $client->id])->andWhere(['id' => $order_id])->one();
+        if(empty($order))
+            return Helpers::HttpException(404, 'not found', ['error' => 'order not found']);
+        return Helpers::formatResponse(true, 'get success', ['order' => $order]);
+    }
 }

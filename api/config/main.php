@@ -140,7 +140,8 @@ return [
                         'GET,POST,PUT,DELETE change-password' => 'change-password',
                         'GET,POST,PUT,DELETE new-restaurant' => 'new-restaurant',
                         'GET,POST,PUT,DELETE validate-voucher' => 'validate-voucher',
-                        'GET,POST,PUT,DELETE order' => 'order',
+                        'GET,POST,PUT,DELETE orders' => 'orders',
+                        'GET,POST,PUT,DELETE orders/{id}' => 'orders',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
