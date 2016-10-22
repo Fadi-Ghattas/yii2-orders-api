@@ -466,15 +466,14 @@ class Orders extends \yii\db\ActiveRecord
 
             $transaction->commit();
             $response = [
+                'status' => $order->status->name,
+                'reference' => $order->reference_number,
                 'restaurant_name' => $restaurants->name,
                 'order_date_time' => Restaurants::getDateTimeBaseOnRestaurantCountry($restaurants->id, $order->created_at),
-                'order_status' => $order->status->name,
-                'order_reference' => $order->reference_number,
                 'restaurant_delivery_fee' => $restaurants->delivery_fee,
                 'restaurant_delivery_time' => $restaurants->delivery_duration,
-                'order_total' => $order->total,
-                'order_total_with_voucher' => $order->total_with_voucher,
-
+                'total' => $order->total,
+                'total_with_voucher' => $order->total_with_voucher,
             ];
             return Helpers::formatResponse(true, 'make order success', $response);
         } catch (\Exception $e) {
@@ -557,21 +556,22 @@ class Orders extends \yii\db\ActiveRecord
                     'created_at',
                 ],
                 self::SCENARIO_CLIENT_ORDERS => [
+                    'id',
+                    'status' => function () {
+                        return (string)$this->status->name;
+                    },
+                    'reference' => function () {
+                        return $this->reference_number;
+                    },
                     'restaurant_name' => function () {
                         return (string)$this->restaurant->name;
                     },
-                    'order_status' => function () {
-                        return (string)$this->status->name;
+                    'restaurant_logo' => function () {
+                        return $this->restaurant->image;
                     },
                     'order_date_time' => function () {
                         return (string)Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);
                     },
-                    'order_reference' => function () {
-                        return $this->reference_number;
-                    },
-                    'restaurant_logo' => function () {
-                        return $this->restaurant->image;
-                    }
                 ],
             ]
         );
