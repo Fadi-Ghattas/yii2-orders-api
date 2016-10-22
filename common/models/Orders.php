@@ -466,6 +466,7 @@ class Orders extends \yii\db\ActiveRecord
 
             $transaction->commit();
             $response = [
+                'id',
                 'status' => $order->status->name,
                 'reference' => $order->reference_number,
                 'restaurant_name' => $restaurants->name,
