@@ -27,6 +27,7 @@ use yii\helpers\ArrayHelper;
 class OrderItems extends \yii\db\ActiveRecord
 {
     const SCENARIO_GET_BY_RESTAURANTS_MANGER = 'get_by_restaurants_manger';
+    const SCENARIO_CLIENT_ORDER_DETAILS = 'client_order_details';
     /**
      * @inheritdoc
      */
@@ -140,10 +141,10 @@ class OrderItems extends \yii\db\ActiveRecord
                     'price' => function () {
                         return (float)$this->price;
                     },
-                    'quantity' => function(){
+                    'quantity' => function () {
                         return (int)$this->quantity;
                     },
-                    'note' => function(){
+                    'note' => function () {
                         return (string)$this->note;
                     },
                     'menu_item' => function () {
@@ -168,13 +169,42 @@ class OrderItems extends \yii\db\ActiveRecord
                         return $this->orderItemChoices;
                     }
                 ],
+                self::SCENARIO_CLIENT_ORDER_DETAILS => [
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
+                    'ordered_price' => function () {
+                        return (float)$this->price;
+                    },
+                    'ordered_quantity' => function () {
+                        return (int)$this->quantity;
+                    },
+                    'ordered_note' => function () {
+                        return (string)$this->note;
+                    },
+                    'ordered_menu_item' => function () {
+                      return $this->item;
+                    },
+                    'ordered_addons' => function () {
+                        return $this->orderItemAddons;
+                    },
+                    'ordered_item_choices' => function () {
+                        return $this->orderItemChoices;
+                    }
+                ],
             ]);
     }
 
     public function fields()
     {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
-        if (in_array('orders', $request_action) && Yii::$app->request->isGet && isset(Yii::$app->request->get()['id']))
+        if ((in_array('clients', $request_action) && in_array('orders', $request_action)) && $request->isGet) {
+            if (!empty($get_data) && isset($get_data['id']))
+                return $this->scenarios()[self::SCENARIO_CLIENT_ORDER_DETAILS];
+        } else if (in_array('orders', $request_action) && Yii::$app->request->isGet && isset(Yii::$app->request->get()['id']))
             return $this->scenarios()[self::SCENARIO_GET_BY_RESTAURANTS_MANGER];
         return parent::fields();
     }

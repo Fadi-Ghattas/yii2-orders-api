@@ -277,7 +277,7 @@ class Restaurants extends \yii\db\ActiveRecord
      */
     public function getReviews()
     {
-        return $this->hasMany(Reviews::className(), ['restaurant_id' => 'id']);
+        return $this->hasMany(Reviews::className(), ['restaurant_id' => 'id'])->orderBy('created_at DESC');
     }
 
     /**

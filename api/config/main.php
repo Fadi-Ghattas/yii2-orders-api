@@ -142,6 +142,7 @@ return [
                         'GET,POST,PUT,DELETE validate-voucher' => 'validate-voucher',
                         'GET,POST,PUT,DELETE orders' => 'orders',
                         'GET,POST,PUT,DELETE orders/{id}' => 'orders',
+                        'GET,POST,PUT,DELETE reviews' => 'reviews',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

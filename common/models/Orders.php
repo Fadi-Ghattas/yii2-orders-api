@@ -47,6 +47,7 @@ class Orders extends \yii\db\ActiveRecord
     const SCENARIO_ALL_ORDERS = 'all_orders';
     const SCENARIO_ORDER_DETAILS = 'order_details';
     const SCENARIO_CLIENT_ORDERS = 'client_orders';
+    const SCENARIO_CLIENT_ORDER_DETAILS = 'client_order_details';
 
     /**
      * @inheritdoc
@@ -221,6 +222,7 @@ class Orders extends \yii\db\ActiveRecord
             $query->andFilterWhere(['>=', 'created_at', trim($get_data['date'])]);
         if ($limit != -1)
             $query->limit($limit)->offset($page - 1);
+        $query->orderBy('created_at DESC');
         return Helpers::formatResponse(true, 'get success', $dataProvider->models);
     }
 
@@ -273,8 +275,8 @@ class Orders extends \yii\db\ActiveRecord
             return Helpers::HttpException(422, 'validation failed', ['error' => "this restaurants is not exist"]);
         if (!$restaurants->status)
             return Helpers::HttpException(422, 'validation failed', ['error' => "this restaurants is not exist"]);
-        if (!$restaurants->isOpenForOrders())
-            return Helpers::HttpException(422, 'validation failed', ['error' => 'Sorry restaurant ' . $restaurants->name . ' is not taken any order for now pleas try some time later.']);
+//        if (!$restaurants->isOpenForOrders())
+//            return Helpers::HttpException(422, 'validation failed', ['error' => 'Sorry restaurant ' . $restaurants->name . ' is not taken any order for now pleas try some time later.']);
         if (!$restaurants->checkPaymentMethod($makeOrderForm->payment_method_id))
             return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry restaurant " . $restaurants->name . " don't accept this payment method."]);
         if (!empty(BlacklistedClients::find()->where(['client_id' => $client->id])->andWhere(['restaurant_id' => $restaurants->id])->one()))
@@ -466,15 +468,15 @@ class Orders extends \yii\db\ActiveRecord
 
             $transaction->commit();
             $response = [
-                'id' => $order->id,
-                'status' => $order->status->name,
-                'reference_number' => $order->reference_number,
-                'restaurant_name' => $restaurants->name,
-                'order_date_time' => Restaurants::getDateTimeBaseOnRestaurantCountry($restaurants->id, $order->created_at),
-                'restaurant_delivery_fee' => $restaurants->delivery_fee,
-                'restaurant_delivery_time' => $restaurants->delivery_duration,
-                'total' => $order->total,
-                'total_with_voucher' => $order->total_with_voucher,
+                'id' => (int)$order->id,
+                'status' => (string)$order->status->name,
+                'reference_number' => (string)$order->reference_number,
+                'restaurant_name' => (string)$restaurants->name,
+                'order_date_time' => (string)Restaurants::getDateTimeBaseOnRestaurantCountry($restaurants->id, $order->created_at),
+                'restaurant_delivery_fee' => (float)$restaurants->delivery_fee,
+                'restaurant_delivery_time' => (int)$restaurants->delivery_duration,
+                'total' => (float)$order->total,
+                'total_with_voucher' => (float)$order->total_with_voucher,
             ];
             return Helpers::formatResponse(true, 'make order success', $response);
         } catch (\Exception $e) {
@@ -492,7 +494,7 @@ class Orders extends \yii\db\ActiveRecord
                     'id',
                     'reference_number',
                     'status' => function () {
-                        return $this->status->name;
+                        return $this->status;
                     },
                     'name' => function () {
                         return $this->client->user->username;
@@ -512,14 +514,13 @@ class Orders extends \yii\db\ActiveRecord
                     'commission_amount',
                     'note',
                     'delivery_fee' => function () {
-                        return $this->restaurant->delivery_fee;
+                        return $this->delivery_fee;
                     },
                     'status' => function () {
                         return $this->status->name;
                     },
                     'vouchers' => function () {
-//                        return $this->voucher;
-                        return [];
+                        return $this->voucher->getVoucherFields();
                     },
                     'customer_details' => function () {
                         $customer_details = array();
@@ -554,7 +555,9 @@ class Orders extends \yii\db\ActiveRecord
                     'payment_method' => function () {
                         return $this->paymentMethod;
                     },
-                    'created_at',
+                    'created_at' => function () {
+                        return (string)date('d/m/Y H:i:s', strtotime($this->created_at));
+                    }
                 ],
                 self::SCENARIO_CLIENT_ORDERS => [
                     'id',
@@ -562,18 +565,54 @@ class Orders extends \yii\db\ActiveRecord
                         return (string)$this->status->name;
                     },
                     'reference_number' => function () {
-                        return $this->reference_number;
+                        return (string)$this->reference_number;
                     },
                     'restaurant_name' => function () {
                         return (string)$this->restaurant->name;
                     },
                     'restaurant_logo' => function () {
-                        return $this->restaurant->image;
+                        return (string)$this->restaurant->image;
                     },
                     'order_date_time' => function () {
                         return (string)Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);
                     },
                 ],
+                self::SCENARIO_CLIENT_ORDER_DETAILS => [
+                    'id',
+                    'restaurant_name' => function () {
+                        return (string)$this->restaurant->name;
+                    },
+                    'restaurant_logo' => function () {
+                        return (string)$this->restaurant->image;
+                    },
+                    'status' => function () {
+                        return (string)$this->status->name;
+                    },
+                    'reference_number' => function () {
+                        return (string)$this->reference_number;
+                    },
+                    'delivery_address' => function () {
+                        return $this->address;
+                    },
+                    'ordered_items' => function () {
+                        return $this->orderItems;
+                    },
+                    'total' => function () {
+                        return (float)$this->total;
+                    },
+                    'total_with_voucher' => function () {
+                        return (float)$this->total_with_voucher;
+                    },
+                    'delivery_fee' => function () {
+                        return (float)$this->delivery_fee;
+                    },
+                    'delivery_duration' => function () {
+                        return (int)$this->restaurant->delivery_duration;
+                    },
+                    'order_date_time' => function () {
+                        return (string)Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);
+                    },
+                ]
             ]
         );
     }
@@ -587,8 +626,8 @@ class Orders extends \yii\db\ActiveRecord
         if ((in_array('clients', $request_action) && in_array('orders', $request_action)) && $request->isGet) {
             if (!isset($get_data['id']))
                 return $this->scenarios()[self::SCENARIO_CLIENT_ORDERS];
-//            else if (!empty($get_data) && isset($get_data['id']))
-//                return $this->scenarios()[self::SCENARIO_ORDER_DETAILS];
+            else if (!empty($get_data) && isset($get_data['id']))
+                return $this->scenarios()[self::SCENARIO_CLIENT_ORDER_DETAILS];
         } else if (in_array('orders', $request_action) && $request->isGet) {
             if (!isset($get_data['id']))
                 return $this->scenarios()[self::SCENARIO_ALL_ORDERS];

@@ -345,7 +345,7 @@ class Clients extends \yii\db\ActiveRecord
     public static function getClientOrders()
     {
         $client = self::getClientByAuthorization();
-        $orders = Orders::find()->where(['client_id' => $client->id])->all();
+        $orders = Orders::find()->where(['client_id' => $client->id])->orderBy('created_at DESC')->all();
         return Helpers::formatResponse(true, 'get success', ['orders' => $orders]);
     }
 
@@ -353,8 +353,23 @@ class Clients extends \yii\db\ActiveRecord
     {
         $client = self::getClientByAuthorization();
         $order = Orders::find()->where(['client_id' => $client->id])->andWhere(['id' => $order_id])->one();
-        if(empty($order))
+        if (empty($order))
             return Helpers::HttpException(404, 'not found', ['error' => 'order not found']);
         return Helpers::formatResponse(true, 'get success', ['order' => $order]);
+    }
+
+    public static function postReviews($data)
+    {
+        $reviews = new Reviews();
+        $reviews->setAttributes($data);
+        $headers = Yii::$app->request->headers;
+        if (isset($headers['authorization'])) {
+            $client = Clients::getClientByAuthorization();
+            $reviews->client_id = $client->id;
+        }
+        $reviews->validate();
+        if (!$reviews->save())
+            return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
+        return Helpers::formatResponse(true, 'post review success', ['reviews' => $reviews]);
     }
 }

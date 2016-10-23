@@ -125,7 +125,20 @@ class Vouchers extends \yii\db\ActiveRecord
         return [
             'voucher_name' => (string)$this->name,
             'voucher_amount' => (double)$this->value,
-            'voucher_code' => (double)$this->code,
+            'voucher_code' => (string)$this->code,
+        ];
+    }
+
+    public function getVoucherFields()
+    {
+        return [
+            'id' => (integer)$this->id,
+            'name' => (string)$this->name,
+            'amount' => (double)$this->value,
+            'code' => (string)$this->code,
+            'minimum_order' => (double)$this->minimum_order,
+            'start_date' => (string)date('d/m/Y H:i:s' ,strtotime($this->start_date)),
+            'expiry_date' => (string)date('d/m/Y H:i:s' ,strtotime($this->expiry_date)),
         ];
     }
 
@@ -179,6 +192,20 @@ class Vouchers extends \yii\db\ActiveRecord
         return ArrayHelper::merge(
             parent::scenarios(),
             [
+                self::SCENARIO_DEFAULT => [
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
+                    'name' => function () {
+                        return (string)$this->name;
+                    },
+                    'value' => function () {
+                        return (double)$this->value;
+                    },
+                    'minimum_order' => function () {
+                        return (double)$this->minimum_order;
+                    }
+                ],
                 self::SCENARIO_CHECK_VOUCHER => [
                     'id' => function () {
                         return (int)$this->id;

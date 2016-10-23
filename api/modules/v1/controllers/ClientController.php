@@ -61,6 +61,7 @@ class ClientController extends ActiveController
                         'reset-password-sms-code',
                         'reset-password',
                         'new-restaurant',
+                        'reviews'
                     ],
                     'authMethods' => [
                         HttpBearerAuth::className(),
@@ -341,6 +342,19 @@ class ClientController extends ActiveController
         return Helpers::HttpException(405, "Method Not Allowed", null);
     }
 
+    public function actionReviews()
+    {
+        $request = Yii::$app->request;
+        $get_data = $request->get();
+
+        if ($request->isPost && empty($get_data)) {
+            if (empty($request->post()))
+                return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
+            return Clients::postReviews($request->post());
+        }
+        return Helpers::HttpException(405, "Method Not Allowed", null);
+    }
+
     public function beforeAction($event)
     {
         $request_action = explode('/', Yii::$app->getRequest()->getUrl());
@@ -361,7 +375,7 @@ class ClientController extends ActiveController
             'new-restaurant' => ['POST'],
             'validate-voucher' => ['POST'],
             'orders' => ['GET', 'POST'],
-            'upload-image' => ['POST'],
+            'reviews' => ['POST'],
         ];
 
         foreach ($actions as $action => $verb) {

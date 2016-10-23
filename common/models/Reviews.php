@@ -38,8 +38,10 @@ class Reviews extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['rank', 'restaurant_id', 'client_id', 'title'], 'required'],
+            [['rank', 'restaurant_id', 'title'], 'required'],
             [['rank'], 'number'],
+            ['rank', 'compare', 'compareValue' => 1, 'operator' => '>='],
+            ['rank', 'compare', 'compareValue' => 5, 'operator' => '<='],
             [['restaurant_id', 'client_id'], 'integer'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['comment', 'title'], 'string', 'max' => 255],
