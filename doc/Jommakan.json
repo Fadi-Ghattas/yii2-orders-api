@@ -34,7 +34,8 @@
 				"ca4ab488-88e4-b27c-e647-c34df5d63aa8",
 				"21a9186f-3192-1d91-0477-9e2ecbd21f27",
 				"272b0b48-8abe-2156-1212-dc6310590dce",
-				"1974bb02-7f98-1393-e828-180d33c52747"
+				"1974bb02-7f98-1393-e828-180d33c52747",
+				"6ca816ea-4c71-95f2-de32-26708e80d7f2"
 			]
 		},
 		{
@@ -2650,7 +2651,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1477140171825,
+			"time": 1477242478704,
 			"name": "Make Order",
 			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key)(required) | Obtained from login\r\n\r\n##### JSON Parameters:\r\n\r\n- restaurant_id (integer) (required)\r\n- address_id (integer) (required)\r\n- payment_method_id (integer) (required)\r\n- items (array of item object) (required)\r\n- note (string) (optinal)\r\n- voucher_code (string) (optinal)\r\n\r\n##### Return:\r\n\r\n- 200 order_id\r\n- 401 Unauthrized\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error",
 			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
@@ -3349,6 +3350,94 @@
 							}
 						],
 						"data": "{  \r\n   \"restaurant_id\":4,\r\n   \"address_id\":27,\r\n   \"payment_method_id\":1,\r\n   \"voucher_code\":\"22\",\r\n   \"items\":[  \r\n      {  \r\n         \"id\":34,\r\n         \"quantity\":1,\r\n         \"note\":\"with out salt\",\r\n         \"add_on\":[  \r\n            {  \r\n               \"id\":60,\r\n               \"quantity\":2\r\n            }\r\n         ],\r\n         \"item_choices\":{  \r\n            \"id\":4\r\n         }\r\n      }\r\n   ]\r\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 1434,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "277",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 23 Oct 2016 17:11:06 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"make order success\",\"data\":[{\"id\":91,\"status\":\"Pending\",\"reference_number\":\"4_6_91\",\"restaurant_name\":\"tony\",\"order_date_time\":\"24/10/2016 01:11:07\",\"restaurant_delivery_fee\":2,\"restaurant_delivery_time\":15,\"total\":64.14,\"total_with_voucher\":64.14}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "90cc7691-69f3-e61e-7dad-105c5bf687f2",
+					"name": "200",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/orders",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{  \r\n   \"restaurant_id\":4,\r\n   \"address_id\":28,\r\n   \"payment_method_id\":1,\r\n   \"items\":[  \r\n      {  \r\n         \"id\":34,\r\n         \"quantity\":1,\r\n         \"note\":\"with out salt\",\r\n         \"add_on\":[  \r\n            {  \r\n               \"id\":60,\r\n               \"quantity\":2\r\n            }\r\n         ],\r\n         \"item_choices\":{  \r\n            \"id\":4\r\n         }\r\n      }\r\n   ]\r\n}",
 						"method": "POST",
 						"dataMode": "raw"
 					}
@@ -8275,6 +8364,375 @@
 			"responses": [],
 			"rawModeData": "{\n    \"client_id\":\"1\"\n}",
 			"folder": "68964686-86ea-8b26-4972-2953edbdd73f"
+		},
+		{
+			"id": "6ca816ea-4c71-95f2-de32-26708e80d7f2",
+			"headers": "Content-Type: application/json\nAuthorization: {{client_token}}\n",
+			"url": "{{url}}/api/web/v1/clients/reviews",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1477258583121,
+			"name": "Post Review",
+			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key)(required) | Obtained from login\r\n\r\n##### JSON Parameters:\r\n\r\n- restaurant_id (integer) (required)\r\n- address_id (integer) (required)\r\n- payment_method_id (integer) (required)\r\n- items (array of item object) (required)\r\n- note (string) (optinal)\r\n- voucher_code (string) (optinal)\r\n\r\n##### Return:\r\n\r\n- 200 order_id\r\n- 401 Unauthrized\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error",
+			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 221,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "173",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 23 Oct 2016 21:30:45 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"post review success\",\"data\":[{\"reviews\":{\"id\":77,\"name\":\"fadie\",\"title\":\"test reveiw\",\"comment\":\"\",\"rank\":4,\"created_at\":\"2016-10-23 21:30:45\"}}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "f0860872-6156-933c-8195-99b3e2d9560b",
+					"name": "200",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/reviews",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"restaurant_id\" : 4,\n\t\"title\" : \"test reveiw\",\n\t\"rank\" : 4\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 422,
+						"name": "Unprocessable entity",
+						"detail": "The request was well-formed but was unable to be followed due to semantic errors."
+					},
+					"time": 158,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "124",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 23 Oct 2016 21:35:05 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"validation failed\",\"data\":[{\"error\":{\"rank\":[\"Rank must be greater than or equal to \\\"1\\\".\"]}}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "39c15b36-03ad-cbea-f463-f72bdaa88fec",
+					"name": "422",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/reviews",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"restaurant_id\" : 4,\n\t\"title\" : \"test reveiw\",\n\t\"rank\" : 0\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 422,
+						"name": "Unprocessable entity",
+						"detail": "The request was well-formed but was unable to be followed due to semantic errors."
+					},
+					"time": 191,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "121",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 23 Oct 2016 21:35:13 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"validation failed\",\"data\":[{\"error\":{\"rank\":[\"Rank must be less than or equal to \\\"5\\\".\"]}}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "bdf85056-64e7-be9b-43d0-6ad18c61e6a7",
+					"name": "422",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/reviews",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{client_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"restaurant_id\" : 4,\n\t\"title\" : \"test reveiw\",\n\t\"rank\" : 10\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 275,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "180",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 23 Oct 2016 21:36:02 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"post review success\",\"data\":[{\"reviews\":{\"id\":80,\"name\":\"Unknown User\",\"title\":\"test reveiw\",\"comment\":\"\",\"rank\":5,\"created_at\":\"2016-10-23 21:36:02\"}}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "55153f08-5ef8-8923-3cb3-86011cd0f54b",
+					"name": "200",
+					"request": {
+						"url": "{{url}}/api/web/v1/clients/reviews",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content",
+								"warning": ""
+							}
+						],
+						"data": "{\n\t\"restaurant_id\" : 4,\n\t\"title\" : \"test reveiw\",\n\t\"rank\" : 5\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				}
+			],
+			"rawModeData": "{\n\t\"restaurant_id\" : 4,\n\t\"title\" : \"test review\",\n\t\"rank\" : 4\n}"
 		},
 		{
 			"id": "7255a662-68b8-380c-d60f-7d0868603963",
