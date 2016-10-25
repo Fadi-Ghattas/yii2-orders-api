@@ -346,7 +346,7 @@ class Clients extends \yii\db\ActiveRecord
     {
         $client = self::getClientByAuthorization();
         $orders = Orders::find()->where(['client_id' => $client->id])->orderBy('created_at DESC')->all();
-        return Helpers::formatResponse(true, 'get success', ['orders' => $orders]);
+        return Helpers::formatResponse(true, 'get success',  $orders);
     }
 
     public static function getClientOrder($order_id)
@@ -355,7 +355,7 @@ class Clients extends \yii\db\ActiveRecord
         $order = Orders::find()->where(['client_id' => $client->id])->andWhere(['id' => $order_id])->one();
         if (empty($order))
             return Helpers::HttpException(404, 'not found', ['error' => 'order not found']);
-        return Helpers::formatResponse(true, 'get success', ['order' => $order]);
+        return Helpers::formatResponse(true, 'get success', $order);
     }
 
     public static function postReviews($data)
