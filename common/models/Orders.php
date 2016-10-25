@@ -520,7 +520,7 @@ class Orders extends \yii\db\ActiveRecord
                         return $this->status->name;
                     },
                     'vouchers' => function () {
-                        return $this->voucher->getVoucherFields();
+                        return (!empty($this->voucher) ? $this->voucher->getVoucherFields() : []) ;
                     },
                     'customer_details' => function () {
                         $customer_details = array();
@@ -579,23 +579,26 @@ class Orders extends \yii\db\ActiveRecord
                 ],
                 self::SCENARIO_CLIENT_ORDER_DETAILS => [
                     'id',
-                    'restaurant_name' => function () {
-                        return (string)$this->restaurant->name;
-                    },
-                    'restaurant_logo' => function () {
-                        return (string)$this->restaurant->image;
-                    },
                     'status' => function () {
                         return (string)$this->status->name;
                     },
                     'reference_number' => function () {
                         return (string)$this->reference_number;
                     },
-                    'delivery_address' => function () {
-                        return $this->address;
+                    'restaurant_name' => function () {
+                        return (string)$this->restaurant->name;
                     },
-                    'ordered_items' => function () {
-                        return $this->orderItems;
+                    'restaurant_logo' => function () {
+                        return (string)$this->restaurant->image;
+                    },
+                    'order_date_time' => function () {
+                        return (string)Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);
+                    },
+                    'order_delivery_fee' => function () {
+                        return (float)$this->delivery_fee;
+                    },
+                    'restaurant_delivery_duration' => function () {
+                        return (int)$this->restaurant->delivery_duration;
                     },
                     'total' => function () {
                         return (float)$this->total;
@@ -603,14 +606,11 @@ class Orders extends \yii\db\ActiveRecord
                     'total_with_voucher' => function () {
                         return (float)$this->total_with_voucher;
                     },
-                    'delivery_fee' => function () {
-                        return (float)$this->delivery_fee;
+                    'address' => function () {
+                        return $this->address;
                     },
-                    'delivery_duration' => function () {
-                        return (int)$this->restaurant->delivery_duration;
-                    },
-                    'order_date_time' => function () {
-                        return (string)Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);
+                    'items' => function () {
+                        return $this->orderItems;
                     },
                 ]
             ]
@@ -622,7 +622,9 @@ class Orders extends \yii\db\ActiveRecord
         $request = Yii::$app->request;
         $get_data = $request->get();
 
-        $request_action = explode('/', Yii::$app->getRequest()->getUrl());
+        $request_action = explode('?', Yii::$app->getRequest()->getUrl());
+        $request_action = explode('/', $request_action[0]);
+
         if ((in_array('clients', $request_action) && in_array('orders', $request_action)) && $request->isGet) {
             if (!isset($get_data['id']))
                 return $this->scenarios()[self::SCENARIO_CLIENT_ORDERS];

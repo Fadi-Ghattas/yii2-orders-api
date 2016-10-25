@@ -370,6 +370,6 @@ class Clients extends \yii\db\ActiveRecord
         $reviews->validate();
         if (!$reviews->save())
             return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
-        return Helpers::formatResponse(true, 'post review success', ['reviews' => $reviews]);
+        return Helpers::formatResponse(true, 'Thank you for rating this order, your review will be published shortly.', ['id' => $reviews->id]);
     }
 }

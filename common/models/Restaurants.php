@@ -647,7 +647,9 @@ class Restaurants extends \yii\db\ActiveRecord
 
     public function fields()
     {
-        $request_action = explode('/', Yii::$app->getRequest()->getUrl());
+        $request_action = explode('?', Yii::$app->getRequest()->getUrl());
+        $request_action = explode('/', $request_action[0]);
+
         if (in_array('clients', $request_action) && Yii::$app->request->isGet && !isset(Yii::$app->request->get()['id']))
             return $this->scenarios()[self::SCENARIO_GET_BY_CLIENT];
         else if (in_array('clients', $request_action) && Yii::$app->request->isGet && isset(Yii::$app->request->get()['id']))

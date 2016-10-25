@@ -173,22 +173,22 @@ class OrderItems extends \yii\db\ActiveRecord
                     'id' => function () {
                         return (int)$this->id;
                     },
-                    'ordered_price' => function () {
+                    'price' => function () {
                         return (float)$this->price;
                     },
-                    'ordered_quantity' => function () {
+                    'quantity' => function () {
                         return (int)$this->quantity;
                     },
-                    'ordered_note' => function () {
+                    'note' => function () {
                         return (string)$this->note;
                     },
-                    'ordered_menu_item' => function () {
-                      return $this->item;
-                    },
-                    'ordered_addons' => function () {
+//                    'ordered_menu_item' => function () {
+//                      return $this->item;
+//                    },
+                    'addons' => function () {
                         return $this->orderItemAddons;
                     },
-                    'ordered_item_choices' => function () {
+                    'item_choices' => function () {
                         return $this->orderItemChoices;
                     }
                 ],
