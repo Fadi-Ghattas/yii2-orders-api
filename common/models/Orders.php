@@ -491,36 +491,52 @@ class Orders extends \yii\db\ActiveRecord
             parent::scenarios(),
             [
                 self::SCENARIO_ALL_ORDERS => [
-                    'id',
-                    'reference_number',
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
+                    'reference_number' => function () {
+                        return (string)$this->reference_number;
+                    },
                     'status' => function () {
-                        return $this->status;
+                        return (string)$this->status;
                     },
                     'name' => function () {
-                        return $this->client->user->username;
+                        return (string)$this->client->user->username;
                     },
                     'date' => function () {
-                        return date('d/m/Y', strtotime($this->created_at));
+                        return (string)date('d/m/Y', strtotime($this->created_at));
                     },
                     'time' => function () {
-                        return date('h:i A', strtotime($this->created_at));
+                        return (string)date('h:i A', strtotime($this->created_at));
                     }
                 ],
                 self::SCENARIO_ORDER_DETAILS => [
-                    'id',
-                    'reference_number',
-                    'total',
-                    'total_with_voucher',
-                    'commission_amount',
-                    'note',
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
+                    'reference_number' => function () {
+                        return (string)$this->reference_number;
+                    },
+                    'total' => function () {
+                        return (float)$this->total;
+                    },
+                    'total_with_voucher' => function () {
+                        return (float)$this->total_with_voucher;
+                    },
+                    'commission_amount' => function () {
+                        return (float)$this->commission_amount;
+                    },
+                    'note' => function () {
+                        return (string)$this->note;
+                    },
                     'delivery_fee' => function () {
-                        return $this->delivery_fee;
+                        return (float)$this->delivery_fee;
                     },
                     'status' => function () {
-                        return $this->status->name;
+                        return (string)$this->status->name;
                     },
                     'vouchers' => function () {
-                        return (!empty($this->voucher) ? $this->voucher->getVoucherFields() : []) ;
+                        return (!empty($this->voucher) ? $this->voucher->getVoucherFields() : []);
                     },
                     'customer_details' => function () {
                         $customer_details = array();
@@ -560,7 +576,9 @@ class Orders extends \yii\db\ActiveRecord
                     }
                 ],
                 self::SCENARIO_CLIENT_ORDERS => [
-                    'id',
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
                     'status' => function () {
                         return (string)$this->status->name;
                     },
@@ -578,7 +596,9 @@ class Orders extends \yii\db\ActiveRecord
                     },
                 ],
                 self::SCENARIO_CLIENT_ORDER_DETAILS => [
-                    'id',
+                    'id' => function () {
+                        return (int)$this->id;
+                    },
                     'status' => function () {
                         return (string)$this->status->name;
                     },
