@@ -35,7 +35,8 @@
 				"21a9186f-3192-1d91-0477-9e2ecbd21f27",
 				"272b0b48-8abe-2156-1212-dc6310590dce",
 				"1974bb02-7f98-1393-e828-180d33c52747",
-				"6ca816ea-4c71-95f2-de32-26708e80d7f2"
+				"6ca816ea-4c71-95f2-de32-26708e80d7f2",
+				"efad0cd8-604f-6c52-2c4a-3169a16bc56a"
 			]
 		},
 		{
@@ -47,7 +48,8 @@
 			"description": "",
 			"order": [
 				"6a923495-4bd9-3335-20a2-5f1f12074583",
-				"2386bf62-70ed-ff91-e775-edd551b300f8"
+				"2386bf62-70ed-ff91-e775-edd551b300f8",
+				"a64b0888-cda2-19ed-f78c-8188cf387a9d"
 			]
 		},
 		{
@@ -12146,6 +12148,117 @@
 			"folder": "433b17d6-ca1f-4bcb-4c28-ab8cf25c3184"
 		},
 		{
+			"id": "a64b0888-cda2-19ed-f78c-8188cf387a9d",
+			"headers": "Content-Type: application/json\nAuthorization: {{vendor_token}}\n",
+			"url": "{{url}}/api/web/v1/commons/orders",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Get Order Status",
+			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key)(required) | Obtained from login\r\n\r\n##### JSON Parameters:\r\n\r\n- id (intger) (optinal)\r\n\r\n##### Return:\r\n\r\n- 200 Order Status Object\r\n- 401 Unauthrized\r\n- 404 Not Found\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error\r\n",
+			"descriptionFormat": "html",
+			"time": 1477729160394,
+			"version": 2,
+			"responses": [
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 8204,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "77",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sat, 29 Oct 2016 08:20:33 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"get success\",\"data\":[{\"id\":\"1\",\"name\":\"Pending\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "7bbba890-c0f6-73bb-0c75-45d2b5d57026",
+					"name": "200",
+					"request": {
+						"url": "{{url}}/api/web/v1/commons/orders",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{vendor_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{\n\t\"id\" : \"93\"\n}",
+						"method": "POST",
+						"dataMode": "raw"
+					}
+				}
+			],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"folder": "68964686-86ea-8b26-4972-2953edbdd73f",
+			"rawModeData": "{\n\t\"id\" : \"93\"\n}"
+		},
+		{
 			"id": "a6f1a5d0-fb83-c671-f920-26dbeb94e8e5",
 			"headers": "Content-Type: application/json\nAuthorization: {{vendor_token}}\n",
 			"url": "{{url}}/api/web/v1/vendors/orders/2",
@@ -17013,6 +17126,453 @@
 			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
 			"responses": [],
 			"folder": "433b17d6-ca1f-4bcb-4c28-ab8cf25c3184"
+		},
+		{
+			"id": "efad0cd8-604f-6c52-2c4a-3169a16bc56a",
+			"headers": "Content-Type: application/json\n",
+			"url": "{{url}}/api/web/v1/clients/sign-up",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1475740395200,
+			"name": "Sign Up copy",
+			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n\r\n##### JSON Parameters:\r\n\r\n- full_name (string) (required)   \r\n- email (string) (required)\r\n- password (string) (required)\r\n- phone_number (string) (required)\r\n\r\n##### Return:\r\n\r\n- 200 UserClient Object\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error\r\n- 501 Not Implemented",
+			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
+			"responses": [
+				{
+					"owner": "262964",
+					"lastUpdatedBy": "262964",
+					"lastRevision": 588487877,
+					"request": "4cf9f9cd-f9ff-5b67-7b03-20b370ff553c",
+					"id": "7190000b-a9f3-924d-fdeb-0e2f5478408d",
+					"name": "422 facebook",
+					"status": "",
+					"responseCode": {
+						"code": 422,
+						"name": "Unprocessable entity"
+					},
+					"time": "356",
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": ""
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "171",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sat, 24 Sep 2016 06:10:50 GMT",
+							"description": ""
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": ""
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": ""
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"validation failed\",\"data\":[{\"error\":\"You are already sing up with facebook , you can login with facebook or reset your password and log in.\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": "-1",
+					"version": null,
+					"requestObject": "{\"url\":\"{{url}}/api/web/v1/clients/sign-up\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"enabled\":true,\"description\":\"The mime type of this content\"}],\"data\":\"{\\n    \\\"full_name\\\":\\\"Fadi Ghattas\\\",\\n    \\\"email\\\":\\\"fadighattas100@gmail.com\\\",\\n    \\\"password\\\":\\\"123456\\\",\\n    \\\"phone_number\\\":\\\"0999999498\\\"\\n}\",\"method\":\"POST\",\"dataMode\":\"raw\"}",
+					"createdAt": "2016-09-24T06:11:01.000Z",
+					"updatedAt": "2016-09-24T06:11:01.000Z",
+					"write": true
+				},
+				{
+					"owner": "262964",
+					"lastUpdatedBy": "262964",
+					"lastRevision": 588489599,
+					"request": "4cf9f9cd-f9ff-5b67-7b03-20b370ff553c",
+					"id": "e8d518a1-ace6-5091-678d-a08cc9b60b9c",
+					"name": "500",
+					"status": "",
+					"responseCode": {
+						"code": 500,
+						"name": "Internal Server Error"
+					},
+					"time": "1372",
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "close",
+							"description": ""
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "101",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sat, 24 Sep 2016 06:12:29 GMT",
+							"description": ""
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": ""
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"server error\",\"data\":[{\"error\":\"Something went wrong, try again later\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": "-1",
+					"version": null,
+					"requestObject": "{\"url\":\"{{url}}/api/web/v1/clients/sign-up\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"enabled\":true,\"description\":\"The mime type of this content\"}],\"data\":\"{\\n    \\\"full_name\\\":\\\"Fadi Ghattas\\\",\\n    \\\"email\\\":\\\"fadighattas100000@gmail.com\\\",\\n    \\\"password\\\":\\\"123456\\\",\\n    \\\"phone_number\\\":\\\"0999999498\\\"\\n}\",\"method\":\"POST\",\"dataMode\":\"raw\"}",
+					"createdAt": "2016-09-24T06:12:37.000Z",
+					"updatedAt": "2016-09-24T06:12:37.000Z",
+					"write": true
+				},
+				{
+					"owner": "262964",
+					"lastUpdatedBy": "262964",
+					"lastRevision": 588489925,
+					"request": "4cf9f9cd-f9ff-5b67-7b03-20b370ff553c",
+					"id": "8d6d57e3-ba15-6961-62ae-f58a70a5dabb",
+					"name": "501",
+					"status": "",
+					"responseCode": {
+						"code": 501,
+						"name": "Not Implemented"
+					},
+					"time": "387",
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "close",
+							"description": ""
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "126",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sat, 24 Sep 2016 06:12:55 GMT",
+							"description": ""
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": ""
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"not implemented\",\"data\":[{\"error\":\"Something went wrong, try again later or contact the admin.\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": "-1",
+					"version": null,
+					"requestObject": "{\"url\":\"{{url}}/api/web/v1/clients/sign-up\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"enabled\":true,\"description\":\"The mime type of this content\"}],\"data\":\"{\\n    \\\"full_name\\\":\\\"Fadi Ghattas\\\",\\n    \\\"email\\\":\\\"fadighattas100000@gmail.com\\\",\\n    \\\"password\\\":\\\"123456\\\",\\n    \\\"phone_number\\\":\\\"0999999498\\\"\\n}\",\"method\":\"POST\",\"dataMode\":\"raw\"}",
+					"createdAt": "2016-09-24T06:13:00.000Z",
+					"updatedAt": "2016-09-24T06:13:00.000Z",
+					"write": true
+				},
+				{
+					"owner": "262964",
+					"lastUpdatedBy": "262964",
+					"lastRevision": 589933012,
+					"request": "4cf9f9cd-f9ff-5b67-7b03-20b370ff553c",
+					"id": "002aa95c-1e21-5070-79e6-3ecd523737c0",
+					"name": "200",
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK"
+					},
+					"time": "2054",
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": ""
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "238",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sun, 25 Sep 2016 21:18:40 GMT",
+							"description": ""
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": ""
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": ""
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"sign up success\",\"data\":[{\"full_name\":\"Fadi Ghattas\",\"email\":\"fadighattas10012@gmail.com\",\"auth_key\":\"dsYVrGO6wtsLIUA6NCWbJ4QCJuL_h7Bv\",\"phone_number\":\"09999999855\",\"image\":null,\"is_verified\":0,\"addresses\":[]}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": "-1",
+					"version": null,
+					"requestObject": "{\"url\":\"{{url}}/api/web/v1/clients/sign-up\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"enabled\":true,\"description\":\"The mime type of this content\"}],\"data\":\"{\\n    \\\"full_name\\\":\\\"Fadi Ghattas\\\",\\n    \\\"email\\\":\\\"fadighattas10012@gmail.com\\\",\\n    \\\"password\\\":\\\"123456\\\",\\n    \\\"phone_number\\\":\\\"09999999855\\\"\\n}\",\"method\":\"POST\",\"dataMode\":\"raw\"}",
+					"createdAt": "2016-09-25T21:18:45.000Z",
+					"updatedAt": "2016-09-25T21:18:45.000Z",
+					"write": true
+				},
+				{
+					"owner": "262964",
+					"lastUpdatedBy": "262964",
+					"lastRevision": 588496128,
+					"request": "4cf9f9cd-f9ff-5b67-7b03-20b370ff553c",
+					"id": "65b3405b-b2c3-ec42-1606-cadeb6fb4082",
+					"name": "405",
+					"status": "",
+					"responseCode": {
+						"code": 405,
+						"name": "Method Not Allowed"
+					},
+					"time": "1668",
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": ""
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "60",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sat, 24 Sep 2016 06:20:49 GMT",
+							"description": ""
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": ""
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": ""
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"Method Not Allowed\",\"data\":null}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": "-1",
+					"version": null,
+					"requestObject": "{\"url\":\"{{url}}/api/web/v1/clients/sign-up\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"enabled\":true,\"description\":\"The mime type of this content\"}],\"data\":\"{\\n    \\\"full_name\\\":\\\"Fadi Ghattas\\\",\\n    \\\"email\\\":\\\"fadighattas100@gmail.com\\\",\\n    \\\"password\\\":\\\"123456\\\",\\n    \\\"phone_number\\\":\\\"099999998\\\"\\n}\",\"method\":\"GET\",\"dataMode\":\"raw\"}",
+					"createdAt": "2016-09-24T06:20:58.000Z",
+					"updatedAt": "2016-09-24T06:20:58.000Z",
+					"write": true
+				},
+				{
+					"owner": "262964",
+					"lastUpdatedBy": "262964",
+					"lastRevision": 588484358,
+					"request": "4cf9f9cd-f9ff-5b67-7b03-20b370ff553c",
+					"id": "b8e8ddeb-3f22-f94a-19a7-2835c7138729",
+					"name": "422",
+					"status": "",
+					"responseCode": {
+						"code": 422,
+						"name": "Unprocessable entity"
+					},
+					"time": "358",
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": ""
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "91",
+							"description": ""
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": ""
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Sat, 24 Sep 2016 06:06:52 GMT",
+							"description": ""
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": ""
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.18 (Win64) PHP/5.6.19",
+							"description": ""
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.19",
+							"description": ""
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":false,\"message\":\"validation failed\",\"data\":[{\"error\":\"Account already exists\"}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"state": {
+						"size": "normal"
+					},
+					"previewType": "html",
+					"searchResultScrolledTo": "-1",
+					"version": null,
+					"requestObject": "{\"url\":\"{{url}}/api/web/v1/clients/sign-up\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"enabled\":true,\"description\":\"The mime type of this content\"}],\"data\":\"{\\n    \\\"full_name\\\":\\\"Fadi Ghattas\\\",\\n    \\\"email\\\":\\\"fadighattas100@gmail.com\\\",\\n    \\\"password\\\":\\\"123456\\\",\\n    \\\"phone_number\\\":\\\"099999998\\\"\\n}\",\"method\":\"POST\",\"dataMode\":\"raw\"}",
+					"createdAt": "2016-09-24T06:07:04.000Z",
+					"updatedAt": "2016-09-24T06:07:04.000Z",
+					"write": true
+				}
+			],
+			"rawModeData": "{\n    \"full_name\":\"Fadi Ghattas\",\n    \"email\":\"fadighattas10012@gmail.com\",\n    \"password\":\"123456\",\n    \"phone_number\":\"09999999855\"\n}",
+			"folder": "8fe34db4-f82a-7a4c-437e-864cf1942e8a"
 		},
 		{
 			"id": "efeec33c-afb4-9b7b-4f69-f3ce3bdfbc15",
