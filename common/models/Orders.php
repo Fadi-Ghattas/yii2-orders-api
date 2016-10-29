@@ -190,18 +190,6 @@
 			return self::find()->where(['restaurant_id' => $restaurant_id])->andWhere(['id' => $orderID])->andWhere(['deleted_at' => NULL])->one();
 		}
 
-		public static function getOrderStatus($data)
-		{
-			if (!isset($data['id']))
-				return Helpers::HttpException(422, 'validation failed', ['error' => 'order id is required']);
-			if (empty($data['id']))
-				return Helpers::HttpException(422, 'validation failed', ['error' => "order id can't be blank"]);
-			$order = Orders::find()->where(['id' => $data['id']])->one();
-			if (empty($order))
-				return Helpers::HttpException(422, 'validation failed', ['error' => "order dos't exist"]);
-			return Helpers::formatResponse(TRUE, 'get success', $order->status);
-		}
-
 		public static function getOrders()
 		{
 			$restaurant = Restaurants::checkRestaurantAccess();

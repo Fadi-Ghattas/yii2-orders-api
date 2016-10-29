@@ -12150,74 +12150,75 @@
 		{
 			"id": "a64b0888-cda2-19ed-f78c-8188cf387a9d",
 			"headers": "Content-Type: application/json\nAuthorization: {{vendor_token}}\n",
-			"url": "{{url}}/api/web/v1/commons/orders",
-			"pathVariables": {},
+			"url": "{{url}}/api/web/v1/commons/order-status",
 			"preRequestScript": null,
-			"method": "POST",
-			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
+			"pathVariables": {},
+			"method": "GET",
 			"data": [],
 			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1477730483153,
 			"name": "Get Order Status",
 			"description": "##### Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key)(required) | Obtained from login\r\n\r\n##### JSON Parameters:\r\n\r\n- id (intger) (optinal)\r\n\r\n##### Return:\r\n\r\n- 200 Order Status Object\r\n- 401 Unauthrized\r\n- 404 Not Found\r\n- 405 Method Not Allowed\r\n- 422 Validation Failed\r\n- 500 Internal Server Error\r\n",
-			"descriptionFormat": "html",
-			"time": 1477729160394,
-			"version": 2,
+			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
 			"responses": [
 				{
 					"status": "",
 					"responseCode": {
 						"code": 200,
-						"name": "OK",
-						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+						"name": "OK"
 					},
-					"time": 8204,
+					"time": 917,
 					"headers": [
 						{
 							"name": "Connection",
 							"key": "Connection",
 							"value": "Keep-Alive",
-							"description": "Options that are desired for the connection"
+							"description": ""
 						},
 						{
 							"name": "Content-Length",
 							"key": "Content-Length",
-							"value": "77",
-							"description": "The length of the response body in octets (8-bit bytes)"
+							"value": "225",
+							"description": ""
 						},
 						{
 							"name": "Content-Type",
 							"key": "Content-Type",
 							"value": "application/json; charset=UTF-8",
-							"description": "The mime type of this content"
+							"description": ""
 						},
 						{
 							"name": "Date",
 							"key": "Date",
-							"value": "Sat, 29 Oct 2016 08:20:33 GMT",
-							"description": "The date and time that the message was sent"
+							"value": "Sat, 29 Oct 2016 08:40:57 GMT",
+							"description": ""
 						},
 						{
 							"name": "Keep-Alive",
 							"key": "Keep-Alive",
 							"value": "timeout=5, max=100",
-							"description": "Custom header"
+							"description": ""
 						},
 						{
 							"name": "Server",
 							"key": "Server",
 							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
-							"description": "A name for the server"
+							"description": ""
 						},
 						{
 							"name": "X-Powered-By",
 							"key": "X-Powered-By",
 							"value": "PHP/5.6.25",
-							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+							"description": ""
 						}
 					],
 					"cookies": [],
 					"mime": "",
-					"text": "{\"success\":true,\"message\":\"get success\",\"data\":[{\"id\":\"1\",\"name\":\"Pending\"}]}",
+					"text": "{\"success\":true,\"message\":\"get success\",\"data\":[{\"id\":\"1\",\"name\":\"Pending\"},{\"id\":\"2\",\"name\":\"Accepted\"},{\"id\":\"3\",\"name\":\"Declined\"},{\"id\":\"4\",\"name\":\"In-progress\"},{\"id\":\"5\",\"name\":\"Shipped\"},{\"id\":\"6\",\"name\":\"Delivered\"}]}",
 					"language": "javascript",
 					"rawDataType": "text",
 					"previewType": "html",
@@ -12229,10 +12230,10 @@
 					"state": {
 						"size": "normal"
 					},
-					"id": "7bbba890-c0f6-73bb-0c75-45d2b5d57026",
+					"id": "1fbb61ce-834a-a535-e7c5-ef3d3b83dd1b",
 					"name": "200",
 					"request": {
-						"url": "{{url}}/api/web/v1/commons/orders",
+						"url": "{{url}}/api/web/v1/commons/order-status",
 						"headers": [
 							{
 								"key": "Content-Type",
@@ -12247,15 +12248,11 @@
 							}
 						],
 						"data": "{\n\t\"id\" : \"93\"\n}",
-						"method": "POST",
+						"method": "GET",
 						"dataMode": "raw"
 					}
 				}
 			],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"folder": "68964686-86ea-8b26-4972-2953edbdd73f",
 			"rawModeData": "{\n\t\"id\" : \"93\"\n}"
 		},
 		{

@@ -9,6 +9,7 @@
 	namespace api\modules\v1\controllers;
 
 	use common\models\Orders;
+	use common\models\OrderStatus;
 	use Yii;
 	use common\models\Countries;
 	use common\models\States;
@@ -61,15 +62,14 @@
 			throw new MethodNotAllowedHttpException("Method Not Allowed");
 		}
 
-		public function actionOrders()
+		public function actionOrderStatus()
 		{
 			$request = Yii::$app->request;
 			$get_data = $request->get();
 
-			if ($request->isPost && empty($get_data)) {
-				if (empty($request->post()))
-					return Helpers::HttpException(422, 'validation failed', ['error' => 'please provide data']);
-				return Orders::getOrderStatus($request->post());
+			if ($request->isGet) {
+				if (empty($get_data))
+					return OrderStatus::getOrderStatus();
 			}
 
 			throw new MethodNotAllowedHttpException("Method Not Allowed");
@@ -81,7 +81,7 @@
 			$actions = [
 				'countries' => ['GET'],
 				'states' => ['GET'],
-				'orders' => ['POST'],
+				'order-status' => ['GET'],
 			];
 
 			foreach ($actions as $action => $verb) {
