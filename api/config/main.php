@@ -116,6 +116,7 @@ return [
                     'extraPatterns' => [
                         'GET,POST,PUT,DELETE countries' => 'countries',
                         'GET,POST,PUT,DELETE states' => 'states',
+                        'GET,POST,PUT,DELETE orders' => 'orders',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'
