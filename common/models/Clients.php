@@ -362,6 +362,8 @@ class Clients extends \yii\db\ActiveRecord
     {
         $reviews = new Reviews();
         $reviews->setAttributes($data);
+        $reviews->title =  json_encode($reviews->title);
+        $reviews->comment =  json_encode($reviews->comment);
         $headers = Yii::$app->request->headers;
         if (isset($headers['authorization'])) {
             $client = Clients::getClientByAuthorization();

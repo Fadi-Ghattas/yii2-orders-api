@@ -124,10 +124,10 @@ class Reviews extends \yii\db\ActiveRecord
                 return (!empty($this->client) ? (string)$this->client->user->username : 'Unknown User');
             },
             'title' => function () {
-                return (string)$this->title;
+                return (string)json_decode($this->title);
             },
             'comment' => function () {
-                return (string)$this->comment;
+                return (string)json_decode($this->comment);
             },
             'rank' => function () {
                 return (float)$this->rank;
