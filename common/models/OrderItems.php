@@ -8,26 +8,27 @@ use yii\helpers\ArrayHelper;
 /**
  * This is the model class for table "order_items".
  *
- * @property string $id
- * @property string $order_id
- * @property string $item_id
- * @property string $price
- * @property integer $quantity
- * @property string $note
- * @property string $created_at
- * @property string $updated_at
- * @property string $deleted_at
+ * @property string             $id
+ * @property string             $order_id
+ * @property string             $item_id
+ * @property string             $price
+ * @property integer            $quantity
+ * @property string             $note
+ * @property string             $created_at
+ * @property string             $updated_at
+ * @property string             $deleted_at
  *
- * @property OrderItemAddon[] $orderItemAddons
- * @property Addons[] $addons
+ * @property OrderItemAddon[]   $orderItemAddons
+ * @property Addons[]           $addons
  * @property OrderItemChoices[] $orderItemChoices
- * @property ItemChoices[] $itemChoices
- * @property MenuItems $item
+ * @property ItemChoices[]      $itemChoices
+ * @property MenuItems          $item
  */
 class OrderItems extends \yii\db\ActiveRecord
 {
     const SCENARIO_GET_BY_RESTAURANTS_MANGER = 'get_by_restaurants_manger';
     const SCENARIO_CLIENT_ORDER_DETAILS = 'client_order_details';
+
     /**
      * @inheritdoc
      */
@@ -48,7 +49,7 @@ class OrderItems extends \yii\db\ActiveRecord
             [['note'], 'string'],
             [['quantity'], 'compare', 'compareValue' => 0, 'operator' => '>'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['item_id'], 'exist', 'skipOnError' => true, 'targetClass' => MenuItems::className(), 'targetAttribute' => ['item_id' => 'id']],
+            [['item_id'], 'exist', 'skipOnError' => TRUE, 'targetClass' => MenuItems::className(), 'targetAttribute' => ['item_id' => 'id']],
         ];
     }
 
@@ -148,7 +149,7 @@ class OrderItems extends \yii\db\ActiveRecord
                         return (string)$this->note;
                     },
                     'menu_item' => function () {
-                        $item = array();
+                        $item = [];
                         $item['id'] = (int)$this->item->id;
                         $item['name'] = (string)$this->item->name;
                         $item['description'] = (string)$this->item->description;
@@ -166,12 +167,15 @@ class OrderItems extends \yii\db\ActiveRecord
                         return $this->orderItemAddons;
                     },
                     'item_choices' => function () {
-                        return $this->orderItemChoices;
-                    }
+                        return (!empty($this->orderItemChoices) ? $this->orderItemChoices : NULL);
+                    },
                 ],
                 self::SCENARIO_CLIENT_ORDER_DETAILS => [
-                    'id' => function () {
+                    'order_item_id' => function () {
                         return (int)$this->id;
+                    },
+                    'menu_item_id' => function () {
+                        return (int)$this->item_id;
                     },
                     'price' => function () {
                         return (float)$this->price;
@@ -189,8 +193,8 @@ class OrderItems extends \yii\db\ActiveRecord
                         return $this->orderItemAddons;
                     },
                     'item_choices' => function () {
-                        return $this->orderItemChoices;
-                    }
+                        return (!empty($this->orderItemChoices) ? $this->orderItemChoices : NULL);
+                    },
                 ],
             ]);
     }
