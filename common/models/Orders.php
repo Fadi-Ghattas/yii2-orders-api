@@ -597,6 +597,10 @@ class Orders extends \yii\db\ActiveRecord
 					'order_date_time' => function () {
 						return (string)Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);
 					},
+					'restaurant_status' => function () {
+						$restaurant = Restaurants::getRestaurantDetails($this->restaurant->id, 0);
+						return $restaurant->getRestaurantsStatus($restaurant->res_status);
+					},
 				],
 				self::SCENARIO_CLIENT_ORDER_DETAILS => [
 					'id' => function () {

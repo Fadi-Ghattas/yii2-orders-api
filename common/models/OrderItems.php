@@ -177,6 +177,9 @@ class OrderItems extends \yii\db\ActiveRecord
                     'menu_item_id' => function () {
                         return (int)$this->item_id;
                     },
+                    'menu_item_name' => function () {
+                        return (string)$this->item->name;
+                    },
                     'price' => function () {
                         return (float)$this->price;
                     },
