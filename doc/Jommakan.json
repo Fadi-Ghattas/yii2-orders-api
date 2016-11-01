@@ -525,72 +525,6 @@
 				{
 					"owner": "262964",
 					"lastUpdatedBy": "262964",
-					"lastRevision": 563677226,
-					"request": "16224108-3fcc-b157-3fd1-bf25f27c82ab",
-					"id": "2ae1b235-29f1-62ac-dc78-8ea89bd6a38f",
-					"name": "1-Success Response",
-					"status": "",
-					"responseCode": {
-						"code": 200,
-						"name": "OK"
-					},
-					"time": "1706",
-					"headers": [
-						{
-							"name": "Connection",
-							"key": "Connection",
-							"value": "Keep-Alive",
-							"description": ""
-						},
-						{
-							"name": "Content-Length",
-							"key": "Content-Length",
-							"value": "659",
-							"description": ""
-						},
-						{
-							"name": "Content-Type",
-							"key": "Content-Type",
-							"value": "application/json; charset=UTF-8",
-							"description": ""
-						},
-						{
-							"name": "Date",
-							"key": "Date",
-							"value": "Fri, 19 Aug 2016 17:47:17 GMT",
-							"description": ""
-						},
-						{
-							"name": "Keep-Alive",
-							"key": "Keep-Alive",
-							"value": "timeout=5, max=100",
-							"description": ""
-						},
-						{
-							"name": "Server",
-							"key": "Server",
-							"value": "Apache/2.4.7 (Ubuntu)",
-							"description": ""
-						}
-					],
-					"cookies": [],
-					"mime": "",
-					"text": "{\"id\":1,\"name\":\"Restaurant\",\"email\":\"ah.daleen@gmail.com\",\"phone_number\":\"+60 18-203 1218\",\"minimum_order_amount\":\"1.00\",\"working_opening_hours\":\"10:05:00\",\"working_closing_hours\":\"11:00:00\",\"time_order_open\":\"08:00:00\",\"time_order_close\":\"12:00:00\",\"delivery_fee\":\"2.00\",\"halal\":1,\"featured\":1,\"disable_ordering\":1,\"delivery_duration\":60,\"longitude\":5.65,\"latitude\":9.45,\"image\":\"http://www.bestfinance-blog.com/wp-content/uploads/2016/07/restaurant-939435_960_720.jpg\",\"owner\":{\"name\":\"Ahmad\",\"contact_number\":\"+6932019700787\",\"email\":\"ahmad@jommakan.com\"},\"areas\":[{\"89\":\"Bukit Rotan\"},{\"154\":\"Taman Melawati\"}],\"cuisine\":[{\"7\":\"Thai\"}],\"paymentMethod\":[]}",
-					"language": "javascript",
-					"rawDataType": "text",
-					"state": {
-						"size": "normal"
-					},
-					"previewType": "html",
-					"searchResultScrolledTo": "-1",
-					"version": null,
-					"requestObject": "{\"url\":\"{{url}}/api/web/v1/vendors/profile\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"enabled\":true,\"description\":\"The mime type of this content\"},{\"key\":\"Authorization\",\"value\":\"{{vendor_token}}\",\"enabled\":true}],\"data\":\"{\\n    \\\"email\\\":\\\"ahmad@jommakan.com\\\",\\n    \\\"password\\\":\\\"123456\\\"\\n}\",\"method\":\"GET\",\"dataMode\":\"raw\"}",
-					"createdAt": "2016-09-15T19:20:11.000Z",
-					"updatedAt": "2016-09-15T19:20:11.000Z"
-				},
-				{
-					"owner": "262964",
-					"lastUpdatedBy": "262964",
 					"lastRevision": 563677266,
 					"request": "16224108-3fcc-b157-3fd1-bf25f27c82ab",
 					"id": "f5c78fd6-04c8-8a01-e8dc-825fab6c5a33",
@@ -659,6 +593,94 @@
 					"requestObject": "{\"url\":\"{{url}}/api/web/v1/vendors/profile\",\"headers\":[{\"key\":\"Content-Type\",\"value\":\"application/json\",\"enabled\":true,\"description\":\"The mime type of this content\",\"warning\":\"\"}],\"data\":\"{\\n    \\\"email\\\":\\\"ahmad@jommakan.com\\\",\\n    \\\"password\\\":\\\"123456\\\"\\n}\",\"method\":\"GET\",\"dataMode\":\"raw\"}",
 					"createdAt": "2016-09-15T19:20:13.000Z",
 					"updatedAt": "2016-09-15T19:20:13.000Z"
+				},
+				{
+					"status": "",
+					"responseCode": {
+						"code": 200,
+						"name": "OK",
+						"detail": "Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request the response will contain an entity describing or containing the result of the action."
+					},
+					"time": 918,
+					"headers": [
+						{
+							"name": "Connection",
+							"key": "Connection",
+							"value": "Keep-Alive",
+							"description": "Options that are desired for the connection"
+						},
+						{
+							"name": "Content-Length",
+							"key": "Content-Length",
+							"value": "794",
+							"description": "The length of the response body in octets (8-bit bytes)"
+						},
+						{
+							"name": "Content-Type",
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8",
+							"description": "The mime type of this content"
+						},
+						{
+							"name": "Date",
+							"key": "Date",
+							"value": "Tue, 01 Nov 2016 22:31:54 GMT",
+							"description": "The date and time that the message was sent"
+						},
+						{
+							"name": "Keep-Alive",
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100",
+							"description": "Custom header"
+						},
+						{
+							"name": "Server",
+							"key": "Server",
+							"value": "Apache/2.4.23 (Win64) PHP/5.6.25",
+							"description": "A name for the server"
+						},
+						{
+							"name": "X-Powered-By",
+							"key": "X-Powered-By",
+							"value": "PHP/5.6.25",
+							"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+						}
+					],
+					"cookies": [],
+					"mime": "",
+					"text": "{\"success\":true,\"message\":\"get success\",\"data\":[{\"id\":4,\"name\":\"tony\",\"email\":\"tonyhaddad91@gmail.com\",\"phone_number\":\"4\",\"owner_number\":\"tony\",\"uuid\":\"7a330ef2-0810-419c-adf5-40ea1734c3c3\",\"minimum_order_amount\":1,\"working_opening_hours\":\"08:00:00\",\"working_closing_hours\":\"02:00:00\",\"time_order_open\":\"10:00:00\",\"time_order_close\":\"12:00:00\",\"delivery_fee\":2,\"halal\":true,\"featured\":true,\"disable_ordering\":true,\"delivery_duration\":15,\"longitude\":2323,\"latitude\":2323,\"image\":\"http://stephboreldesign.com/wp-content/uploads/2012/03/lorem-ipsum-logo.jpg\",\"image_background\":\"https://s3.amazonaws.com/jommakan-all-images-s3/4/res_4_background.jpg\",\"country_id\":1,\"areas\":[{\"id\":93,\"name\":\"Damansara Damai\"},{\"id\":92,\"name\":\"Cyberjaya\"}],\"cuisine\":[],\"payment_method\":[{\"id\":1,\"name\":\"Cash\"}]}]}",
+					"language": "javascript",
+					"rawDataType": "text",
+					"previewType": "html",
+					"searchResultScrolledTo": -1,
+					"forceNoPretty": false,
+					"write": true,
+					"empty": false,
+					"failed": false,
+					"state": {
+						"size": "normal"
+					},
+					"id": "d81b2db3-3bdd-115f-dd53-098e8430ced3",
+					"name": "200",
+					"request": {
+						"url": "{{url}}/api/web/v1/vendors/profile",
+						"headers": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"enabled": true,
+								"description": "The mime type of this content"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{vendor_token}}",
+								"enabled": true
+							}
+						],
+						"data": "{\n    \"email\":\"ahmad@jommakan.com\",\n    \"password\":\"123456\"\n}",
+						"method": "GET",
+						"dataMode": "raw"
+					}
 				}
 			],
 			"rawModeData": "{\n    \"email\":\"ahmad@jommakan.com\",\n    \"password\":\"123456\"\n}",
@@ -698,7 +720,7 @@
 			"helperAttributes": {},
 			"time": 1475736177809,
 			"name": "Update Restaurant",
-			"description": "#####Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key) (required) | Obtained from login\r\n\r\n#####JSON Parameters:\r\n   \r\n- phone_number (string) (optional) | MY ISO PhoneNumber Eg: +6018-2031218 or 0060182031218 or 006018-2031218\r\n- minimum_order_amount (decimal) (optional)\r\n- working_opening_hours (time) (optional) | format: 'H:m:s'\r\n- working_closing_hours (time) (optional) | format: 'H:m:s'\r\n- time_order_open (time) (optional) | format: 'H:m:s'\r\n- time_order_close (time) (optional) | format: 'H:m:s'\r\n- delivery_fee (decimal) (optional)\r\n- disable_ordering (bit) (optional) | 1 or 0\r\n- image_background (base64Image string) (optional)\r\n- extension (string) (required) if image_background set\r\n\r\n#####JSON Unauditable Parameters:\r\n\r\n- name (string)\r\n- status halal (bit) | 1 or 0\r\n- image (string) | Image URL\r\n- longitude (double)\r\n- latitude (double)\r\n- rank (decimal)\r\n- featured (bit) | 1 or 0\r\n- halal (bit) | 1 or 0\r\n- \r\n##### background url\r\n- https://s3.amazonaws.com/jommakan-all-images-s3/res_{res_id}/{res_id}_background\r\n\r\n- EX:\r\n- https://s3.amazonaws.com/jommakan-all-images-s3/4/res_4_background\r\n",
+			"description": "#####Headers Parameters:\r\n   \r\n- Content-Type (application/json)\r\n- Authorization (Bearer Auth_Key) (required) | Obtained from login\r\n\r\n#####JSON Parameters:\r\n\r\n- uuid (string) (optional) \"one signal player key\"  \r\n- phone_number (string) (optional) | MY ISO PhoneNumber Eg: +6018-2031218 or 0060182031218 or 006018-2031218\r\n- minimum_order_amount (decimal) (optional)\r\n- working_opening_hours (time) (optional) | format: 'H:m:s'\r\n- working_closing_hours (time) (optional) | format: 'H:m:s'\r\n- time_order_open (time) (optional) | format: 'H:m:s'\r\n- time_order_close (time) (optional) | format: 'H:m:s'\r\n- delivery_fee (decimal) (optional)\r\n- disable_ordering (bit) (optional) | 1 or 0\r\n- image_background (base64Image string) (optional)\r\n- extension (string) (required) if image_background set\r\n\r\n#####JSON Unauditable Parameters:\r\n\r\n- name (string)\r\n- status halal (bit) | 1 or 0\r\n- image (string) | Image URL\r\n- longitude (double)\r\n- latitude (double)\r\n- rank (decimal)\r\n- featured (bit) | 1 or 0\r\n- halal (bit) | 1 or 0\r\n- \r\n##### background url\r\n- https://s3.amazonaws.com/jommakan-all-images-s3/res_{res_id}/{res_id}_background\r\n\r\n- EX:\r\n- https://s3.amazonaws.com/jommakan-all-images-s3/4/res_4_background\r\n",
 			"collectionId": "355f1e0b-a2df-7bdf-2146-ddd12bb814a5",
 			"responses": [
 				{
