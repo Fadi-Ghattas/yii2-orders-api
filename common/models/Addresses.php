@@ -160,7 +160,6 @@
 				$model['Addresses'] = $data;
 				$Address->load($model);
 				$Address->client_id = $client->id;
-				$Address->label = json_encode($Address->label);
 				$Address->validate();
 				if ($Address->is_default)
 					$connection->createCommand()->update('addresses', ['is_default' => 0], 'client_id = ' . $Address->client_id)->execute();
@@ -189,7 +188,6 @@
 				$model['Addresses'] = $data;
 				$address->load($model);
 				$address->client_id = $client->id;
-				$address->label = json_encode($address->label);
 				$address->validate();
 				if ($address->is_default)
 					$connection->createCommand()->update('addresses', ['is_default' => 0], 'client_id = ' . $address->client_id)->execute();
@@ -248,7 +246,7 @@
 					return (!empty($this->company) ? (string)$this->company : NULL);
 				},
 				'label' => function () {
-					return (string)json_decode($this->label);
+					return (string)($this->label);
 				},
 				'area' => function () {
 					return $this->area;
