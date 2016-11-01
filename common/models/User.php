@@ -27,6 +27,7 @@ use Facebook\Facebook;
  * @property string $deleted_at
  * @property integer $last_logged_at
  * @property string $password write-only password
+ * @property string $uuid
  *
  * @property Clients[] $clients
  * @property Restaurants[] $restaurants
@@ -75,9 +76,9 @@ class User extends ActiveRecord implements IdentityInterface
             [['username', 'auth_key', 'email', 'created_at'], 'required', 'on' => self::SCENARIO_SIGN_UP_FACEBOOK],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['deleted_at', 'last_logged_at', 'facebook_id', 'source'], 'safe'],
-            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+            [['username', 'password_hash', 'password_reset_token', 'email', 'uuid'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
-            [['email'], 'unique'],
+            [['email', 'uuid'], 'unique'],
             [['password_reset_token'], 'unique'],
         ];
     }

@@ -432,6 +432,14 @@ class Restaurants extends \yii\db\ActiveRecord
                         $AreaRestaurant->delete();
             }
 
+            if (isset($data['uuid'])) {
+                if (empty(trim($data['uuid'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "uuid can't be blank"]);
+
+                $restaurants->user->uuid = $data['uuid'];
+                $restaurants->user->save(FALSE);
+            }
+
             $transaction->commit();
             return Helpers::formatResponse(true, 'update success', ['id' => $restaurants->id]);
         } catch (\Exception $e) {
@@ -462,6 +470,9 @@ class Restaurants extends \yii\db\ActiveRecord
                     },
                     'owner_number' => function () {
                         return (string)$this->owner_number;
+                    },
+                    'uuid' => function(){
+                      return (string)$this->user->uuid;
                     },
                     'minimum_order_amount' => function () {
                         return (float)$this->minimum_order_amount;
