@@ -48,11 +48,14 @@ class SettingsForm extends Model
 	{
 		return [
 			[['home_url'], 'required'],
-			[['facebook_app_id_key',
+			[[	'facebook_app_id_key',
 				'facebook_app_secret',
 				'twillio_sid',
 				'twillio_token',
 				'twillio_number',
+				's3_key',
+				's3_secret',
+				's3_bucket_name',
 				'one_signal_app_id',
 				'one_signal_app_url',
 				'one_signal_app_authorization',
