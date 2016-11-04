@@ -12,6 +12,7 @@ use api\modules\v1\models\OrderItemForm;
 use api\modules\v1\models\OrderItemItemChoicesForm;
 use api\modules\v1\models\VoucherForm;
 use common\helpers\Helpers;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "orders".
@@ -465,6 +466,19 @@ class Orders extends \yii\db\ActiveRecord
 				return Helpers::HttpException(422, 'validation failed', ['error' => $order->errors]);
 			}
 			$order->save();
+
+			//one signal notification for restaurant
+			$title = 'Order up!';
+			$content = [
+				"en" => $client->user->username . ' has placed a new order.Click here to view the order.',
+			];
+			$action = ["action" => Helpers::ONE_SIGNAL_ACTION_ORDER, "id" => $order->id];
+			$uuid = [$restaurants->user->uuid];
+			$oneSignalResponse =  Json::decode(Helpers::sendOneSignalMessage($title,$content,$action,$uuid));
+			if(!intval($oneSignalResponse["recipients"])){
+				$transaction->rollBack();
+				return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+			}
 
 			$transaction->commit();
 			$response = [
