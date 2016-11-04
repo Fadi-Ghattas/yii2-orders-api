@@ -286,8 +286,8 @@ class MenuItems extends \yii\db\ActiveRecord
 
                 $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
                 $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
-                    'jommakan-all-images-s3/' . $restaurant->id,
-                    'res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
+                    trim(Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME), '/') . '/' . $restaurant->id,
+                    time().'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
                     $data['image'],
                     $data['extension'],
                     $sizes = ['Normal' , 'Thumbnail' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
@@ -342,8 +342,8 @@ class MenuItems extends \yii\db\ActiveRecord
 
                 $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
                 $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
-                    'jommakan-all-images-s3/' . $restaurant->id,
-                    'res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
+                    trim(Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME), '/'). '/' . $restaurant->id,
+                    time().'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
                     $menuItem->image,
                     $menuItem->extension,
                     $sizes = ['Normal' , 'Thumbnail' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]

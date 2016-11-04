@@ -378,8 +378,9 @@ class Restaurants extends \yii\db\ActiveRecord
                     return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
 
                 $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
-                $AWSImageUrl = $AWSFileManager->uploadedImageBase64ToBucket('jommakan-all-images-s3/' . $restaurants->id,
-                    'res_' . $restaurants->id . '_background',
+                $AWSImageUrl = $AWSFileManager->uploadedImageBase64ToBucket(
+                    trim(Setting::getSettinssssgValueByName(SettingsForm::S3_BUCKET_NAME), '/') . '/' . $restaurants->id,
+                    time().'_res_' . $restaurants->id . '_background',
                     $restaurants->image_background,
                     $restaurants->extension,
                     $sizes = ['Normal']);
