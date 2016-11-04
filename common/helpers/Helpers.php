@@ -167,7 +167,6 @@ class Helpers
         return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later or contact the admin']);
     }
 
-
     public static function getImageFileContentType($extension)
     {
         switch ($extension) {

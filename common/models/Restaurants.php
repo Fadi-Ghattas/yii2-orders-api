@@ -437,7 +437,7 @@ class Restaurants extends \yii\db\ActiveRecord
                     return Helpers::HttpException(422, 'validation failed', ['error' => "uuid can't be blank"]);
 
                 $restaurants->user->uuid = $data['uuid'];
-                $restaurants->user->save(FALSE);
+                $restaurants->user->save();
             }
 
             $transaction->commit();
