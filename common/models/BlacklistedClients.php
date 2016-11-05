@@ -164,13 +164,13 @@ class BlacklistedClients extends \yii\db\ActiveRecord
             },
             'email' => function () {
                 return (string)$this->client->user->email;
-            },
+            },/*
             'address' => function () {
                 $address = Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['is_default' => 1])->andWhere(['deleted_at' => null])->one();
                 if (empty($address))
                     return Addresses::find()->where(['client_id' => $this->client->id])->andWhere(['deleted_at' => null])->orderBy('created_at DESC')->one();
                 return $address;
-            },
+            },*/
             'created_at' => function () {
                 return (string)$this->created_at;
             }
