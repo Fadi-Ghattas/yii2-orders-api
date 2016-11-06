@@ -475,10 +475,10 @@ class Orders extends \yii\db\ActiveRecord
 			$action = ["action" => Helpers::ONE_SIGNAL_ACTION_ORDER, "id" => $order->id];
 			$uuid = [$restaurants->user->uuid];
 			$oneSignalResponse =  Json::decode(Helpers::sendOneSignalMessage($title,$content,$action,$uuid));
-			if(!intval($oneSignalResponse["recipients"])){
-				$transaction->rollBack();
-				return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
-			}
+			// if(!intval($oneSignalResponse["recipients"])){
+			// 	$transaction->rollBack();
+			// 	return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+			// }
 
 			$transaction->commit();
 			$response = [
