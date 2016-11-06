@@ -85,13 +85,14 @@ class AWSFileManager extends Aws
     public function createBucket()
     {
         try {
-            $result = $this->client->createBucket(array('Bucket' => $this->bucket));
+
+            $result = $this->client->createBucket(array('Bucket' => $this->bucket,'LocationConstraint'=>'ap-southeast-1'));
             $this->client->waitUntil('bucket_exists', array('Bucket' => $this->bucket));
             $clear = new ClearBucket($this->client, $this->bucket);
             $clear->clear();
             return $result;
         } catch (S3Exception $e) {
-            return false;
+            return $e->getMessage();
         }
         return false;
     }
@@ -114,7 +115,7 @@ class AWSFileManager extends Aws
             $result = $this->client->putObject($args);
             return $result;
         } catch (S3Exception $e) {
-            return false;
+            return $e->getMessage();
         }
         return false;
     }

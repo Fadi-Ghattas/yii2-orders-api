@@ -377,17 +377,21 @@ class Restaurants extends \yii\db\ActiveRecord
                 if (empty(trim($data['extension'])))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
 
-                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
+                $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
+
+                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
+                
                 $AWSImageUrl = $AWSFileManager->uploadedImageBase64ToBucket(
-                    trim(Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME), '/') . '/' . $restaurants->id,
+                    trim($bucket_name, '/') . '/' . $restaurants->id,
                     time().'_res_' . $restaurants->id . '_background',
                     $restaurants->image_background,
                     $restaurants->extension,
                     $sizes = ['Normal']);
-                die(print_r($AWSImageUrl));
                 if ($AWSImageUrl['success']) {
                     $restaurants->image_background = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
                 }
+
+
             }
             $restaurants->validate();
             $restaurants->save();
