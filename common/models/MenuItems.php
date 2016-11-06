@@ -195,7 +195,7 @@ class MenuItems extends \yii\db\ActiveRecord
         $restaurant = Restaurants::checkRestaurantAccess();
         $MenuItem = self::getMenuItem($restaurant->id, $menu_item_id);
         if (empty($MenuItem))
-            return Helpers::HttpException(404, 'get failed', ['error' => "this menu item dos't exist"]);
+            return Helpers::HttpException(404, 'get failed', ['error' => "this menu item doesn't exist"]);
 
         return Helpers::formatResponse(true, 'get success', $MenuItem);
     }
@@ -213,20 +213,20 @@ class MenuItems extends \yii\db\ActiveRecord
         if (isset($data['categories']) && !empty($data['categories'])) {
             foreach ($data['categories'] as $category) {
                 if (empty(MenuCategories::getCategory($restaurant->id, $category['id'])))//check's if addOn belong to the restaurant
-                    return Helpers::HttpException(404, 'create failed', ['error' => "There is category dos't exist"]);
+                    return Helpers::HttpException(404, 'create failed', ['error' => "This category doesn't exist"]);
             }
         }
         if (isset($data['addOns']) && !empty($data['addOns'])) {
             foreach ($data['addOns'] as $addOn) {
                 if (empty(Addons::getAddOn($restaurant->id, $addOn['id'])))//check's if addOn belong to the restaurant
-                    return Helpers::HttpException(404, 'create failed', ['error' => "There is add-on dos't exist"]);
+                    return Helpers::HttpException(404, 'create failed', ['error' => "This add-on doesn't exist"]);
             }
         }
 
         if (isset($data['ItemChoices']) && !empty($data['ItemChoices'])) {
             foreach ($data['ItemChoices'] as $itemChoices) {
                 if (empty(ItemChoices::getItemChoice($restaurant->id, $itemChoices['id'])))//check's if item choices belong to the restaurant
-                    return Helpers::HttpException(404, 'create failed', ['error' => "There is item choices dos't exist"]);
+                    return Helpers::HttpException(404, 'create failed', ['error' => "This item choices doesn't exist"]);
             }
         }
 
@@ -284,18 +284,25 @@ class MenuItems extends \yii\db\ActiveRecord
                 if (empty(trim($data['extension'])))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
 
-                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
+                $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
+                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
+                //$AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
                 $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
-                    trim(Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME), '/') . '/' . $restaurant->id,
+                    trim($bucket_name, '/') . '/' . $restaurant->id,
                     time().'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
                     $data['image'],
                     $data['extension'],
                     $sizes = ['Normal' , 'Thumbnail' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
                 );
+
                 if ($AWSImageUrl['success']) {
                     $menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
                 }
+
+            }else{
+                return Helpers::HttpException(422, 'validation failed', ['error' => "image is required"]);
             }
+
             $menuItem->validate();
             $menuItem->save();
 
@@ -315,7 +322,7 @@ class MenuItems extends \yii\db\ActiveRecord
         $menuItem = self::getMenuItem($restaurant->id, $menu_item_id);
 
         if (empty($menuItem))
-            return Helpers::HttpException(404, 'update failed', ['error' => "This menu item dos't exist"]);
+            return Helpers::HttpException(404, 'update failed', ['error' => "This menu item doesn't exist"]);
 
 
         $model['MenuItems'] = $data;
@@ -340,9 +347,11 @@ class MenuItems extends \yii\db\ActiveRecord
                 if (empty(trim($data['extension'])))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
 
-                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
+                $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
+                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
+                // $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
                 $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
-                    trim(Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME), '/'). '/' . $restaurant->id,
+                    trim($bucket_name, '/'). '/' . $restaurant->id,
                     time().'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
                     $menuItem->image,
                     $menuItem->extension,
@@ -381,7 +390,7 @@ class MenuItems extends \yii\db\ActiveRecord
                     if (!array_key_exists($Category['id'], $menuCategoryItems)) {
 
                         if (empty(MenuCategories::getCategory($restaurant->id, $Category['id'])))
-                            return Helpers::HttpException(422, 'validation failed', ['error' => "There is a category dos't exist"]);
+                            return Helpers::HttpException(422, 'validation failed', ['error' => "This category doesn't exist"]);
 
                         $menuCategoryItem = new MenuCategoryItem();
                         $menuCategoryItem->menu_category_id = $Category['id'];
@@ -420,7 +429,7 @@ class MenuItems extends \yii\db\ActiveRecord
                     if (!array_key_exists($Addon['id'], $menuItemAddons)) {
 
                         if (empty(Addons::getAddOn($restaurant->id, $Addon['id'])))
-                            return Helpers::HttpException(404, 'update failed', ['error' => "There add-on dos't exist"]);
+                            return Helpers::HttpException(404, 'update failed', ['error' => "This add-on doesn't exist"]);
 
                         $menuItemAddon = new MenuItemAddon();
                         $menuItemAddon->addon_id = $Addon['id'];
@@ -460,7 +469,7 @@ class MenuItems extends \yii\db\ActiveRecord
                     if (!array_key_exists($ItemChoice['id'], $menuItemChoices)) {
 
                         if (empty(ItemChoices::getItemChoice($restaurant->id, $ItemChoice['id'])))
-                            return Helpers::HttpException(404, 'update failed', ['error' => "There item choice dos't exist"]);
+                            return Helpers::HttpException(404, 'update failed', ['error' => "This item choice doesn't exist"]);
 
                         $menuItemChoice = new MenuItemChoice();
                         $menuItemChoice->choice_id = $ItemChoice['id'];
@@ -494,7 +503,7 @@ class MenuItems extends \yii\db\ActiveRecord
         $MenuItem = self::getMenuItem($restaurant->id, $menu_item_id);
 
         if (empty($MenuItem))
-            return Helpers::HttpException(404, 'update failed', ['error' => "This menu item dos't exist"]);
+            return Helpers::HttpException(404, 'update failed', ['error' => "This menu item doesn't exist"]);
 
         $MenuItem->deleted_at = date('Y-m-d H:i:s');
         $isUpdated = $MenuItem->save();
