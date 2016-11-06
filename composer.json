@@ -16,19 +16,15 @@
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": ">=2.0.6",
-        "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
             "johnitvn/yii2-rbac-plus": "*",
-            "kartik-v/yii2-widgets": "*",
-            "kartik-v/yii2-slider": "*",
-            "kartik-v/yii2-date-range": "*",
-            "kartik-v/yii2-builder": "*",
-            "amass/yii2-bootstrap-panel-widget": "dev-master",
-            "kartik-v/yii2-datecontrol": "@dev",
             "udokmeci/yii2-phone-validator" : "*",
             "facebook/graph-sdk": "^5.3",
             "bryglen/yii2-twillio": "dev-master",
-            "aws/aws-sdk-php": "2.*"
+            "aws/aws-sdk-php": "2.*",
+            "mailgun/mailgun-php": "*",
+            "php-http/curl-client": "*",
+            "guzzlehttp/psr7" : "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

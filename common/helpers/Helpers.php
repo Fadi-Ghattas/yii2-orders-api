@@ -13,6 +13,7 @@ use Yii;
 use yii\web\Response;
 use common\models\Setting;
 use common\models\SettingsForm;
+use Mailgun\Mailgun;
 
 class Helpers
 {
@@ -235,4 +236,23 @@ class Helpers
 
 		return $response;
 	}
+
+	public static function sendMailgunEmail()
+	{
+		//$client = new \Http\Adapter\Guzzle6\Client(); $mailgun = new \Mailgun\Mailgun('api_key', $client);
+		# Instantiate the client.
+		$mgClient = new Mailgun('key-758295c286588b30f777eb1d9d724f77');
+		$domain = "jommakan.asia";
+
+		# Make the call to the client.
+		$result = $mgClient->sendMessage("$domain",
+			[
+				'from' => 'Jommakan <hello@jommakan.asia>',
+				'to' => 'fadighattas100@gmail.com',
+				'subject' => 'Hello',
+				'text' => 'Testing some Mailgun awesomeness!',
+				'html'    => '<html>HTML version of the body</html>'
+			]);
+	}
+
 }

@@ -100,11 +100,14 @@ class ClientController extends ActiveController
 			return Helpers::HttpException(422, 'validation failed', ['error' => 'You are already sing up with facebook , you can login with facebook or reset your password and log in.']);
 		}
 		if (!$user) {
+			Helpers::sendMailgunEmail();
 			$new_user = User::NewBasicSignUp($sing_up_form->full_name, $sing_up_form->email, $sing_up_form->phone_number, $sing_up_form->password, User::CLIENT);
 			if (!$new_user)
 				return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
 			return Helpers::formatResponse(TRUE, 'sign up success', $new_user->getUserClientFields());
 		}
+
+		Helpers::sendMailgunEmail();
 		return Helpers::HttpException(501, 'not implemented', ['error' => 'Something went wrong, try again later or contact the admin.']);
 	}
 
