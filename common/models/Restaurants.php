@@ -384,6 +384,7 @@ class Restaurants extends \yii\db\ActiveRecord
                     $restaurants->image_background,
                     $restaurants->extension,
                     $sizes = ['Normal']);
+                die(print_r($AWSImageUrl));
                 if ($AWSImageUrl['success']) {
                     $restaurants->image_background = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
                 }
