@@ -169,7 +169,7 @@ class ClientController extends ActiveController
 
 			return Helpers::formatResponse(TRUE, 'You have been logged in successfully!', $user->getUserClientFields());
 		}else
-			return Helpers::formatResponse(TRUE, 'Invalid source', 'You are requesting with invalid source!');
+			return Helpers::formatResponse(TRUE, 'Invalid source', ['error' => 'You are requesting with invalid source!'] );
 	}
 
 	public function actionLogOut()
