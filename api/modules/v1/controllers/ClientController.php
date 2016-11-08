@@ -168,7 +168,8 @@ class ClientController extends ActiveController
 				return Helpers::HttpException(422, 'validation failed', ['error' => $client->errors]);
 
 			return Helpers::formatResponse(TRUE, 'You have been logged in successfully!', $user->getUserClientFields());
-		}
+		}else
+			return Helpers::formatResponse(TRUE, 'Invalid source', 'You are requesting with invalid source!');
 	}
 
 	public function actionLogOut()
