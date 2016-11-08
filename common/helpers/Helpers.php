@@ -22,7 +22,24 @@ class Helpers
 
 	//web
 	public static function formatResponse($success, $message, $data)
-	{
+	{	
+
+		try {
+			// Daleen was here .... :)
+			if(isset($data['error']) && is_array($data['error']) ) {
+
+				$error  = array();
+				foreach ($data['error'] as $key => $value) {
+					$err['error'] = $value[0];
+					$error[] = $err;
+				}
+				$data = $error;
+			}
+		} catch (Exception $e) {
+			$data = $data;
+		}
+		
+		
 		if (!isset($data[0]) && !empty($data)) {
 			return ['success' => $success,
 				'message' => $message,
