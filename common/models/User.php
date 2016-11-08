@@ -350,14 +350,15 @@ class User extends ActiveRecord implements IdentityInterface
 		 */
 		$user = User::findOne(['email' => $email]);
 
-		$user_role = User::getRoleName($user->id);
-
-		if ($user_role != self::CLIENT)
-			return Helpers::HttpException(403, "forbidden", ['error' => "You've signed up as vendor, kindly, use another email to process!"]);
-
 		if (!$user) {
 			return Helpers::HttpException(422, 'validation failed', ['error' => 'Invalid email or password.']);
 		}
+
+		$user_role = User::getRoleName($user->id);
+		if ($user_role != self::CLIENT)
+			return Helpers::HttpException(403, "forbidden", ['error' => "You've signed up as vendor, kindly, use another email to process!"]);
+		
+		
 		//TODO if not user Verified not allowed to login
 		if (!$user->validatePassword($password)) {
 			return Helpers::HttpException(422, 'validation failed', ['error' => 'Invalid password.']);
