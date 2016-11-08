@@ -370,8 +370,6 @@ class Restaurants extends \yii\db\ActiveRecord
           
             if ( isset($data['image_background']) &&   filter_var($data['image_background'], FILTER_VALIDATE_URL) === FALSE   &&  base64_decode($data['image_background'] , true) !== false /*|| substr($data['image_background'], 0, 4 ) != 'http' */ )  {
 
-                $model['Restaurants'] = $data;
-                $restaurants->load($model);
                 
                 if (empty(trim($data['image_background'])))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "image background can't be blank"]);
@@ -384,24 +382,39 @@ class Restaurants extends \yii\db\ActiveRecord
 
                 $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
                 
+
                 $AWSImageUrl = $AWSFileManager->uploadedImageBase64ToBucket(
                     trim($bucket_name, '/') . '/' . $restaurants->id,
                     time().'_res_' . $restaurants->id . '_background',
-                    $restaurants->image_background,
-                    $restaurants->extension,
+                    trim($data['image_background']),
+                    trim($data['extension']),
                     $sizes = ['Normal']);
+
                 if ($AWSImageUrl['success']) {
-                    $restaurants->image_background = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
+
+                    $data['image_background'] = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
+
+                    $key = explode("/",$restaurants->oldAttributes['image_background']);
+                    $key = end($key);
+
+                    $AWSFileManager->deleteObject([
+                        'Bucket' => trim($bucket_name, '/') . '/' . $restaurants->id, // REQUIRED
+                        'Key' => $key,
+                    ]);
+
+                }else{
+                    
+                    $data['image_background'] = $restaurants->oldAttributes['image_background']; 
                 }
 
             }else{
 
                 unset($data['image_background']);
-                $model['Restaurants'] = $data;
-                $restaurants->load($model);
+                unset($data['extension']);
             }
 
-            
+            $model['Restaurants'] = $data;
+            $restaurants->load($model);
             $restaurants->validate();
             $restaurants->save();
 
