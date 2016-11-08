@@ -361,15 +361,18 @@ class Restaurants extends \yii\db\ActiveRecord
     public static function updateRestaurant($data)
     {
         $restaurants = Restaurants::checkRestaurantAccess();
-        $model['Restaurants'] = $data;
-
-        $restaurants->load($model);
+    
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
+        
         try {
 
-            if (isset($data['image_background'])) {
+          
+            if ( isset($data['image_background']) &&   filter_var($data['image_background'], FILTER_VALIDATE_URL) === FALSE   &&  base64_decode($data['image_background'] , true) !== false /*|| substr($data['image_background'], 0, 4 ) != 'http' */ )  {
 
+                $model['Restaurants'] = $data;
+                $restaurants->load($model);
+                
                 if (empty(trim($data['image_background'])))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "image background can't be blank"]);
                 if (!isset($data['extension']))
@@ -391,8 +394,14 @@ class Restaurants extends \yii\db\ActiveRecord
                     $restaurants->image_background = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
                 }
 
+            }else{
 
+                unset($data['image_background']);
+                $model['Restaurants'] = $data;
+                $restaurants->load($model);
             }
+
+            
             $restaurants->validate();
             $restaurants->save();
 
@@ -450,7 +459,7 @@ class Restaurants extends \yii\db\ActiveRecord
             return Helpers::formatResponse(true, 'update success', ['id' => $restaurants->id]);
         } catch (\Exception $e) {
             $transaction->rollBack();
-            return Helpers::HttpException(422, 'update failed', null);
+            return Helpers::HttpException(422, 'update failed', ['error' => $e->getMessage() ]);
             //throw $e;
         }
         return Helpers::HttpException(422, 'update failed', null);
