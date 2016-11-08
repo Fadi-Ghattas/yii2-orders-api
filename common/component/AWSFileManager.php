@@ -126,7 +126,7 @@ class AWSFileManager extends Aws
             $result = $this->client->deleteObject($args);
             return $result;
         } catch (S3Exception $e) {
-            return false;
+            return $e->getMessage();
         }
         return false;
     }
