@@ -275,7 +275,8 @@ class MenuItems extends \yii\db\ActiveRecord
                 }
             }
 
-            if (isset($data['image'])) {
+            //if (isset($data['image'])) {
+            if ( isset($data['image']) &&   filter_var($data['image'], FILTER_VALIDATE_URL) === FALSE   &&  base64_decode($data['image'] , true) !== false /*|| substr($data['image'], 0, 4 ) != 'http' */ )  {
 
                 if (empty(trim($data['image'])))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "image can't be blank"]);
@@ -310,7 +311,7 @@ class MenuItems extends \yii\db\ActiveRecord
             return Helpers::formatResponse(true, 'create success', ['id' => $menuItem->id]);
         } catch (\Exception $e) {
             $transaction->rollBack();
-            return Helpers::HttpException(422, 'create failed', $e->getMessage());
+            return Helpers::HttpException(422, 'create failed', ['error' => $e->getMessage() ]);
 //            throw $e;
         }
         return Helpers::HttpException(422, 'create failed', null);
@@ -325,9 +326,6 @@ class MenuItems extends \yii\db\ActiveRecord
             return Helpers::HttpException(404, 'update failed', ['error' => "This menu item doesn't exist"]);
 
 
-        $model['MenuItems'] = $data;
-        $menuItem->load($model);
-
         if (isset($data['name'])) {
             $CheckUniqueMenuItem = self::getMenuItemByName($restaurant->id, $data['name']);
             if (!empty($CheckUniqueMenuItem) && $CheckUniqueMenuItem->id != $menu_item_id)
@@ -338,7 +336,12 @@ class MenuItems extends \yii\db\ActiveRecord
         $transaction = $connection->beginTransaction();
         try {
 
-            if (isset($data['image'])) {
+            //if (isset($data['image'])) {
+            if ( isset($data['image']) &&   filter_var($data['image'], FILTER_VALIDATE_URL) === FALSE   &&  base64_decode($data['image'] , true) !== false /*|| substr($data['image'], 0, 4 ) != 'http' */ )  {
+                //die("fuck");
+
+                $model['MenuItems'] = $data;
+                $menuItem->load($model);
 
                 if (empty(trim($data['image'])))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "image can't be blank"]);
@@ -360,8 +363,14 @@ class MenuItems extends \yii\db\ActiveRecord
                 if ($AWSImageUrl['success']) {
                     $menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
                 }
-            }
 
+            }else{
+
+                unset($data['image']);
+                $model['MenuItems'] = $data;
+                $menuItem->load($model);
+            }
+            
             $menuItem->validate();
             $menuItem->save();
 
@@ -490,7 +499,7 @@ class MenuItems extends \yii\db\ActiveRecord
             return Helpers::formatResponse(true, 'update success', ['id' => $menuItem->id]);
         } catch (\Exception $e) {
             $transaction->rollBack();
-            return Helpers::HttpException(422, 'update failed', null);
+            return Helpers::HttpException(422, 'update failed', ['error' => $e->getMessage() ]);
             //throw $e;
         }
         return Helpers::HttpException(422, 'update failed', null);
