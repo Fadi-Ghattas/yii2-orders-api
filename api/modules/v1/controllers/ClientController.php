@@ -236,6 +236,7 @@ class ClientController extends ActiveController
 		$request = Yii::$app->request;
 		$get_data = $request->get();
 
+		
 		if ($request->isGet) {
 			if (empty($get_data))
 				return Addresses::getAddresses();
