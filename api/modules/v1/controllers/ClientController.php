@@ -105,7 +105,8 @@ class ClientController extends ActiveController
 			if (!$new_user)
 				return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
 			return Helpers::formatResponse(TRUE, 'sign up success', $new_user->getUserClientFields());
-		}
+		}else
+			return Helpers::HttpException(422, 'Vendor account', ['error' => 'You are using a vendor email, kindly, use another email to process!']);
 
 		Helpers::sendMailgunEmail();
 		return Helpers::HttpException(501, 'not implemented', ['error' => 'Something went wrong, try again later or contact the admin.']);

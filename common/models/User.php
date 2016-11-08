@@ -422,6 +422,7 @@ class User extends ActiveRecord implements IdentityInterface
 	{
 		$client = Clients::findOne(['user_id' => $this->id]);
 		return [
+			/*'id' => (int) $this->id ,*/
 			'full_name' => (string)$this->username,
 			'email' => (string)$this->email,
 			'auth_key' => (string)$this->auth_key,
