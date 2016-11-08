@@ -367,56 +367,6 @@ class Restaurants extends \yii\db\ActiveRecord
         
         try {
 
-          
-            if ( isset($data['image_background']) &&   filter_var($data['image_background'], FILTER_VALIDATE_URL) === FALSE   &&  base64_decode($data['image_background'] , true) !== false /*|| substr($data['image_background'], 0, 4 ) != 'http' */ )  {
-
-                
-                if (empty(trim($data['image_background'])))
-                    return Helpers::HttpException(422, 'validation failed', ['error' => "image background can't be blank"]);
-                if (!isset($data['extension']))
-                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension is required"]);
-                if (empty(trim($data['extension'])))
-                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
-
-                $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
-
-                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
-                
-
-                $AWSImageUrl = $AWSFileManager->uploadedImageBase64ToBucket(
-                    trim($bucket_name, '/') . '/' . $restaurants->id,
-                    time().'_res_' . $restaurants->id . '_background',
-                    trim($data['image_background']),
-                    trim($data['extension']),
-                    $sizes = ['Normal']);
-
-                if ($AWSImageUrl['success']) {
-
-                    $data['image_background'] = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
-
-                    $key = explode("/",$restaurants->oldAttributes['image_background']);
-                    $key = end($key);
-
-                    $AWSFileManager->deleteObject([
-                        'Bucket' => trim($bucket_name, '/') . '/' . $restaurants->id, // REQUIRED
-                        'Key' => $key,
-                    ]);
-
-                }else{
-                    
-                    $data['image_background'] = $restaurants->oldAttributes['image_background']; 
-                }
-
-            }else{
-
-                unset($data['image_background']);
-                unset($data['extension']);
-            }
-
-            $model['Restaurants'] = $data;
-            $restaurants->load($model);
-            $restaurants->validate();
-            $restaurants->save();
 
             if (isset($data['areas'])) {
 
@@ -468,13 +418,66 @@ class Restaurants extends \yii\db\ActiveRecord
                 $restaurants->user->save();
             }
 
+            if ( isset($data['image_background']) &&   filter_var($data['image_background'], FILTER_VALIDATE_URL) === FALSE   &&  base64_decode($data['image_background'] , true) !== false /*|| substr($data['image_background'], 0, 4 ) != 'http' */ )  {
+
+                
+                if (empty(trim($data['image_background'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "image background can't be blank"]);
+                if (!isset($data['extension']))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension is required"]);
+                if (empty(trim($data['extension'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
+
+                $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
+
+                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
+                
+
+                $AWSImageUrl = $AWSFileManager->uploadedImageBase64ToBucket(
+                    trim($bucket_name, '/') . '/' . $restaurants->id,
+                    time().'_res_' . $restaurants->id . '_background',
+                    trim($data['image_background']),
+                    trim($data['extension']),
+                    $sizes = ['Normal']);
+
+                if ($AWSImageUrl['success']) {
+
+                    $data['image_background'] = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
+
+                    $key = explode("/",$restaurants->oldAttributes['image_background']);
+                    $key = end($key);
+
+                    $AWSFileManager->deleteObject([
+                        'Bucket' => trim($bucket_name, '/') . '/' . $restaurants->id, // REQUIRED
+                        'Key' => $key,
+                    ]);
+
+                }else{
+                    
+                    $data['image_background'] = $restaurants->oldAttributes['image_background']; 
+                }
+
+            }else{
+
+                unset($data['image_background']);
+                unset($data['extension']);
+            }
+
+            $model['Restaurants'] = $data;
+            $restaurants->load($model);
+            $restaurants->validate();
+            $restaurants->save();
+
+
             $transaction->commit();
             return Helpers::formatResponse(true, 'update success', ['id' => $restaurants->id]);
+
         } catch (\Exception $e) {
             $transaction->rollBack();
             return Helpers::HttpException(422, 'update failed', ['error' => $e->getMessage() ]);
             //throw $e;
         }
+        
         return Helpers::HttpException(422, 'update failed', null);
     }
 
