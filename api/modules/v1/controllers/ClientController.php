@@ -79,7 +79,7 @@ class ClientController extends ActiveController
 	{
 		$post_data = Yii::$app->request->post();
 		$clientData = Clients::updateClient($post_data);
-		return Helpers::formatResponse(TRUE, 'update success', $clientData);
+		return Helpers::formatResponse(TRUE, 'Updated successfully!', $clientData);
 	}
 
 	public function actionSignUp()
@@ -93,7 +93,7 @@ class ClientController extends ActiveController
 		$user = User::findOne(['email' => $sing_up_form->email]);
 		//if account already exists
 		if ($user && $user->source == User::SOURCE_BASIC) {
-			return Helpers::HttpException(422, 'validation failed', ['error' => 'Account already exists']);
+			return Helpers::HttpException(422, 'validation failed', ['error' => 'Email already been registered.']);
 		}
 		//if user connect("logged in") with facebook then he sing up again with the sing up form
 		if ($user && $user->source == User::SOURCE_FACEBOOK) {
@@ -104,7 +104,7 @@ class ClientController extends ActiveController
 			$new_user = User::NewBasicSignUp($sing_up_form->full_name, $sing_up_form->email, $sing_up_form->phone_number, $sing_up_form->password, User::CLIENT);
 			if (!$new_user)
 				return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
-			return Helpers::formatResponse(TRUE, 'sign up success', $new_user->getUserClientFields());
+			return Helpers::formatResponse(TRUE, 'You have been signed up successfully!', $new_user->getUserClientFields());
 		}else
 			return Helpers::HttpException(422, 'Vendor account', ['error' => 'You are using a vendor email, kindly, use another email to process!']);
 
@@ -120,16 +120,18 @@ class ClientController extends ActiveController
 		if (empty($post_data['source']))
 			return Helpers::HttpException(422, 'validation failed', ['error' => "source can't be blank"]);
 
+		
 		if ($post_data['source'] == User::SOURCE_BASIC) {
 			$login_form = new LoginForm();
 			$login_form->setAttributes($post_data);
 			if (!$login_form->validate()) {
 				return Helpers::HttpException(422, 'validation failed', ['error' => $login_form->errors]);
 			}
+
 			$user = User::Login($login_form->email, $login_form->password);
 			if (!$user)
 				return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
-			return Helpers::formatResponse(TRUE, 'log in success', $user->getUserClientFields());
+			return Helpers::formatResponse(TRUE, 'You have been logged in successfully!', $user->getUserClientFields());
 		} else if ($post_data['source'] == User::SOURCE_FACEBOOK) {
 			$fb_login_form = new FacebookLoginForm();
 			$fb_login_form->setAttributes($post_data);
@@ -148,7 +150,7 @@ class ClientController extends ActiveController
 				$new_user = User::NewFacebookSignUp($fb_login_form->full_name, $fb_login_form->email, $fb_login_form->picture, $fb_login_form->facebook_id, User::CLIENT);
 				if (!$new_user)
 					return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
-				return Helpers::formatResponse(TRUE, 'sign up success', $new_user->getUserClientFields());
+				return Helpers::formatResponse(TRUE, 'You have been signed up successfully!', $new_user->getUserClientFields());
 			}
 
 			if (!$user->regGenerateAuthKey()) {
@@ -165,7 +167,7 @@ class ClientController extends ActiveController
 			if (!$client->save())
 				return Helpers::HttpException(422, 'validation failed', ['error' => $client->errors]);
 
-			return Helpers::formatResponse(TRUE, 'log in success', $user->getUserClientFields());
+			return Helpers::formatResponse(TRUE, 'You have been logged in successfully!', $user->getUserClientFields());
 		}
 	}
 
@@ -175,13 +177,17 @@ class ClientController extends ActiveController
 
 		$clientUser = User::findIdentityByAccessToken(explode(' ', $headers['authorization'])[1]);
 		if (empty($clientUser))
-			return Helpers::HttpException(404, 'not found', ['error' => 'user not found']);
+			return Helpers::HttpException(404, 'Not found', ['error' => 'user not found']);
+
+		$user_role = User::getRoleName($clientUser->id);
+		if ($user_role != User::CLIENT)
+			return Helpers::HttpException(403, "forbidden", ['error' => "You've signed up as vendor, kindly, use another email to process!"]);
 
 		$clientUser->auth_key = '';
 		if (!$clientUser->save(FALSE))
 			return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
 
-		return Helpers::formatResponse(TRUE, 'log out success', NULL);
+		return Helpers::formatResponse(TRUE, 'You have been logged out successfully!', NULL);
 	}
 
 	public function actionRestaurants()
