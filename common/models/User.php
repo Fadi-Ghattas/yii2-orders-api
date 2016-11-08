@@ -350,6 +350,11 @@ class User extends ActiveRecord implements IdentityInterface
 		 */
 		$user = User::findOne(['email' => $email]);
 
+		$user_role = User::getRoleName($user->id);
+
+		if ($user_role != self::CLIENT)
+			return Helpers::HttpException(403, "forbidden", ['error' => "You've signed up as vendor, kindly, use another email to process!"]);
+
 		if (!$user) {
 			return Helpers::HttpException(422, 'validation failed', ['error' => 'Invalid email or password.']);
 		}
@@ -361,11 +366,6 @@ class User extends ActiveRecord implements IdentityInterface
 		if (!$user->regGenerateAuthKey()) {
 			return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
 		}
-
-		$user_role = User::getRoleName($user->id);
-
-		if ($user_role != self::CLIENT)
-			return Helpers::HttpException(403, "forbidden", ['error' => "You must sing up for client account first."]);
 
 		$user->last_logged_at = date('Y-m-d H:i:s');
 		if (!$user->save()) {
