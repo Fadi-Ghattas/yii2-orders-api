@@ -336,44 +336,6 @@ class MenuItems extends \yii\db\ActiveRecord
         $transaction = $connection->beginTransaction();
         try {
 
-            //if (isset($data['image'])) {
-            if ( isset($data['image']) &&   filter_var($data['image'], FILTER_VALIDATE_URL) === FALSE   &&  base64_decode($data['image'] , true) !== false /*|| substr($data['image'], 0, 4 ) != 'http' */ )  {
-                //die("fuck");
-
-                $model['MenuItems'] = $data;
-                $menuItem->load($model);
-
-                if (empty(trim($data['image'])))
-                    return Helpers::HttpException(422, 'validation failed', ['error' => "image can't be blank"]);
-                if (!isset($data['extension']))
-                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension is required"]);
-                if (empty(trim($data['extension'])))
-                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
-
-                $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
-                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
-                // $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
-                $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
-                    trim($bucket_name, '/'). '/' . $restaurant->id,
-                    time().'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
-                    $menuItem->image,
-                    $menuItem->extension,
-                    $sizes = ['Normal' , 'Thumbnail' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
-                );
-                if ($AWSImageUrl['success']) {
-                    $menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
-                }
-
-            }else{
-
-                unset($data['image']);
-                $model['MenuItems'] = $data;
-                $menuItem->load($model);
-            }
-            
-            $menuItem->validate();
-            $menuItem->save();
-
             if (isset($data['categories'])) {
 
                 if (empty($data['categories']))
@@ -494,6 +456,58 @@ class MenuItems extends \yii\db\ActiveRecord
                     foreach ($menuItemChoices as $MenuItemChoice)
                         $MenuItemChoice->delete();
             }
+
+             //if (isset($data['image'])) {
+            if ( isset($data['image']) &&   filter_var($data['image'], FILTER_VALIDATE_URL) === FALSE   &&  base64_decode($data['image'] , true) !== false /*|| substr($data['image'], 0, 4 ) != 'http' */ )  {
+                
+
+                if (empty(trim($data['image'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "image can't be blank"]);
+                if (!isset($data['extension']))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension is required"]);
+                if (empty(trim($data['extension'])))
+                    return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
+
+                $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
+                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
+                // $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
+                $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
+                    trim($bucket_name, '/'). '/' . $restaurant->id,
+                    time().'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
+                    trim($data['image']),
+                    trim($data['extension']),
+                    $sizes = ['Normal' , 'Thumbnail' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
+                );
+
+                if ($AWSImageUrl['success']) {
+
+                    $data['image'] =  urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
+                    
+                    $key = explode("/",$menuItem->oldAttributes['image']);
+                    $key = end($key);
+
+                    $AWSFileManager->deleteObject([
+                        'Bucket' => trim($bucket_name, '/') . '/' . $restaurant->id, // REQUIRED
+                        'Key' => $key,
+                    ]);
+
+                }else{
+
+                    $data['image'] = $menuItem->oldAttributes['image']; 
+                }
+
+            }else{
+
+                unset($data['image']);
+                unset($data['extension']);
+            }
+            
+            
+            $model['MenuItems'] = $data;
+            $menuItem->load($model);
+            $menuItem->validate();
+            $menuItem->save();
+
 
             $transaction->commit();
             return Helpers::formatResponse(true, 'update success', ['id' => $menuItem->id]);
