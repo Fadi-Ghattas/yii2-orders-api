@@ -232,7 +232,7 @@ class Restaurants extends \yii\db\ActiveRecord
      */
     public function getMenuCategories()
     {
-        return $this->hasMany(MenuCategories::className(), ['restaurant_id' => 'id'])->where(['deleted_at' => null]);
+        return $this->hasMany(MenuCategories::className(), ['restaurant_id' => 'id'])->where(['deleted_at' => null])->orderBy('updated_at DESC')->orderBy('created_at DESC');
     }
 
     /**
