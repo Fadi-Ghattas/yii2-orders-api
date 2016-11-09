@@ -95,6 +95,7 @@ class MenuCategories extends \yii\db\ActiveRecord
             ->andWhere(['menu_categories.deleted_at' => null])
             ->joinWith(['menuCategoryItems'], true, 'INNER JOIN')
             ->joinWith(['menuCategoryItems', 'menuCategoryItems.menuItem'], true, 'INNER JOIN')
+             ->orderBy('menu_items.updated_at DESC')
             ->orderBy('menu_items.created_at DESC')
             ->asArray()->all();
     }
