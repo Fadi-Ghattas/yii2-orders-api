@@ -268,7 +268,7 @@ class Helpers
 				'to' => 'fadighattas100@gmail.com',
 				'subject' => 'Hello',
 				'text' => 'Testing some Mailgun awesomeness!',
-				'html'    => '<!DOCTYPE html>
+				'html'    => ' <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
