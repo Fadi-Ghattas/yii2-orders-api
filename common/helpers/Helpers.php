@@ -260,34 +260,15 @@ class Helpers
 		# Instantiate the client.
 		$mgClient = new Mailgun('key-758295c286588b30f777eb1d9d724f77');
 		$domain = "jommakan.asia";
-
+		$emailTemplate = file_get_contents(dirname(dirname(__FILE__)) . '\emails-templates\admin-new-book-now-success.html');
 		# Make the call to the client.
-		$result = $mgClient->sendMessage("$domain",
+			$result = $mgClient->sendMessage("$domain",
 			[
 				'from' => 'Jommakan <hello@jommakan.asia>',
 				'to' => 'fadighattas100@gmail.com',
 				'subject' => 'Hello',
-				'text' => 'Testing some Mailgun awesomeness!',
-				'html'    => '<!DOCTYPE html>
-<html lang="en">
-<head><meta charset="UTF-8">
-    <title>Congratulations!</title>
-</head>
-<body style="margin:0;padding:0;background-color: white;font-family: arial; font-size:14px;color: #999999;">
-<center style="background-color: #eaeaea;padding: 40px 0px;">
-    <a href="" target="_blank"><img width="140px" src="" /></a>
-</center>
-<div style="padding: 40px;">
-    <p style="color: #45454A;text-align:center;font-size:16px;"><b>Hi Admin,</b></p>
-    <p style="color: #45454A;text-align:center"><b>A new reservation for () from ().</b></p>
-    <p style="color: #45454A;text-align:center"><b>You can check the following details by clicking <a href="">Booking Info</a></b></p>
-    <p>&nbsp;</p>
-</div>
-<center style="background-color: #8d333d;font-size: 11px;color: #E6E6E6;padding: 20px 0px;">
-    © INKED.
-</center>
-</body>
-</html>'
+				'text' => 'Your mail do not support HTML',
+				'html'    => $emailTemplate
 			]);
 	}
 
