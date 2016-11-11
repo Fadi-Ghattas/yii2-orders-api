@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "779284039841d1d18cebac3a3addc0b4",
-    "content-hash": "e320c9cca2d80edecd9fdfc869297712",
+    "hash": "668316ff5139c16f54ddf93d0b3b8969",
+    "content-hash": "595ee4cc00851ecb5edc16f1ea1bd0b1",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -595,12 +595,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/giggsey/libphonenumber-for-php.git",
-                "reference": "e55e956a7a8211af3dfbd9dd5372ccc5eb79e495"
+                "reference": "1bb1209981e0452d49b7b2e9cc894ad0901b04bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/e55e956a7a8211af3dfbd9dd5372ccc5eb79e495",
-                "reference": "e55e956a7a8211af3dfbd9dd5372ccc5eb79e495",
+                "url": "https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/1bb1209981e0452d49b7b2e9cc894ad0901b04bf",
+                "reference": "1bb1209981e0452d49b7b2e9cc894ad0901b04bf",
                 "shasum": ""
             },
             "require": {
@@ -649,7 +649,7 @@
                 "phonenumber",
                 "validation"
             ],
-            "time": "2016-10-26 13:35:16"
+            "time": "2016-11-10 20:47:39"
         },
         {
             "name": "giggsey/locale",
@@ -1516,62 +1516,6 @@
             "time": "2016-11-04 09:19:15"
         },
         {
-            "name": "php-http/curl-client",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/curl-client.git",
-                "reference": "984b3e6e9b7c56bb85f6db3725e5a74e83cd6257"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/curl-client/zipball/984b3e6e9b7c56bb85f6db3725e5a74e83cd6257",
-                "reference": "984b3e6e9b7c56bb85f6db3725e5a74e83cd6257",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "php": "^5.5 || ^7.0",
-                "php-http/discovery": "^1.0",
-                "php-http/httplug": "^1.0",
-                "php-http/message": "^1.2",
-                "php-http/message-factory": "^1.0.2"
-            },
-            "provide": {
-                "php-http/async-client-implementation": "1.0",
-                "php-http/client-implementation": "1.0"
-            },
-            "require-dev": {
-                "guzzlehttp/psr7": "^1.0",
-                "php-http/client-integration-tests": "^0.5.1",
-                "phpunit/phpunit": "^4.8.27",
-                "zendframework/zend-diactoros": "^1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Http\\Client\\Curl\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Михаил Красильников",
-                    "email": "m.krasilnikov@yandex.ru"
-                }
-            ],
-            "description": "cURL client for PHP-HTTP",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "curl",
-                "http"
-            ],
-            "time": "2016-09-12 14:10:21"
-        },
-        {
             "name": "php-http/discovery",
             "version": "dev-master",
             "source": {
@@ -2370,12 +2314,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "2a9020506f88e372b62919dd20dfa4134e5d2f0d"
+                "reference": "dafb94737017ab4c34ded5de5e33cbaeadf8af5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/2a9020506f88e372b62919dd20dfa4134e5d2f0d",
-                "reference": "2a9020506f88e372b62919dd20dfa4134e5d2f0d",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/dafb94737017ab4c34ded5de5e33cbaeadf8af5c",
+                "reference": "dafb94737017ab4c34ded5de5e33cbaeadf8af5c",
                 "shasum": ""
             },
             "require": {
@@ -2456,7 +2400,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2016-11-07 12:34:17"
+            "time": "2016-11-10 19:18:45"
         },
         {
             "name": "yiisoft/yii2-bootstrap",
@@ -2666,12 +2610,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "47104e5a568d5bdc57f4073dcdb030f13440088d"
+                "reference": "70572abb2ee34c79a566dc13d016f89011f8365e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/47104e5a568d5bdc57f4073dcdb030f13440088d",
-                "reference": "47104e5a568d5bdc57f4073dcdb030f13440088d",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/70572abb2ee34c79a566dc13d016f89011f8365e",
+                "reference": "70572abb2ee34c79a566dc13d016f89011f8365e",
                 "shasum": ""
             },
             "require": {
@@ -2708,7 +2652,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2016-11-07 15:53:41"
+            "time": "2016-11-09 08:42:27"
         },
         {
             "name": "yiisoft/yii2-codeception",
@@ -2762,12 +2706,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-debug.git",
-                "reference": "99f2f9275674a3b461632268adc78e90f2e9b29d"
+                "reference": "53709234d8fee793ced6d8db09edd7c326f8da0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/99f2f9275674a3b461632268adc78e90f2e9b29d",
-                "reference": "99f2f9275674a3b461632268adc78e90f2e9b29d",
+                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/53709234d8fee793ced6d8db09edd7c326f8da0a",
+                "reference": "53709234d8fee793ced6d8db09edd7c326f8da0a",
                 "shasum": ""
             },
             "require": {
@@ -2801,7 +2745,7 @@
                 "debugger",
                 "yii2"
             ],
-            "time": "2016-10-26 16:39:50"
+            "time": "2016-11-11 10:35:09"
         },
         {
             "name": "yiisoft/yii2-faker",

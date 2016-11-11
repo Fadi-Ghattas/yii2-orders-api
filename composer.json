@@ -23,7 +23,6 @@
             "bryglen/yii2-twillio": "dev-master",
             "aws/aws-sdk-php": "2.*",
             "mailgun/mailgun-php": "*",
-            "php-http/curl-client": "*",
             "guzzlehttp/psr7" : "*"
     },
     "require-dev": {
