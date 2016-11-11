@@ -260,7 +260,7 @@ class Helpers
 		# Instantiate the client.
 		$mgClient = new Mailgun('key-758295c286588b30f777eb1d9d724f77');
 		$domain = "jommakan.asia";
-		$emailTemplate = file_get_contents(dirname(dirname(__FILE__)) . '\/\emails-templates\/\admin-new-book-now-success.html');
+		$emailTemplate = file_get_contents(dirname(dirname(__FILE__)) . '//emails-templates//admin-new-book-now-success.html');
 		# Make the call to the client.
 			$result = $mgClient->sendMessage("$domain",
 			[
