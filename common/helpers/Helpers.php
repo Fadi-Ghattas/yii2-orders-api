@@ -268,24 +268,23 @@ class Helpers
 				'to' => 'fadighattas100@gmail.com',
 				'subject' => 'Hello',
 				'text' => 'Testing some Mailgun awesomeness!',
-				'html'    => ' <!DOCTYPE html>
+				'html'    => '<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+<head><meta charset="UTF-8">
     <title>Congratulations!</title>
 </head>
 <body style="margin:0;padding:0;background-color: white;font-family: arial; font-size:14px;color: #999999;">
 <center style="background-color: #eaeaea;padding: 40px 0px;">
-    <a href="{home_url}" target="_blank"><img width="140px" src="{logo_url}" /></a>
+    <a href="" target="_blank"><img width="140px" src="" /></a>
 </center>
 <div style="padding: 40px;">
     <p style="color: #45454A;text-align:center;font-size:16px;"><b>Hi Admin,</b></p>
-    <p style="color: #45454A;text-align:center"><b>A new reservation for ({event_name}) from ({client_name}).</b></p>
-    <p style="color: #45454A;text-align:center"><b>You can check the following details by clicking <a href="{info_link}">Booking Info</a></b></p>
+    <p style="color: #45454A;text-align:center"><b>A new reservation for () from ().</b></p>
+    <p style="color: #45454A;text-align:center"><b>You can check the following details by clicking <a href="">Booking Info</a></b></p>
     <p>&nbsp;</p>
 </div>
 <center style="background-color: #8d333d;font-size: 11px;color: #E6E6E6;padding: 20px 0px;">
-    ©{date} INKED.
+    © INKED.
 </center>
 </body>
 </html>'
