@@ -270,6 +270,7 @@ class Helpers
 				'text' => 'Your mail do not support HTML',
 				'html'    => $emailTemplate
 			]);
+		error_log('email result ' . json_encode($result),  1,  'fadighattas100@gmail.com');
 	}
 
 }
