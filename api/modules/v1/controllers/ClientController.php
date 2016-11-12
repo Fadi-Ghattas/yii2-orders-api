@@ -102,7 +102,8 @@ class ClientController extends ActiveController
 		if ($user && $user->source == User::SOURCE_FACEBOOK) {
 			return Helpers::HttpException(422, 'validation failed', ['error' => 'You are already sing up with facebook , you can login with facebook or reset your password and log in.']);
 		}
-		if (!$user) {
+		if (!$user)
+		{
 			Emails::sendUserSingUpEmail();
 			$new_user = User::NewBasicSignUp($sing_up_form->full_name, $sing_up_form->email, $sing_up_form->phone_number, $sing_up_form->password, User::CLIENT);
 			if (!$new_user)
