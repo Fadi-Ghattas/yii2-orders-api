@@ -24,7 +24,7 @@ class Helpers
 	public static function formatResponse($success, $message, $data)
 	{	
 
-		try {
+		/*try {
 			// Daleen was here .... :)
 			if(isset($data['error']) && is_array($data['error']) ) {
 
@@ -38,7 +38,7 @@ class Helpers
 		} catch (Exception $e) {
 			$data = $data;
 		}
-		
+		*/
 		
 		if (!isset($data[0]) && !empty($data)) {
 			return ['success' => $success,
