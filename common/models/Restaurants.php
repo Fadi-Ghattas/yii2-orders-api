@@ -441,17 +441,21 @@ class Restaurants extends \yii\db\ActiveRecord
                     $sizes = ['Normal']);
 
 
-                if ($AWSImageUrl['success'] && !empty($restaurants->oldAttributes['image_background'])) {
+                if ($AWSImageUrl['success']) {
 
                     $data['image_background'] = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
 
-                    $key = explode("/",$restaurants->oldAttributes['image_background']);
-                    $key = end($key);
+                    if(!empty($restaurants->oldAttributes['image_background'])){
+                        
+                        $key = explode("/",$restaurants->oldAttributes['image_background']);
+                        $key = end($key);
 
-                    $AWSFileManager->deleteObject([
-                        'Bucket' => trim($bucket_name, '/') . '/' . $restaurants->id, // REQUIRED
-                        'Key' => $key,
-                    ]);
+                        $AWSFileManager->deleteObject([
+                            'Bucket' => trim($bucket_name, '/') . '/' . $restaurants->id, // REQUIRED
+                            'Key' => $key,
+                        ]);
+                    }
+                    
 
                 }else{
                     
@@ -463,7 +467,7 @@ class Restaurants extends \yii\db\ActiveRecord
                 unset($data['image_background']);
                 unset($data['extension']);
             }
-
+            //die(print_r($data));
             $model['Restaurants'] = $data;
             $restaurants->load($model);
             $restaurants->validate();
