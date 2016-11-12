@@ -105,15 +105,16 @@ class ClientController extends ActiveController
 		}
 		if (!$user)
 		{
-			EmailHandler::sendUserSingUpEmail();
 			$new_user = User::NewBasicSignUp($sing_up_form->full_name, $sing_up_form->email, $sing_up_form->phone_number, $sing_up_form->password, User::CLIENT);
 			if (!$new_user)
 				return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later']);
-			return Helpers::formatResponse(TRUE, 'You have been signed up successfully!', $new_user->getUserClientFields());
-		} else
-			return Helpers::HttpException(422, 'Vendor account', ['error' => 'You are using a vendor email, kindly, use another email to process!']);
 
-		EmailHandler::sendUserSingUpEmail();
+			EmailHandler::sendUserSingUpEmail($new_user->email);
+			return Helpers::formatResponse(TRUE, 'You have been signed up successfully!', $new_user->getUserClientFields());
+		} else {
+			return Helpers::HttpException(422, 'Vendor account', ['error' => 'You are using a vendor email, kindly, use another email to process!']);
+		}
+
 		return Helpers::HttpException(501, 'not implemented', ['error' => 'Something went wrong, try again later or contact the admin.']);
 	}
 

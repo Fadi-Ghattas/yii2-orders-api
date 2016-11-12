@@ -10,12 +10,13 @@ namespace common\emails;
 
 
 use common\helpers\Helpers;
+use common\models\Setting;
+use common\models\SettingsForm;
 
 class EmailHandler
 {
-	public static function sendUserSingUpEmail()
+	public static function sendUserSingUpEmail($to)
 	{
-
 		$emailTemplate = file_get_contents(dirname(dirname(__FILE__)) . '//emails-templates//user-sing-up-email.html');
 		$emailTemplate = str_replace('{home_url}', '#', $emailTemplate);
 		$emailTemplate = str_replace('{logo_url}', 'https://s3-ap-southeast-1.amazonaws.com/foodhunting.app.assets/jommakan-icon.png', $emailTemplate);
@@ -37,6 +38,10 @@ class EmailHandler
 		$emailTemplate = str_replace('{apple_store_icon}', 'https://s3-ap-southeast-1.amazonaws.com/foodhunting.app.assets/apple-store-icon.png', $emailTemplate);
 		$emailTemplate = str_replace('{apple_store_url}', '#', $emailTemplate);
 
-		Helpers::sendMailgunEmail($emailTemplate);
+		Helpers::sendMailgunEmail(
+			Setting::getSettingValueByName(SettingsForm::EMAIL_NAME) . ' <' . Setting::getSettingValueByName(SettingsForm::EMAIL) . '>',
+			$to,
+			'FOOD HUNTING | Welcome',
+			$emailTemplate);
 	}
 }

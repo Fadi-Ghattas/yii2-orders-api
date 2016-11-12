@@ -256,8 +256,8 @@ class Helpers
 
 	public static function sendMailgunEmail($from, $to, $subject, $emailTemplate)
 	{
-		$mgClient = new Mailgun('');
-		$domain = "";
+		$mgClient = new Mailgun(Setting::getSettingValueByName(SettingsForm::MAIL_GUN_API_KEY));
+		$domain = Setting::getSettingValueByName(SettingsForm::MAIL_GUN_DOMAIN);
 
 		# Make the call to the client.
 			$result = $mgClient->sendMessage("$domain",
