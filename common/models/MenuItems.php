@@ -560,19 +560,19 @@ class MenuItems extends \yii\db\ActiveRecord
             foreach ($menuCategoryItems as $menuItem) {
                 $singleMenuItem = array();
                 if ($isVerifiedGlobal) {
-                    if ($menuItem['menuItem']['status']) {
-                        $singleMenuItem['id'] = (int)$menuItem['menuItem']['id'];
-                        $singleMenuItem['image'] = (string)$menuItem['menuItem']['image'];
-                        $singleMenuItem['name'] = (string)$menuItem['menuItem']['name'];
-                        $singleMenuItem['price'] = (double)$menuItem['menuItem']['price'];
+                    if ($menuItem->status) {
+                        $singleMenuItem['id'] = (int)$menuItem->id;
+                        $singleMenuItem['image'] = (string)$menuItem->image;
+                        $singleMenuItem['name'] = (string)$menuItem->name;
+                        $singleMenuItem['price'] = (double)$menuItem->price;
                         $menuCategoryItemsResult [] = $singleMenuItem;
                     }
-                } else if ($menuItem['menuItem']['is_verified']) {
-                    if ($menuItem['menuItem']['status']) {
-                        $singleMenuItem['id'] = (int)$menuItem['menuItem']['id'];
-                        $singleMenuItem['image'] = (string)$menuItem['menuItem']['image'];
-                        $singleMenuItem['name'] = (string)$menuItem['menuItem']['name'];
-                        $singleMenuItem['price'] = (double)$menuItem['menuItem']['price'];
+                } else if ($menuItem->is_verified) {
+                    if ($menuItem->status) {
+                        $singleMenuItem['id'] = (int)$menuItem->id;
+                        $singleMenuItem['image'] = (string)$menuItem->image;
+                        $singleMenuItem['name'] = (string)$menuItem->name;
+                        $singleMenuItem['price'] = (double)$menuItem->price;
                         $menuCategoryItemsResult [] = $singleMenuItem;
                     }
                 }

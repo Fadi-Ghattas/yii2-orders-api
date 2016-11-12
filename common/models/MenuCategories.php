@@ -243,9 +243,9 @@ class MenuCategories extends \yii\db\ActiveRecord
                         return (string)$this->name;
                     },
                     'menuCategoriesItems' => function () {
-                        $menuCategories = self::getMenuCategoryItemsAsArray($this->restaurant_id, $this->id);
-                        if (!empty($menuCategories[0]['menuCategoryItems']))
-                            return MenuItems::formatMenuCategoryItems($menuCategories[0]['menuCategoryItems'], $this->restaurant->is_verified_global);
+                        $menuCategoryItems = self::getMenuCategoryItemsAsArray($this->restaurant_id, $this->id);
+                        if (!empty($menuCategoryItems))
+                            return MenuItems::formatMenuCategoryItems($menuCategoryItems, $this->restaurant->is_verified_global);
                         else return [];
                     },
                 ],
