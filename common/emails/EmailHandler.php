@@ -1,25 +1,22 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: Fadi
  * Date: 11/12/2016
- * Time: 10:44 AM
+ * Time: 1:14 PM
  */
 
 namespace common\emails;
 
-use common\helpers\Helpers;
 
-class Emails
+class EmailHandler
 {
-
 	public static function sendUserSingUpEmail()
 	{
 
 		$emailTemplate = file_get_contents(dirname(dirname(__FILE__)) . '//emails-templates//user-sing-up-email.html');
 		$emailTemplate = str_replace('{home_url}', '#', $emailTemplate);
-		$emailTemplate = str_replace('{logo_url}', 'https://s3-ap-southeast-1.amazonaws.com/foodhunting.app.assets/jommakan-icon.png' , $emailTemplate);
+		$emailTemplate = str_replace('{logo_url}', 'https://s3-ap-southeast-1.amazonaws.com/foodhunting.app.assets/jommakan-icon.png', $emailTemplate);
 		$emailTemplate = str_replace('{back_ground}', 'https://s3-ap-southeast-1.amazonaws.com/foodhunting.app.assets/email-back-ground.png', $emailTemplate);
 		$emailTemplate = str_replace('{heart}', 'https://s3-ap-southeast-1.amazonaws.com/foodhunting.app.assets/heart.png', $emailTemplate);
 
