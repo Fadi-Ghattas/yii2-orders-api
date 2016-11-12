@@ -7,11 +7,11 @@
  * Time: 10:44 AM
  */
 
-namespace common\emails;
+namespace common\Emails;
 
 use common\helpers\Helpers;
 
-class emails
+class Emails
 {
 
 
