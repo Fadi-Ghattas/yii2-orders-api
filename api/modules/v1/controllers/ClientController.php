@@ -10,13 +10,14 @@ namespace api\modules\v1\controllers;
 
 
 
+
 use Yii;
 use api\modules\v1\models\LoginForm;
 use api\modules\v1\models\SignUpForm;
 use api\modules\v1\models\FacebookLoginForm;
 use common\models\User;
+use common\Emails\Emails;
 use common\helpers\Helpers;
-use common\emails\Emails;
 use common\models\Cuisines;
 use common\models\MenuItems;
 use common\models\Restaurants;
