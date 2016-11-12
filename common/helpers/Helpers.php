@@ -254,23 +254,20 @@ class Helpers
 		return $response;
 	}
 
-	public static function sendMailgunEmail($emailTemplate)
+	public static function sendMailgunEmail($from, $to, $subject, $emailTemplate)
 	{
-		//$client = new \Http\Adapter\Guzzle6\Client(); $mailgun = new \Mailgun\Mailgun('api_key', $client);
-		# Instantiate the client.
-		$mgClient = new Mailgun('key-758295c286588b30f777eb1d9d724f77');
-		$domain = "jommakan.asia";
+		$mgClient = new Mailgun('');
+		$domain = "";
 
 		# Make the call to the client.
 			$result = $mgClient->sendMessage("$domain",
 			[
-				'from' => 'Jommakan <hello@jommakan.asia>',
-				'to' => 'fadighattas100@gmail.com',
-				'subject' => 'Hello',
-				'text' => 'Your mail do not support HTML',
+				'from' => $from,
+				'to' => $to,
+				'subject' => $subject,
+				//'text' => 'Your mail do not support HTML',
 				'html'    => $emailTemplate
 			]);
-		error_log('email result ' . json_encode($result),  1,  'fadighattas100@gmail.com');
 	}
 
 }
