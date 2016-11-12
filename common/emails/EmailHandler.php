@@ -9,6 +9,8 @@
 namespace common\emails;
 
 
+use common\helpers\Helpers;
+
 class EmailHandler
 {
 	public static function sendUserSingUpEmail()
