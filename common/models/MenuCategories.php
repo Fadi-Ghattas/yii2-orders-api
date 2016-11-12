@@ -90,7 +90,7 @@ class MenuCategories extends \yii\db\ActiveRecord
     {
         return MenuItems::find()->joinWith(['menuCategoryItems'])
             ->where(['menu_category_item.menu_category_id' => $category_id])
-            ->andWhere(['delete_at' => NULL])
+            ->andWhere(['deleted_at' => NULL])
             ->orderBy('created_at DESC')->orderBy('updated_at DESC')->all();
     }
 
