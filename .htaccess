@@ -1,0 +1,33 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+
+# RewriteCond %{REQUEST_URI} !^/index.html$
+#  RewriteCond %{REQUEST_URI} !\.(gif|jpe?g|png|css|js)$
+#  RewriteRule .* /index.html [L,R=302]
+
+#  RewriteCond %{REQUEST_URI} superhero
+#  RewriteRule ^(.*)$ backend/web/$1 [L]
+#   RewriteRule ^superhero/assets/(.*)$ backend/web/assets/$1 [L]
+#   RewriteRule ^superhero/css/(.*)$ backend/web/css/$1 [L]
+#   RewriteRule ^superhero/js/(.*)$ backend/web/js/$1 [L]
+#   RewriteRule ^superhero/upload/(.*)$ backend/web/uploads/$1 [L]
+#
+#  RewriteCond %{REQUEST_URI} !^public
+#  RewriteRule ^common/(.*)$ common/$1 [L,NC]
+#  RewriteRule ^docs/(.*)$ docs/$1 [L,NC]
+#  RewriteRule ^(.*)$ frontend/web/$1 [L]
+#
+
+
+</IfModule>
+#SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
+# Deny accessing below extensions
+#Files ~ "(.json|.lock|.git)">
+#Order allow,deny
+#Deny from all
+#</Files>
+
+# Deny accessing dot files
+#RewriteRule (^\.|/\.) - [F]
