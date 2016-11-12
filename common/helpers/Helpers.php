@@ -24,21 +24,19 @@ class Helpers
 	public static function formatResponse($success, $message, $data)
 	{	
 
-		/*try {
-			// Daleen was here .... :)
-			if(isset($data['error']) && is_array($data['error']) ) {
+		
+		// Daleen was here .... :)
+		if(isset($data['error']) && is_array($data['error']) ) {
 
-				$error  = array();
-				foreach ($data['error'] as $key => $value) {
-					$err['error'] = $value[0];
-					$error[] = $err;
-				}
-				$data = $error;
+			$error  = array();
+			foreach ($data['error'] as $key => $value) {
+				$err['error'] = (isset($value[0]) ? $value[0] : $value );
+				$error[] = $err;
 			}
-		} catch (Exception $e) {
-			$data = $data;
+			$data = $error;
 		}
-		*/
+		
+		
 		
 		if (!isset($data[0]) && !empty($data)) {
 			return ['success' => $success,
