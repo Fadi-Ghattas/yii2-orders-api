@@ -145,6 +145,7 @@ class VendorController extends ActiveController
 		$request = Yii::$app->request;
 		$get_data = $request->get();
 
+		
 		if ($request->isGet && empty($get_data)) {
 			return Helpers::formatResponse(TRUE, 'get success', Restaurants::checkRestaurantAccess());
 		} else if ($request->isPut && empty($get_data)) {
