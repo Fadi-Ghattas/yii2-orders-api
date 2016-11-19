@@ -288,16 +288,23 @@ class MenuItems extends \yii\db\ActiveRecord
                 $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
                 $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
                 //$AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
+                $menu_category_id = MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id;
+
                 $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
-                    trim($bucket_name, '/') . '/' . $restaurant->id,
-                    time().'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id,
+                    trim($bucket_name, '/') . '/' . $restaurant->id .'/'.$menu_category_id,
+                    time()/*.'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id*/,
                     $data['image'],
                     $data['extension'],
-                    $sizes = ['Normal' , 'Thumbnail' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
+                    $sizes = ['Normal' , '' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
                 );
 
                 if ($AWSImageUrl['success']) {
-                    $menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
+
+                    $image = explode($bucket_name,urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']));
+                    $menuItem->image   = ltrim( $image[1] , '/');
+                    // die(print_r(urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL'])));
+                    //$menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
+
                 }
 
             }else{
@@ -468,7 +475,8 @@ class MenuItems extends \yii\db\ActiveRecord
                 if (empty(trim($data['extension'])))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
 
-                $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
+
+                /*$bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
                 $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
                 // $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
                 $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
@@ -478,8 +486,51 @@ class MenuItems extends \yii\db\ActiveRecord
                     trim($data['extension']),
                     $sizes = ['Normal' , 'Thumbnail' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
                 );
+                */
+                $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
+                $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
+                //$AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET)]));
+                $menu_category_id = MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id;
+
+                $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
+                    trim($bucket_name, '/') . '/' . $restaurant->id .'/'.$menu_category_id,
+                    time()/*.'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id*/,
+                    $data['image'],
+                    $data['extension'],
+                    $sizes = ['Normal' , '' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
+                );
 
                 if ($AWSImageUrl['success']) {
+
+                    $image = explode($bucket_name,urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']));
+                    $data['image'] = ltrim( $image[1] , '/');
+                    // die(print_r(urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL'])));
+                    //$menuItem->image = urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
+                    if(!empty($menuItem->oldAttributes['image'])) {
+
+                        $key = explode("/",$menuItem->oldAttributes['image']);
+                        $key = end($key);
+
+                        $AWSFileManager->deleteObject([
+                            'Bucket' => trim($bucket_name, '/') . '/' . $restaurant->id .'/'.$menu_category_id,// REQUIRED
+                            'Key' => $key,
+                        ]);
+
+                        $AWSFileManager->deleteObject([
+                            'Bucket' => trim($bucket_name, '/') . '/' . $restaurant->id .'/'.$menu_category_id.'/thumbnail',// REQUIRED
+                            'Key' => $key,
+                        ]);
+
+                    }
+
+                }else{
+
+                    $data['image'] = $menuItem->oldAttributes['image']; 
+                }
+
+
+                
+                /*if ($AWSImageUrl['success']) {
 
                     $data['image'] =  urldecode(Json::decode($AWSImageUrl['result'])[0]['ObjectURL']);
                     
@@ -491,10 +542,7 @@ class MenuItems extends \yii\db\ActiveRecord
                         'Key' => $key,
                     ]);
 
-                }else{
-
-                    $data['image'] = $menuItem->oldAttributes['image']; 
-                }
+                }*/
 
             }else{
 
@@ -562,7 +610,7 @@ class MenuItems extends \yii\db\ActiveRecord
                 if ($isVerifiedGlobal) {
                     if ($menuItem->status) {
                         $singleMenuItem['id'] = (int)$menuItem->id;
-                        $singleMenuItem['image'] = (string)$menuItem->image;
+                        $singleMenuItem['image'] = Helpers::getImageFullUrl($menuItem->image); //(string)Setting::getSettingValueByName(SettingsForm::S3_BUCKET_URL).$menuItem->image;
                         $singleMenuItem['name'] = (string)$menuItem->name;
                         $singleMenuItem['price'] = (double)$menuItem->price;
                         $menuCategoryItemsResult [] = $singleMenuItem;
@@ -570,7 +618,7 @@ class MenuItems extends \yii\db\ActiveRecord
                 } else if ($menuItem->is_verified) {
                     if ($menuItem->status) {
                         $singleMenuItem['id'] = (int)$menuItem->id;
-                        $singleMenuItem['image'] = (string)$menuItem->image;
+                        $singleMenuItem['image'] = Helpers::getImageFullUrl($menuItem->image);//(string)Setting::getSettingValueByName(SettingsForm::S3_BUCKET_URL).$menuItem->image;
                         $singleMenuItem['name'] = (string)$menuItem->name;
                         $singleMenuItem['price'] = (double)$menuItem->price;
                         $menuCategoryItemsResult [] = $singleMenuItem;
@@ -611,7 +659,7 @@ class MenuItems extends \yii\db\ActiveRecord
                         return (string)$this->name;
                     },
                     'image' => function () {
-                        return (!empty($this->image) ? (string)$this->image : null);
+                        return Helpers::getImageFullUrl($this->image);//(!empty($this->image) ? (string) Setting::getSettingValueByName(SettingsForm::S3_BUCKET_URL).$this->image : null);
                     },
                     'price' => function () {
                         return (float)$this->price;
@@ -650,7 +698,7 @@ class MenuItems extends \yii\db\ActiveRecord
                         return (string)$this->name;
                     },
                     'image' => function () {
-                        return (!empty($this->image) ? (string)$this->image : null);
+                        return Helpers::getImageFullUrl($this->image); //(!empty($this->image) ? (string)Setting::getSettingValueByName(SettingsForm::S3_BUCKET_URL).$this->image : null);
                     },
                     'price' => function () {
                         return (float)$this->price;

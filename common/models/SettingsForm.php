@@ -26,6 +26,7 @@ class SettingsForm extends Model
 	const S3_KEY = 's3_key';
 	const S3_SECRET = 's3_secret';
 	const S3_BUCKET_NAME = 's3_bucket_name';
+	const S3_BUCKET_URL = 's3_bucket_url';
 	//one signal
 	const ONE_SIGNAL_APP_ID = 'one_signal_app_id';
 	const ONE_SIGNAL_API_URL = 'one_signal_api_url';
@@ -46,6 +47,7 @@ class SettingsForm extends Model
 	public $s3_key;
 	public $s3_secret;
 	public $s3_bucket_name;
+	public $s3_bucket_url;
 	public $one_signal_app_id;
 	public $one_signal_app_url;
 	public $one_signal_app_authorization;
@@ -89,6 +91,7 @@ class SettingsForm extends Model
 		Setting::setSettingValueByName(SettingsForm::S3_KEY, $this->s3_key);
 		Setting::setSettingValueByName(SettingsForm::S3_SECRET, $this->s3_secret);
 		Setting::setSettingValueByName(SettingsForm::S3_BUCKET_NAME, $this->s3_bucket_name);
+		Setting::setSettingValueByName(SettingsForm::S3_BUCKET_URL, $this->s3_bucket_url);
 		Setting::setSettingValueByName(SettingsForm::ONE_SIGNAL_APP_ID, $this->one_signal_app_id);
 		Setting::setSettingValueByName(SettingsForm::ONE_SIGNAL_API_URL, $this->one_signal_app_url);
 		Setting::setSettingValueByName(SettingsForm::ONE_SIGNAL_API_AUTHORIZATION, $this->one_signal_app_authorization);
@@ -109,6 +112,7 @@ class SettingsForm extends Model
 		$this->s3_key = Setting::getSettingValueByName(SettingsForm::S3_KEY);
 		$this->s3_secret = Setting::getSettingValueByName(SettingsForm::S3_SECRET);
 		$this->s3_bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
+		$this->s3_bucket_url = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_URL);
 		$this->one_signal_app_id = Setting::getSettingValueByName(SettingsForm::ONE_SIGNAL_APP_ID);
 		$this->one_signal_app_url = Setting::getSettingValueByName(SettingsForm::ONE_SIGNAL_API_URL);
 		$this->one_signal_app_authorization = Setting::getSettingValueByName(SettingsForm::ONE_SIGNAL_API_AUTHORIZATION);

@@ -50,15 +50,15 @@ class AWSFileManager extends Aws
             if ($size == 'Normal' || $size == 'normal') {
                 $commands[] = $this->client->getCommand('PutObject', array(
                     'Bucket' => $bucket,
-                    'Key' => $imageName . '.' . $extension,
+                    'Key' => "$imageName.$extension",
                     'Body' => base64_decode($imageBase64),
                     'ContentType' => Helpers::getImageFileContentType($extension),
                     'ACL' => 'public-read',
                 ));
             } else {
                 $commands[] = $this->client->getCommand('PutObject', array(
-                    'Bucket' => $bucket,
-                    'Key' => $imageName . '_' . $size['suffix'] . '.' . $extension,
+                    'Bucket' => $bucket.'/thumbnail',
+                    'Key' => "$imageName.$extension", //$imageName /*. '_' . $size['suffix'] */. '.' . $extension,
                     'Body' => base64_decode(Helpers::resizeImage($imageBase64, $size['width'], $size['height'])),
                     'ContentType' => Helpers::getImageFileContentType($extension),
                     'ACL' => 'public-read',

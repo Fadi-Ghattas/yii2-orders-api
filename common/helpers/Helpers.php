@@ -251,7 +251,7 @@ class Helpers
 
 		return $response;
 	}
-
+	
 	public static function sendMailgunEmail($from, $to, $subject, $emailTemplate)
 	{
 		$mgClient = new Mailgun(Setting::getSettingValueByName(SettingsForm::MAIL_GUN_API_KEY));
@@ -266,6 +266,20 @@ class Helpers
 				//'text' => 'Your mail do not support HTML',
 				'html'    => $emailTemplate
 			]);
+	}
+
+	public static function getImageFullUrl($imagePath)
+	{	
+		if (empty($imagePath))
+			return null;
+		else{
+			// for old images ... 
+			if(substr($imagePath, 0, 4) == 'http' || strpos($imagePath, 'http') !== false )
+				return (string) $imagePath;
+			else
+				return (string) Setting::getSettingValueByName(SettingsForm::S3_BUCKET_URL).$imagePath;
+		}
+		return null;
 	}
 
 }
