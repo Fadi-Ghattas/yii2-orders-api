@@ -292,7 +292,7 @@ class MenuItems extends \yii\db\ActiveRecord
 
                 $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
                     trim($bucket_name, '/') . '/' . $restaurant->id .'/'.$menu_category_id,
-                    time()/*.'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id*/,
+                    time().'_'.$menuItem->id/*.'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id*/,
                     $data['image'],
                     $data['extension'],
                     $sizes = ['Normal' , '' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
@@ -494,7 +494,7 @@ class MenuItems extends \yii\db\ActiveRecord
 
                 $AWSImageUrl = $AWSFileManager->uploadedMultipleImagesBase64ToBucket(
                     trim($bucket_name, '/') . '/' . $restaurant->id .'/'.$menu_category_id,
-                    time()/*.'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id*/,
+                    time().'_'.$menuItem->id/*.'_res_' . $restaurant->id . '_mci_' . MenuCategoryItem::find()->where(['menu_item_id' => $menuItem->id])->one()->menu_category_id . '_mi_' . $menuItem->id*/,
                     $data['image'],
                     $data['extension'],
                     $sizes = ['Normal' , '' => ['suffix' => 'thumbnail', 'width' => 150 , 'height' => 150]]
