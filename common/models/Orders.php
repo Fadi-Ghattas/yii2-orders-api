@@ -606,7 +606,7 @@ class Orders extends \yii\db\ActiveRecord
 						return (string)$this->restaurant->name;
 					},
 					'restaurant_logo' => function () {
-						return (string)$this->restaurant->image;
+						return Helpers::getImageFullUrl($this->restaurant->image);  //(string)$this->restaurant->image;
 					},
 					'order_date_time' => function () {
 						return (string)Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);
@@ -630,7 +630,7 @@ class Orders extends \yii\db\ActiveRecord
 						return (string)$this->restaurant->name;
 					},
 					'restaurant_logo' => function () {
-						return (string)$this->restaurant->image;
+						return Helpers::getImageFullUrl($this->restaurant->image); //(string)$this->restaurant->image;
 					},
 					'order_date_time' => function () {
 						return (string)Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);

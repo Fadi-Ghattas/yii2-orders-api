@@ -428,14 +428,15 @@ class Restaurants extends \yii\db\ActiveRecord
                 if (empty(trim($data['extension'])))
                     return Helpers::HttpException(422, 'validation failed', ['error' => "extension can't be blank"]);
 
+                // echo(uniqid($restaurants->id));
+                // die();
                 $bucket_name = Setting::getSettingValueByName(SettingsForm::S3_BUCKET_NAME);
 
                 $AWSFileManager = new AWSFileManager(S3Client::factory(['key' => Setting::getSettingValueByName(SettingsForm::S3_KEY), 'secret' => Setting::getSettingValueByName(SettingsForm::S3_SECRET),'region' => 'ap-southeast-1']) , $bucket_name );
                 
-
                 $AWSImageUrl = $AWSFileManager->uploadedImageBase64ToBucket(
                     trim($bucket_name, '/') . '/' . $restaurants->id,
-                    time().'_res_' . $restaurants->id . '_background',
+                    time()/*uniqid($restaurants->id).'_res_' . $restaurants->id*/ . '_background',
                     trim($data['image_background']),
                     trim($data['extension']),
                     $sizes = ['Normal']);
@@ -443,13 +444,15 @@ class Restaurants extends \yii\db\ActiveRecord
 
                 if ($AWSImageUrl['success']) {
 
-                    $data['image_background'] = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
-
+                    // $data['image_background'] = urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']);
+                    $image = explode($bucket_name,urldecode(Json::decode($AWSImageUrl['result'])['ObjectURL']));
+                    $data['image_background'] = ltrim( $image[1] , '/');
+                    //die(print_r($data['image_background']));
                     if(!empty($restaurants->oldAttributes['image_background'])){
                         
                         $key = explode("/",$restaurants->oldAttributes['image_background']);
                         $key = end($key);
-
+                        //die(print_r($key));
                         $AWSFileManager->deleteObject([
                             'Bucket' => trim($bucket_name, '/') . '/' . $restaurants->id, // REQUIRED
                             'Key' => $key,
@@ -547,10 +550,10 @@ class Restaurants extends \yii\db\ActiveRecord
                         return (double)$this->latitude;
                     },
                     'image' => function () {
-                        return (!empty($this->image) ? (string)$this->image : null);
+                        return Helpers::getImageFullUrl($this->image); //(!empty($this->image) ? (string)$this->image : null);
                     },
                     'image_background' => function () {
-                        return (!empty($this->image_background) ? (string)$this->image_background : null);
+                        return Helpers::getImageFullUrl($this->image_background); //(!empty($this->image_background) ? (string)$this->image_background : null);
                     },
                     'country_id' => function () {
                         return (int)$this->country_id;
@@ -574,7 +577,7 @@ class Restaurants extends \yii\db\ActiveRecord
                         return (string)$this->name;
                     },
                     'image' => function () {
-                        return (!empty($this->image) ? (string)$this->image : null);
+                        return Helpers::getImageFullUrl($this->image); //(!empty($this->image) ? (string)$this->image : null);
                     },
                     'minimum_order_amount' => function () {
                         return (float)$this->minimum_order_amount;
@@ -624,10 +627,10 @@ class Restaurants extends \yii\db\ActiveRecord
                         return (string)$this->getRestaurantsStatus($this->res_status);
                     },
                     'image' => function () {
-                        return (!empty($this->image) ? (string)$this->image : null);
+                        return Helpers::getImageFullUrl($this->image);//(!empty($this->image) ? (string)$this->image : null);
                     },
                     'image_background' => function () {
-                        return (!empty($this->image_background) ? (string)$this->image_background : null);
+                        return Helpers::getImageFullUrl($this->image_background); //(!empty($this->image_background) ? (string)$this->image_background : null);
                     },
                     'minimum_order_amount' => function () {
                         return (float)$this->minimum_order_amount;

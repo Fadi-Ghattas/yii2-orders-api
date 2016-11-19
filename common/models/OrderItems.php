@@ -156,7 +156,7 @@ class OrderItems extends \yii\db\ActiveRecord
                         $item['price'] = (float)$this->item->price;
                         $item['status'] = (bool)$this->item->status;
                         $item['discount'] = (int)$this->item->discount;
-                        $item['image'] = (string)$this->item->image;
+                        $item['image'] = Helpers::getImageFullUrl($this->item->image); //(string)$this->item->image;
                         $item['is_taxable'] = (bool)$this->item->is_taxable;
                         $item['is_verified'] = (bool)$this->item->is_verified;
                         $restaurant = Restaurants::checkRestaurantAccess();
