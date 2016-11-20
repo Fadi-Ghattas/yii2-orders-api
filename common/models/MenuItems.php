@@ -611,6 +611,7 @@ class MenuItems extends \yii\db\ActiveRecord
                     if ($menuItem->status) {
                         $singleMenuItem['id'] = (int)$menuItem->id;
                         $singleMenuItem['image'] = Helpers::getImageFullUrl($menuItem->image); //(string)Setting::getSettingValueByName(SettingsForm::S3_BUCKET_URL).$menuItem->image;
+                        $singleMenuItem['image_thumbnail'] = Helpers::getImageThumbnail($menuItem->image);
                         $singleMenuItem['name'] = (string)$menuItem->name;
                         $singleMenuItem['price'] = (double)$menuItem->price;
                         $menuCategoryItemsResult [] = $singleMenuItem;
@@ -619,6 +620,7 @@ class MenuItems extends \yii\db\ActiveRecord
                     if ($menuItem->status) {
                         $singleMenuItem['id'] = (int)$menuItem->id;
                         $singleMenuItem['image'] = Helpers::getImageFullUrl($menuItem->image);//(string)Setting::getSettingValueByName(SettingsForm::S3_BUCKET_URL).$menuItem->image;
+                        $singleMenuItem['image_thumbnail'] = Helpers::getImageThumbnail($menuItem->image);
                         $singleMenuItem['name'] = (string)$menuItem->name;
                         $singleMenuItem['price'] = (double)$menuItem->price;
                         $menuCategoryItemsResult [] = $singleMenuItem;

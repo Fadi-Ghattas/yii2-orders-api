@@ -620,6 +620,10 @@ class Orders extends \yii\db\ActiveRecord
 					'id' => function () {
 						return (int)$this->id;
 					},
+					'restaurant_status' => function () {
+						$restaurant = Restaurants::getRestaurantDetails($this->restaurant->id, 0);
+						return $restaurant->getRestaurantsStatus($restaurant->res_status);
+					},
 					'status' => function () {
 						return $this->status->name;
 					},
@@ -652,11 +656,7 @@ class Orders extends \yii\db\ActiveRecord
 					},
 					'items' => function () {
 						return $this->orderItems;
-					},
-					'restaurant_status' => function () {
-						$restaurant = Restaurants::getRestaurantDetails($this->restaurant->id, 0);
-						return $restaurant->getRestaurantsStatus($restaurant->res_status);
-					},
+					}
 				],
 			]
 		);

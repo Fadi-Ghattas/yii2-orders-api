@@ -251,7 +251,7 @@ class Helpers
 
 		return $response;
 	}
-	
+
 	public static function sendMailgunEmail($from, $to, $subject, $emailTemplate)
 	{
 		$mgClient = new Mailgun(Setting::getSettingValueByName(SettingsForm::MAIL_GUN_API_KEY));
@@ -268,6 +268,7 @@ class Helpers
 			]);
 	}
 
+	// Daleen was here ..
 	public static function getImageFullUrl($imagePath)
 	{	
 		if (empty($imagePath))
@@ -280,6 +281,33 @@ class Helpers
 				return (string) Setting::getSettingValueByName(SettingsForm::S3_BUCKET_URL).$imagePath;
 		}
 		return null;
+	}
+
+	// Daleen was here....
+	public static function getImageThumbnail ($imagePath) 
+	{
+
+		if (empty($imagePath))
+			return null;
+		else{
+
+			// for old images ... 
+			if(substr($imagePath, 0, 4) == 'http' || strpos($imagePath, 'http') !== false ){
+				
+				//$imagePath  ='https://s3-ap-southeast-1.amazonaws.com/pic.foodhunting.asia/18/1478768092_res_18_mci_216_mi_112.jpg';
+				return (string) substr_replace($imagePath,'_thumbnail',strrpos($imagePath,'.'),0);
+			}else{
+
+				/*echo $imagePath;
+				echo "<br>";
+				echo substr_replace($imagePath,'/thumbnail',strrpos($imagePath,'/'),0);
+				echo "<br>";*/
+				return (string) Setting::getSettingValueByName(SettingsForm::S3_BUCKET_URL).substr_replace($imagePath,'/thumbnail',strrpos($imagePath,'/'),0);
+
+			}
+				
+		}
+
 	}
 
 }

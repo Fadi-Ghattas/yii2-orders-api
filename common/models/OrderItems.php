@@ -4,7 +4,7 @@ namespace common\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
-
+use common\helpers\Helpers;
 /**
  * This is the model class for table "order_items".
  *
@@ -188,6 +188,9 @@ class OrderItems extends \yii\db\ActiveRecord
                     },
                     'note' => function () {
                         return (string)$this->note;
+                    },
+                    'image' => function () {
+                        return  Helpers::getImageThumbnail($this->item->image);//(string)$this->item->image;
                     },
 //                    'ordered_menu_item' => function () {
 //                      return $this->item;
