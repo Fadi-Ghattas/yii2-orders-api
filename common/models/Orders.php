@@ -518,10 +518,15 @@ class Orders extends \yii\db\ActiveRecord
 						return (string)$this->client->user->username;
 					},
 					'date' => function () {
-						return (string)date('d/m/Y', strtotime($this->created_at));
+						
+						$time  = Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);
+						$time = explode(" ",$time);
+						return (string) ( isset($time[0]) ? $time[0] :  date('d/m/Y', strtotime($this->created_at)) );//date('d/m/Y', strtotime($this->created_at));
 					},
 					'time' => function () {
-						return (string)date('h:i A', strtotime($this->created_at));
+						$time  = Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);
+						$time = explode(" ",$time);
+						return (string) ( isset($time[1]) ? $time[1] :  date('h:i A', strtotime($this->created_at))  );//date('h:i A', strtotime($this->created_at));
 					},
 				],
 				self::SCENARIO_ORDER_DETAILS => [
@@ -589,7 +594,8 @@ class Orders extends \yii\db\ActiveRecord
 						return $this->restaurant->res_status;
 					},
 					'created_at' => function () {
-						return (string)date('d/m/Y H:i:s', strtotime($this->created_at));
+						return (string)Restaurants::getDateTimeBaseOnRestaurantCountry($this->restaurant->id, $this->created_at);
+						//return (string)date('d/m/Y H:i:s', strtotime($this->created_at));
 					},
 				],
 				self::SCENARIO_CLIENT_ORDERS => [
