@@ -224,7 +224,7 @@ class Helpers
 	public static function sendOneSignalMessage($title, $content, $action, $uuid)
 	{
 		$headings = [
-			"en" => "FoodHunting - $title",
+			"en" => "FoodTime - $title",
 		];
 
 		$fields = [
