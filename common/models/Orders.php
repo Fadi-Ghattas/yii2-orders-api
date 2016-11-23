@@ -261,7 +261,7 @@ class Orders extends \yii\db\ActiveRecord
 	{
 		$client = Clients::getClientByAuthorization();
 		if (!$client->verified)
-			return Helpers::HttpException(422, 'validation failed', ['error' => 'please verify your account first!!']);
+			return Helpers::HttpException(422, 'validation failed', ['error' => 'please, verify your account first!']);
 
 		$makeOrderForm = new MakeOrderForm();
 		$makeOrderForm->setAttributes($data);
@@ -269,19 +269,22 @@ class Orders extends \yii\db\ActiveRecord
 			return Helpers::HttpException(422, 'validation failed', ['error' => $makeOrderForm->errors]);
 
 		if (!$client->checkClientAddress($makeOrderForm->address_id))
-			return Helpers::HttpException(422, 'validation failed', ['error' => 'Please provide valid address first!!']);
+			return Helpers::HttpException(422, 'validation failed', ['error' => 'Please, provide a valid address!']);
 
 		$restaurants = Restaurants::find()->where(['id' => $makeOrderForm->restaurant_id])->one();
 		if (empty($restaurants))
-			return Helpers::HttpException(422, 'validation failed', ['error' => "this restaurants is not exist"]);
+			return Helpers::HttpException(422, 'validation failed', ['error' => "This restaurant is not exist"]);
 		if (!$restaurants->status)
-			return Helpers::HttpException(422, 'validation failed', ['error' => "this restaurants is not exist"]);
+			return Helpers::HttpException(422, 'validation failed', ['error' => "This restaurant is not active"]);
+		if ($restaurants->disable_ordering)
+			return Helpers::HttpException(422, 'validation failed', ['error' => "This restaurant is busy now please try your order later!"]);
+
 //        if (!$restaurants->isOpenForOrders())
 //            return Helpers::HttpException(422, 'validation failed', ['error' => 'Sorry restaurant ' . $restaurants->name . ' is not taken any order for now pleas try some time later.']);
 		if (!$restaurants->checkPaymentMethod($makeOrderForm->payment_method_id))
-			return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry restaurant " . $restaurants->name . " don't accept this payment method."]);
+			return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry, " . $restaurants->name . " does not accept this payment method."]);
 		if (!empty(BlacklistedClients::find()->where(['client_id' => $client->id])->andWhere(['restaurant_id' => $restaurants->id])->one()))
-			return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry restaurant " . $restaurants->name . " has block you and you can't order from it."]);
+			return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry, " . $restaurants->name . " has blocked you and you can't order from it."]);
 
 		$connection = \Yii::$app->db;
 		$transaction = $connection->beginTransaction();
@@ -351,12 +354,12 @@ class Orders extends \yii\db\ActiveRecord
 						$menuItemAddOn = MenuItemAddon::find()->where(['menu_item_id' => $menuItem->id])->andWhere(['addon_id' => $orderItemAddOnForm->id])->one();
 						if (empty($menuItemAddOn)) {
 
-							return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry there is add on not belong to this menu item."]);
+							return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry this add on not belong to this menu item."]);
 						}
 						$addOn = Addons::find()->where(['id' => $orderItemAddOnForm->id])->andWhere(['restaurant_id' => $makeOrderForm->restaurant_id])->andWhere(['status' => 1])->andWhere(['deleted_at' => NULL])->one();
 						if (empty($addOn)) {
 							$transaction->rollBack();
-							return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry there is add on not belong to this restaurant."]);
+							return Helpers::HttpException(422, 'validation failed', ['error' => "Sorry this add on not belong to this restaurant."]);
 						}
 
 						$orderItemAddOnModel = new OrderItemAddon();
@@ -475,6 +478,10 @@ class Orders extends \yii\db\ActiveRecord
 			$action = ["action" => Helpers::ONE_SIGNAL_ACTION_ORDER, "id" => $order->id];
 			$uuid = [$restaurants->user->uuid];
 			$oneSignalResponse =  Json::decode(Helpers::sendOneSignalMessage($title,$content,$action,$uuid));
+
+			/*if(intval($oneSignalResponse["recipients"])){
+				self::doPost($oneSignalResponse["id"],$client->user->username,$restaurants->id);
+			}*/
 			// if(!intval($oneSignalResponse["recipients"])){
 			// 	$transaction->rollBack();
 			// 	return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
@@ -497,6 +504,27 @@ class Orders extends \yii\db\ActiveRecord
 			$transaction->rollBack();
 			return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
 		}
+	}
+
+	private function doPost($notification_id,$client_name , $restaurant_id) 
+	{
+		
+        $ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL,"https://jommakan.asia/post.php");
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS,
+		        "notification_id=$notification_id&client_name=$client_name&restaurant_id=$restaurant_id");
+		// receive server response ...
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, FALSE);
+		//CURLOPT_CONNECTTIMEOUT - The number of seconds to wait while trying to connect. Use 0 to wait indefinitely.
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,20); 
+		//CURLOPT_TIMEOUT - The maximum number of seconds to allow cURL functions to execute.
+		curl_setopt($ch, CURLOPT_TIMEOUT, 20); //timeout in seconds
+		//$server_output = curl_exec ($ch);
+		//die(print_r($server_output));
+		curl_close ($ch);
+		return true;
+
 	}
 
 	public function scenarios()
