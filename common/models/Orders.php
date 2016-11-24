@@ -460,8 +460,8 @@ class Orders extends \yii\db\ActiveRecord
 				return Helpers::HttpException(422, 'validation failed', ['error' => 'sorry but your order total is ' . $orderTotal . ', and it must be greater than ' . $restaurants->minimum_order_amount . ' to procedure with your order.']);
 			}
 
-			$order->total = $orderTotal + $restaurants->delivery_fee;
-			$order->total_with_voucher = $orderTotalWithVoucher + $restaurants->delivery_fee;
+			$order->total = $orderTotal ;//+ $restaurants->delivery_fee;
+			$order->total_with_voucher = $orderTotalWithVoucher ;//+ $restaurants->delivery_fee;
 			$order->delivery_fee = $restaurants->delivery_fee;
 			$order->commission_amount = Commissions::getOrderCommissions($orderTotal)->value;
 			if (!$order->validate()) {
@@ -477,11 +477,16 @@ class Orders extends \yii\db\ActiveRecord
 			];
 			$action = ["action" => Helpers::ONE_SIGNAL_ACTION_ORDER, "id" => $order->id];
 			$uuid = [$restaurants->user->uuid];
-			$oneSignalResponse =  Json::decode(Helpers::sendOneSignalMessage($title,$content,$action,$uuid));
 
-			/*if(intval($oneSignalResponse["recipients"])){
-				self::doPost($oneSignalResponse["id"],$client->user->username,$restaurants->id);
-			}*/
+			if($uuid){
+
+				$oneSignalResponse =  Json::decode(Helpers::sendOneSignalMessage($title,$content,$action,$uuid));
+				/*if(intval($oneSignalResponse["recipients"])){
+					self::doPost($oneSignalResponse["id"],$client->user->username,$restaurants->id);
+				}*/
+
+			}
+
 			// if(!intval($oneSignalResponse["recipients"])){
 			// 	$transaction->rollBack();
 			// 	return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
@@ -502,15 +507,15 @@ class Orders extends \yii\db\ActiveRecord
 			return Helpers::formatResponse(TRUE, 'make order success', $response);
 		} catch (\Exception $e) {
 			$transaction->rollBack();
-			return Helpers::HttpException(500, 'server error', ['error' => 'Something went wrong, try again later.']);
+			return Helpers::HttpException(500, 'server error', ['error' => $e->getMessage()]);
 		}
 	}
-
+	
 	private function doPost($notification_id,$client_name , $restaurant_id) 
 	{
 		
         $ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL,"https://jommakan.asia/post.php");
+		curl_setopt($ch, CURLOPT_URL,"http://127.0.0.1/post.php");
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS,
 		        "notification_id=$notification_id&client_name=$client_name&restaurant_id=$restaurant_id");
