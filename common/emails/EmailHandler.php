@@ -38,10 +38,66 @@ class EmailHandler
 		$emailTemplate = str_replace('{apple_store_icon}', 'https://s3-ap-southeast-1.amazonaws.com/foodhunting.app.assets/apple-store-icon.png', $emailTemplate);
 		$emailTemplate = str_replace('{apple_store_url}', '#', $emailTemplate);
 
+		$email_name = Setting::getSettingValueByName(SettingsForm::EMAIL_NAME);
 		Helpers::sendMailgunEmail(
-			Setting::getSettingValueByName(SettingsForm::EMAIL_NAME) . ' <' . Setting::getSettingValueByName(SettingsForm::EMAIL) . '>',
+			Setting::getSettingValueByName(SettingsForm::EMAIL_NAME) . ' <' . Setting::getSettingValueByName(SettingsForm::HELLO_EMAIL) . '>',
 			$to,
-			'FOOD HUNTING | Welcome',
+			$email_name .' | Welcome',
 			$emailTemplate);
 	}
+
+
+	public static function sendEmailWebsite($from,$name,$number,$message)
+	{	
+
+		$emailTemplate =<<<OUT
+
+					<!DOCTYPE html>
+					<html>
+					<head>
+					<style>
+					table, th, td {
+					    border: 1px solid black;
+					    border-collapse: collapse;
+					}
+					th, td {
+					    padding: 5px;
+					    text-align: left;
+					}
+					</style>
+					</head>
+					<body>
+
+					<table style="width:100%">
+					  <tr>
+					    <td>Name</td>
+					    <td>$name</td>
+					  </tr>
+					  <tr>
+					    <td>Email</td>
+					    <td>$from</td>
+					  </tr>
+					  <tr>
+					    <td>Number</td>
+					    <td>$number</td>
+					  </tr>
+					  <tr>
+					    <td>Message</td>
+					    <td>$message</td>
+					  </tr>
+					</table>
+
+					</body>
+					</html>
+
+OUT;
+		$email_name = Setting::getSettingValueByName(SettingsForm::EMAIL_NAME);
+
+		Helpers::sendMailgunEmail(
+			$from,
+			$email_name . ' <' . Setting::getSettingValueByName(SettingsForm::INFO_EMAIL) . '>',
+			$email_name .' | Enquiry',
+			$emailTemplate);
+	}
+
 }

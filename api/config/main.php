@@ -117,6 +117,7 @@ return [
                         'GET,POST,PUT,DELETE countries' => 'countries',
                         'GET,POST,PUT,DELETE states' => 'states',
                         'GET,POST,PUT,DELETE order-status' => 'order-status',
+                        'GET,POST,PUT,DELETE email-website' => 'email-website',
                     ],
                     'tokens' => [
                         '{id}' => '<id:\\w+>'

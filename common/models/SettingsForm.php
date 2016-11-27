@@ -35,7 +35,8 @@ class SettingsForm extends Model
 	const MAIL_GUN_API_KEY = 'mail_gun_api_key';
 	const MAIL_GUN_DOMAIN = 'mail_gun_domain';
 	//Food Hunting
-	CONST EMAIL = 'email';
+	CONST HELLO_EMAIL = 'hello_email';
+	CONST INFO_EMAIL = 'info_email';
 	CONST EMAIL_NAME = 'email_name';
 
 	public $home_url;
@@ -53,7 +54,8 @@ class SettingsForm extends Model
 	public $one_signal_app_authorization;
 	public $mail_gun_api_key;
 	public $mail_gun_domain;
-	public $email;
+	public $hello_email;
+	public $info_email;
 	public $email_name;
 
 	public function rules()
@@ -97,7 +99,8 @@ class SettingsForm extends Model
 		Setting::setSettingValueByName(SettingsForm::ONE_SIGNAL_API_AUTHORIZATION, $this->one_signal_app_authorization);
 		Setting::setSettingValueByName(SettingsForm::MAIL_GUN_API_KEY, $this->mail_gun_api_key);
 		Setting::setSettingValueByName(SettingsForm::MAIL_GUN_DOMAIN, $this->mail_gun_domain);
-		Setting::setSettingValueByName(SettingsForm::EMAIL, $this->email);
+		Setting::setSettingValueByName(SettingsForm::HELLO_EMAIL, $this->hello_email);
+		Setting::setSettingValueByName(SettingsForm::INFO_EMAIL, $this->info_email);
 		Setting::setSettingValueByName(SettingsForm::EMAIL_NAME, $this->email_name);
 	}
 
@@ -118,7 +121,8 @@ class SettingsForm extends Model
 		$this->one_signal_app_authorization = Setting::getSettingValueByName(SettingsForm::ONE_SIGNAL_API_AUTHORIZATION);
 		$this->mail_gun_api_key = Setting::getSettingValueByName(SettingsForm::MAIL_GUN_API_KEY);
 		$this->mail_gun_domain = Setting::getSettingValueByName(SettingsForm::MAIL_GUN_DOMAIN);
-		$this->email = Setting::getSettingValueByName(SettingsForm::EMAIL);
+		$this->hello_email = Setting::getSettingValueByName(SettingsForm::HELLO_EMAIL);
+		$this->info_email = Setting::getSettingValueByName(SettingsForm::INFO_EMAIL);
 		$this->email_name = Setting::getSettingValueByName(SettingsForm::EMAIL_NAME);
 	}
 }
