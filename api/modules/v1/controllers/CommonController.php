@@ -111,9 +111,13 @@
 				$post_data = $request->post();
 
 				if (!isset($post_data['name']) ||
+					 empty($post_data['name']) ||
 					!isset($post_data['email']) ||
+					 empty($post_data['email']) ||
 					!isset($post_data['number']) ||
-					!isset($post_data['message']) 
+					 empty($post_data['number']) ||
+					!isset($post_data['message']) ||
+					empty($post_data['message']) 
 				)
 				return Helpers::HttpException(422, 'validation failed', ['error' => "data are missing"]);
 				
