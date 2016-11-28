@@ -122,17 +122,15 @@
 				  return Helpers::HttpException(422, 'validation failed' , ['error' => "$email is not a valid email address"]);
 				} 	
 				
-				if(empty($_SERVER['HTTP_REFERER'])){
-					$_SERVER['HTTP_REFERER'] = 'http://dev.foodtime/';
-					//$_SERVER['HTTP_REFERER'] = 'random text';
-				}
+				if(empty($_SERVER['HTTP_REFERER']))
+					$referer = 'http://dev.example.com';
+				else
+					$referer = $_SERVER['HTTP_REFERER'];
 
-				//isset($_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] :  'http://dev.foodtime');
+
 				$allowedDomains = array('foodtime.asia', 'dev.foodtime');
-				$referer = $_SERVER['HTTP_REFERER'];
 				$domain = parse_url($referer); //If yes, parse referrer
-
-				if(in_array( $domain['host'], $allowedDomains)) {
+				if(isset($domain['host']) && in_array( $domain['host'], $allowedDomains)) {
 					EmailHandler::sendEmailWebsite($email,$name,$number,$message);
 					return Helpers::formatResponse(TRUE, 'Thank you for your enquiry. Our experts will get back to you shortly via phone or email.', NULL);
 				}else{
@@ -142,7 +140,6 @@
 			}
 			
 			return Helpers::HttpException(405, "Method Not Allowed", NULL);
-			
 		}
 
 
