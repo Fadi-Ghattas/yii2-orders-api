@@ -19,9 +19,8 @@
 	use yii\filters\auth\CompositeAuth;
 	use yii\filters\auth\HttpBearerAuth;
 	use yii\web\MethodNotAllowedHttpException;
-	use yii\filters\Cors;
-
 	
+
 	class CommonController extends ActiveController
 	{
 		public $modelClass = '';
@@ -29,26 +28,29 @@
 		public function behaviors()
 		{
 			$behaviors = parent::behaviors();
+			
 			$behaviors['corsFilter'] = [
-	                'class' => Cors::className(),
-		            'cors' => [
-		                // restrict access to
-		                'Origin' => ['*'],
-		                'Access-Control-Request-Method' => ['POST', 'GET'],
-		                // Allow only POST and PUT methods
-		                'Access-Control-Request-Headers' => [' X-Requested-With'],
-		                // Allow only headers 'X-Wsse'
-		                'Access-Control-Allow-Credentials' => true,
-		                // Allow OPTIONS caching
-		                'Access-Control-Max-Age' => 3600,
-		                // Allow the X-Pagination-Current-Page header to be exposed to the browser.
-		                'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-		            ],
-	        ];
+               'class' => \yii\filters\Cors::className(),
+	            'cors' => [
+	                // restrict access to
+	                //'Origin' => ['http://dev.foodtime', 'http://foodtime.asia'],
+	                'Origin' => ['*'],
+	                'Access-Control-Request-Method' => ['POST', 'PUT'],
+	                // Allow only POST and PUT methods
+	                'Access-Control-Request-Headers' => ['X-Wsse'],
+	                // Allow only headers 'X-Wsse'
+	                'Access-Control-Allow-Credentials' => true,
+	                // Allow OPTIONS caching
+	                'Access-Control-Max-Age' => 3600,
+	                // Allow the X-Pagination-Current-Page header to be exposed to the browser.
+	                'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
+	            ],
 
+		   ];
+			
 			$behaviors['authenticator'] = [
 				'class' => CompositeAuth::className(),
-				'except' => ['states', 'countries'],
+				'except' => ['states', 'countries','email-website'],
 				'authMethods' => [
 					HttpBearerAuth::className(),
 				],
@@ -100,8 +102,10 @@
 		public function actionEmailWebsite()
 		{	
 			$request = Yii::$app->request;
-			
 
+			/*if($request->isOptions){
+				die("fuck");
+			}*/
 			if($request->isPost){
 
 				$post_data = $request->post();
@@ -116,26 +120,25 @@
 				extract($post_data);
 				if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
 				  return Helpers::HttpException(422, 'validation failed' , ['error' => "$email is not a valid email address"]);
-				} 
+				} 	
+				
+				if(empty($_SERVER['HTTP_REFERER'])){
+					$_SERVER['HTTP_REFERER'] = 'http://dev.foodtime/';
+					//$_SERVER['HTTP_REFERER'] = 'random text';
+				}
 
-				$_SERVER['HTTP_REFERER'] = 'http://dev.foodtime/#contact';
-
+				//isset($_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] :  'http://dev.foodtime');
 				$allowedDomains = array('foodtime.asia', 'dev.foodtime');
 				$referer = $_SERVER['HTTP_REFERER'];
-
 				$domain = parse_url($referer); //If yes, parse referrer
 
 				if(in_array( $domain['host'], $allowedDomains)) {
-					
 					EmailHandler::sendEmailWebsite($email,$name,$number,$message);
 					return Helpers::formatResponse(TRUE, 'Thank you for your enquiry. Our experts will get back to you shortly via phone or email.', NULL);
-
 				}else{
 					return Helpers::HttpException(403, "Forbidden", ['error' => "The request is understood, but it has been refused or access is not allowed."]);
 				}
-
-
-
+				
 			}
 			
 			return Helpers::HttpException(405, "Method Not Allowed", NULL);
