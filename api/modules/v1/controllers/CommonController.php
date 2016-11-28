@@ -19,7 +19,9 @@
 	use yii\filters\auth\CompositeAuth;
 	use yii\filters\auth\HttpBearerAuth;
 	use yii\web\MethodNotAllowedHttpException;
+	use yii\filters\Cors;
 
+	
 	class CommonController extends ActiveController
 	{
 		public $modelClass = '';
@@ -27,6 +29,23 @@
 		public function behaviors()
 		{
 			$behaviors = parent::behaviors();
+			$behaviors['corsFilter'] = [
+	                'class' => Cors::className(),
+		            'cors' => [
+		                // restrict access to
+		                'Origin' => ['*'],
+		                'Access-Control-Request-Method' => ['POST', 'GET'],
+		                // Allow only POST and PUT methods
+		                'Access-Control-Request-Headers' => [' X-Requested-With'],
+		                // Allow only headers 'X-Wsse'
+		                'Access-Control-Allow-Credentials' => true,
+		                // Allow OPTIONS caching
+		                'Access-Control-Max-Age' => 3600,
+		                // Allow the X-Pagination-Current-Page header to be exposed to the browser.
+		                'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
+		            ],
+	        ];
+
 			$behaviors['authenticator'] = [
 				'class' => CompositeAuth::className(),
 				'except' => ['states', 'countries'],
