@@ -138,7 +138,7 @@
 				}else{
 					return Helpers::HttpException(403, "Forbidden", ['error' => "The request is understood, but it has been refused or access is not allowed."]);
 				}
-				
+
 			}
 			
 			return Helpers::HttpException(405, "Method Not Allowed", NULL);
